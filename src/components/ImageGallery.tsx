@@ -41,10 +41,10 @@ export function ImageGallery({ images, title }: Props) {
             aria-label="Open fullscreen viewer"
           >
             <img
+              key={currentImage.url}
               src={currentImage.url}
               alt={`${title} - Image ${safeIndex + 1}`}
               onLoad={() => setLoaded(true)}
-              onLoadStart={() => setLoaded(false)}
               className={`h-full w-full object-cover transition-opacity duration-300 ${
                 loaded ? 'opacity-100' : 'opacity-0'
               }`}

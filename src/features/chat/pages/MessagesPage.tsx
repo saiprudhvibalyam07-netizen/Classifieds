@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, User } from 'lucide-react'
 import { useAuth } from '../../../hooks/useAuth'
@@ -21,6 +21,29 @@ import { ToastContainer } from '../components/ToastContainer'
 import type { ChatConversation } from '../types'
 
 const DESKTOP_BREAKPOINT = 768
+
+function useIsMobile() {
+  const [mobile, setMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth < DESKTOP_BREAKPOINT : true
+  )
+
+  useEffect(() => {
+    let frameId: number | null = null
+    function handleResize() {
+      if (frameId !== null) cancelAnimationFrame(frameId)
+      frameId = requestAnimationFrame(() => {
+        setMobile(window.innerWidth < DESKTOP_BREAKPOINT)
+      })
+    }
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      if (frameId !== null) cancelAnimationFrame(frameId)
+    }
+  }, [])
+
+  return mobile
+}
 
 function MobileHeader({ name, avatarUrl, onBack }: { name: string; avatarUrl: string | null | undefined; onBack: () => void }) {
   return (
@@ -46,26 +69,11 @@ function MobileHeader({ name, avatarUrl, onBack }: { name: string; avatarUrl: st
   )
 }
 
-function useIsMobile() {
-  const [mobile, setMobile] = useState(
-    typeof window !== 'undefined' ? window.innerWidth < DESKTOP_BREAKPOINT : true
-  )
-
-  useEffect(() => {
-    function handleResize() {
-      setMobile(window.innerWidth < DESKTOP_BREAKPOINT)
-    }
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  return mobile
-}
-
 export function MessagesPage() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
+  const searchParamsStr = useMemo(() => searchParams.toString(), [searchParams])
   const isMobile = useIsMobile()
 
   const {
@@ -85,6 +93,7 @@ export function MessagesPage() {
   const [activeConv, setActiveConv] = useState<ChatConversation | null>(null)
   const [showList, setShowList] = useState(true)
   const { show } = useToast()
+  const fetchedConvRef = useRef(false)
   const setActiveConversation = useChatStore((s) => s.setActiveConversation)
   const { queueSize, syncStatus, isOnline } = useOfflineQueue()
 
@@ -132,9 +141,10 @@ export function MessagesPage() {
   }, [conversations, navigate, refetch, user, show])
 
   useEffect(() => {
-    const convParam = searchParams.get('conversation')
-    const listingParam = searchParams.get('listing')
-    const sellerParam = searchParams.get('seller')
+    const params = new URLSearchParams(searchParamsStr)
+    const convParam = params.get('conversation')
+    const listingParam = params.get('listing')
+    const sellerParam = params.get('seller')
 
     if (convParam) {
       setActiveConvId(convParam)
@@ -142,7 +152,7 @@ export function MessagesPage() {
     } else if (listingParam && sellerParam && user) {
       createOrOpenConversation(listingParam, sellerParam)
     }
-  }, [searchParams, user, createOrOpenConversation])
+  }, [searchParamsStr, user, createOrOpenConversation])
 
   useEffect(() => {
     if (!activeConvId) {
@@ -160,7 +170,8 @@ export function MessagesPage() {
       return
     }
 
-    if (conversations.length === 0 && !convLoading) {
+    if (conversations.length === 0 && !convLoading && !fetchedConvRef.current) {
+      fetchedConvRef.current = true
       getConversationById(activeConvId).then((conv) => {
         if (conv) setActiveConv(conv)
       })

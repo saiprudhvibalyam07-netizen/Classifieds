@@ -74,18 +74,30 @@ export function CreateListing() {
     }
 
     if (images.length > 0 && listing) {
-      for (let i = 0; i < images.length; i++) {
-        const filePath = `${user.id}/${listing.id}/${i}-${images[i].name}`
-        await supabase.storage.from('listing-images').upload(filePath, images[i])
-        const { data: urlData } = supabase.storage
-          .from('listing-images')
-          .getPublicUrl(filePath)
+      const results = await Promise.allSettled(
+        images.map(async (file, i) => {
+          const filePath = `${user.id}/${listing.id}/${i}-${file.name}`
+          const { error: uploadError } = await supabase.storage.from('listing-images').upload(filePath, file)
+          if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`)
 
-        await supabase.from('listing_images').insert({
-          listing_id: listing.id,
-          url: urlData.publicUrl,
-          sort_order: i,
+          const { data: urlData } = supabase.storage
+            .from('listing-images')
+            .getPublicUrl(filePath)
+
+          const { error: insertError } = await supabase.from('listing_images').insert({
+            listing_id: listing.id,
+            url: urlData.publicUrl,
+            sort_order: i,
+          })
+          if (insertError) throw new Error(`DB insert failed: ${insertError.message}`)
         })
+      )
+
+      const failures = results.filter((r) => r.status === 'rejected')
+      if (failures.length > 0) {
+        setError(`${failures.length} image(s) failed to upload`)
+        setLoading(false)
+        return
       }
     }
 

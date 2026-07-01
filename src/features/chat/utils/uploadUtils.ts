@@ -16,12 +16,21 @@ export interface ValidationResult {
   error: string | null
 }
 
+const ALLOWED_IMAGE_MIMES = new Set([
+  'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+  'image/heic', 'image/heif', 'image/avif', 'image/bmp', 'image/tiff',
+  'image/svg+xml',
+])
+
 export function validateFile(file: File, isImage: boolean): ValidationResult {
   if (isImage) {
     const ext = file.name.split('.').pop()?.toLowerCase()
     const allowedExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif', 'avif', 'bmp', 'tiff', 'tif', 'svg']
     if (ext && !allowedExts.includes(ext)) {
       return { valid: false, error: `Unsupported image format: .${ext}` }
+    }
+    if (!ALLOWED_IMAGE_MIMES.has(file.type) && file.type) {
+      return { valid: false, error: `File type ${file.type} is not supported` }
     }
     if (file.size > MAX_IMAGE_SIZE) {
       const mb = MAX_IMAGE_SIZE / (1024 * 1024)

@@ -32,15 +32,16 @@ export function SellerProfile() {
         .single(),
       supabase
         .from('listings')
-        .select('*, category:categories(*), images:listing_images(*)')
+        .select('id, title, price, location, is_featured, created_at, category:categories(name), images:listing_images(url)')
         .eq('user_id', id)
         .eq('status', 'active')
-        .order('created_at', { ascending: false }),
+        .order('created_at', { ascending: false })
+        .limit(50),
     ])
 
     if (profileRes.data) setSeller(profileRes.data as SellerInfo)
     if (listingsRes.data) {
-      setListings(listingsRes.data)
+      setListings(listingsRes.data as unknown as Listing[])
       setActiveCount(listingsRes.data.length)
     }
     setLoading(false)

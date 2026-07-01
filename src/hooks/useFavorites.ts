@@ -24,20 +24,22 @@ export function useFavorites() {
     if (!user) return
 
     if (favoriteIds.has(listingId)) {
-      await supabase
+      const { error } = await supabase
         .from('favorites')
         .delete()
         .eq('user_id', user.id)
         .eq('listing_id', listingId)
+      if (error) return
       setFavoriteIds((prev) => {
         const next = new Set(prev)
         next.delete(listingId)
         return next
       })
     } else {
-      await supabase
+      const { error } = await supabase
         .from('favorites')
         .insert({ user_id: user.id, listing_id: listingId })
+      if (error) return
       setFavoriteIds((prev) => new Set(prev).add(listingId))
     }
   }

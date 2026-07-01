@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useChatStore } from '../state/chatStore'
 import type { Toast } from '../types'
 
@@ -9,6 +9,15 @@ export function useToast() {
   const addToast = useChatStore((s) => s.addToast)
   const removeToast = useChatStore((s) => s.removeToast)
   const timersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
+
+  useEffect(() => {
+    return () => {
+      for (const timer of timersRef.current.values()) {
+        clearTimeout(timer)
+      }
+      timersRef.current.clear()
+    }
+  }, [])
 
   const show = useCallback((toast: Omit<Toast, 'id'>) => {
     const id = crypto.randomUUID()

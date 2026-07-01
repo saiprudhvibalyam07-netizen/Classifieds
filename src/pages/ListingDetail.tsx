@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, Heart, MapPin, Calendar, Eye, User, MessageSquare } from 'lucide-react'
 import { supabase } from '../lib/supabase'
@@ -15,24 +15,35 @@ export function ListingDetail() {
   const { favoriteIds, toggle } = useFavorites()
   const [listing, setListing] = useState<Listing | null>(null)
   const [loading, setLoading] = useState(true)
+  const mountedRef = useRef(true)
 
   useEffect(() => {
+    mountedRef.current = true
     if (id) fetchListing()
+    return () => { mountedRef.current = false }
   }, [id])
 
   async function fetchListing() {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('listings')
       .select('*, category:categories(*), profile:profiles(*), images:listing_images(*)')
       .eq('id', id)
       .single()
 
+    if (!mountedRef.current) return
+
+    if (error) {
+      setLoading(false)
+      return
+    }
+
     if (data) {
       setListing(data)
-      await supabase
+      supabase
         .from('listings')
         .update({ views_count: (data.views_count ?? 0) + 1 })
         .eq('id', id)
+        .then(undefined, () => {})
     }
     setLoading(false)
   }

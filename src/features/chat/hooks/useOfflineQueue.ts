@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { supabase } from '../../../lib/supabase'
-import { getQueuedActions, removeQueuedAction, incrementRetry, getQueueSize, enqueueAction, type OfflineActionType } from '../utils/offlineQueue'
+import { getQueuedActions, removeQueuedAction, incrementRetry, getQueueSize, enqueueAction, getBackoffDelay, type OfflineActionType } from '../utils/offlineQueue'
 
 type SyncStatus = 'idle' | 'syncing' | 'done' | 'error'
 
@@ -9,6 +9,7 @@ export function useOfflineQueue() {
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle')
   const [isOnline, setIsOnline] = useState(navigator.onLine)
   const processingRef = useRef(false)
+  const retryTimersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
 
   const refreshSize = useCallback(async () => {
     const size = await getQueueSize()
@@ -34,6 +35,10 @@ export function useOfflineQueue() {
       window.removeEventListener('online', handleOnline)
       window.removeEventListener('offline', handleOffline)
       clearInterval(heartBeat)
+      for (const timer of retryTimersRef.current.values()) {
+        clearTimeout(timer)
+      }
+      retryTimersRef.current.clear()
     }
   }, [refreshSize])
 
@@ -54,14 +59,27 @@ export function useOfflineQueue() {
         try {
           await processAction(item)
           await removeQueuedAction(item.id)
+          const timer = retryTimersRef.current.get(item.id)
+          if (timer) {
+            clearTimeout(timer)
+            retryTimersRef.current.delete(item.id)
+          }
         } catch (err) {
           const msg = err instanceof Error ? err.message : 'Unknown error'
-          await incrementRetry(item.id, msg)
+          const updated = await incrementRetry(item.id, msg)
+          if (updated) {
+            const delay = getBackoffDelay(updated.retryCount)
+            const timer = setTimeout(() => {
+              processQueue()
+              retryTimersRef.current.delete(item.id)
+            }, delay)
+            retryTimersRef.current.set(item.id, timer)
+          }
         }
       }
 
       await refreshSize()
-      setSyncStatus(items.length > 0 ? 'done' : 'idle')
+      setSyncStatus('idle')
     } catch {
       setSyncStatus('error')
     } finally {
@@ -87,11 +105,32 @@ async function processAction(item: { id: string; type: OfflineActionType; payloa
   switch (item.type) {
     case 'send_message': {
       const payload = { ...item.payload } as Record<string, unknown>
-      if (!payload.content) payload.content = null
-      if (!payload.type) payload.type = 'text'
-      if (!payload.metadata) payload.metadata = {}
-      const { error } = await supabase.from('messages').insert(payload)
-      if (error) throw error
+      const messageContent = payload.content as string | null | undefined
+      const messageType = (payload.type as string) ?? 'text'
+      const metadata = (payload.metadata as Record<string, unknown>) ?? {}
+      const attachments = payload.attachments as Array<{ url: string }> | undefined
+
+      const { data: msg, error: msgError } = await supabase
+        .from('messages')
+        .insert({
+          conversation_id: payload.conversation_id as string,
+          sender_id: payload.sender_id as string,
+          message: messageContent,
+          type: messageType,
+          metadata,
+        })
+        .select('id')
+        .single()
+      if (msgError) throw msgError
+
+      if (attachments && attachments.length > 0 && msg) {
+        const rows = attachments.map((a) => ({
+          message_id: msg.id,
+          url: a.url,
+        }))
+        const { error: attError } = await supabase.from('message_attachments').insert(rows)
+        if (attError) throw attError
+      }
       break
     }
     case 'edit_message': {

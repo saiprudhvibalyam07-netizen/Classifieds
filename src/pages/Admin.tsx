@@ -24,39 +24,45 @@ export function Admin() {
     }
   }, [profile])
   async function fetchUsers() {
-    const { data, error } = await supabase.from('profiles').select('*').order('created_at', { ascending: false })
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('id, email, full_name, role, created_at')
+      .order('created_at', { ascending: false })
+      .limit(500)
     if (error) {
       console.error('Error fetching users:', error)
       return
     }
-    if (data) setUsers(data)
+    if (data) setUsers(data as Profile[])
   }
 
   async function fetchListings() {
     const { data, error } = await supabase
       .from('listings')
-      .select('*, profile:profiles(*)')
+      .select('id, title, price, status, profile:profiles(full_name)')
       .neq('status', 'pending')
       .order('created_at', { ascending: false })
+      .limit(500)
     if (error) {
       console.error('Error fetching listings:', error)
       return
     }
-    if (data) setListings(data)
+    if (data) setListings(data as unknown as Listing[])
   }
 
   async function fetchPending() {
     const { data, error } = await supabase
       .from('listings')
-      .select('*, profile:profiles(*), images:listing_images(*)')
+      .select('id, title, price, location, status, profile:profiles(full_name), images:listing_images(url)')
       .eq('status', 'pending')
       .order('created_at', { ascending: false })
+      .limit(200)
 
     if (error) {
       console.error('Error fetching pending listings:', error)
       return
     }
-    if (data) setPendingListings(data)
+    if (data) setPendingListings(data as unknown as Listing[])
   }
 
   async function approveListing(id: string) {

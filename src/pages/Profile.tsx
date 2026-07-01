@@ -22,16 +22,17 @@ export function Profile() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
+    if (!user) return
     setLoading(true)
     setSaved(false)
 
-    await supabase
+    const { error } = await supabase
       .from('profiles')
       .update({ full_name: fullName, phone: phone || null })
-      .eq('id', user!.id)
+      .eq('id', user.id)
 
     setLoading(false)
-    setSaved(true)
+    if (!error) setSaved(true)
   }
 
   return (

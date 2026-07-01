@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Search, Shield, Zap } from 'lucide-react'
 import { SearchBar } from '../components/SearchBar'
+import { FeatureMenu } from '../components/home/FeatureMenu'
 
 export function Home() {
   return (
@@ -33,6 +34,8 @@ export function Home() {
           </div>
         </div>
       </section>
+
+      <FeatureMenu />
 
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

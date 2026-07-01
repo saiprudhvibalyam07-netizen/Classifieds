@@ -15,20 +15,23 @@ export function Dashboard() {
   }, [user])
 
   async function fetchListings() {
+    if (!user) return
     const { data } = await supabase
       .from('listings')
-      .select('*, images:listing_images(*)')
-      .eq('user_id', user!.id)
+      .select('id, title, price, views_count, status, images:listing_images(url)')
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false })
+      .limit(200)
 
-    if (data) setListings(data)
+    if (data) setListings(data as unknown as Listing[])
     setLoading(false)
   }
 
   async function deleteListing(id: string) {
     if (!confirm('Delete this listing?')) return
-    await supabase.from('listings').delete().eq('id', id)
-    setListings(listings.filter((l) => l.id !== id))
+    const { error } = await supabase.from('listings').delete().eq('id', id)
+    if (error) return
+    setListings((prev) => prev.filter((l) => l.id !== id))
   }
 
   if (loading) {

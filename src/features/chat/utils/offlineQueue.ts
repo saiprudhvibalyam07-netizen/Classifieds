@@ -64,19 +64,21 @@ export function getBackoffDelay(retryCount: number): number {
   return Math.min(1000 * Math.pow(2, retryCount), 30000)
 }
 
-export async function incrementRetry(id: string, error: string): Promise<void> {
+export async function incrementRetry(id: string, error: string): Promise<OfflineQueueItem | null> {
   const item = await getAll<OfflineQueueItem>(STORE).then(
     (items) => items.find((i) => i.id === id)
   )
-  if (!item) return
+  if (!item) return null
 
   item.retryCount++
   item.lastError = error
   if (item.retryCount >= MAX_RETRIES) {
     await removeItem(STORE, id)
     eventBus.emit(ChatEvents.ToastShown, { message: `Action failed after ${MAX_RETRIES} retries`, type: 'error' })
+    return null
   } else {
     await setItem(STORE, id, item)
+    return item
   }
 }
 

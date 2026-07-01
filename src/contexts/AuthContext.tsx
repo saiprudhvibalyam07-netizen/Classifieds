@@ -27,6 +27,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null)
       if (session?.user) fetchProfile(session.user.id)
       setLoading(false)
+    }).catch(() => {
+      setLoading(false)
     })
 
     const {
@@ -40,12 +42,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   async function fetchProfile(userId: string) {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
       .single()
-    setProfile(data)
+    if (!error && data) setProfile(data)
   }
 
   async function signOut() {

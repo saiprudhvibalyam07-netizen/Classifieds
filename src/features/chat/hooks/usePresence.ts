@@ -1,10 +1,19 @@
 import { useEffect, useRef } from 'react'
 import { useAuth } from '../../../hooks/useAuth'
-import { chatMutations } from '../api/chatMutations'
+import { supabase } from '../../../lib/supabase'
 import { useChatStore } from '../state/chatStore'
 
 const AWAY_TIMEOUT = 5 * 60 * 1000
 const DB_SYNC_INTERVAL = 30 * 1000
+
+async function upsertPresence(userId: string, status: string) {
+  const { error } = await supabase
+    .from('user_presence')
+    .upsert({ user_id: userId, status, last_seen_at: new Date().toISOString() })
+  if (error && !error.message.includes('does not exist')) {
+    throw new Error(error.message)
+  }
+}
 
 export function usePresence() {
   const { user } = useAuth()
@@ -14,11 +23,14 @@ export function usePresence() {
   const syncIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
-    if (!user) {
-      return
-    }
+    if (!user) return
 
     const uid = user.id
+    let accessToken = ''
+
+    supabase.auth.getSession().then(({ data }) => {
+      accessToken = data.session?.access_token ?? ''
+    })
 
     function handleActivity() {
       lastActivityRef.current = Date.now()
@@ -26,15 +38,32 @@ export function usePresence() {
 
     function handleVisibilityChange() {
       if (document.hidden) {
-        chatMutations.updatePresence(uid, 'away').catch(() => {})
+        upsertPresence(uid, 'away')
       } else {
         lastActivityRef.current = Date.now()
-        chatMutations.updatePresence(uid, 'online').catch(() => {})
+        upsertPresence(uid, 'online')
       }
     }
 
     function handleBeforeUnload() {
-      chatMutations.updatePresence(uid, 'offline').catch(() => {})
+      const supaUrl = import.meta.env.VITE_SUPABASE_URL
+      const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+      const body = JSON.stringify({
+        user_id: uid,
+        status: 'offline',
+        last_seen_at: new Date().toISOString(),
+      })
+      fetch(`${supaUrl}/rest/v1/user_presence`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: anonKey,
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+          Prefer: 'resolution=merge-duplicates',
+        },
+        body,
+        keepalive: true,
+      })
     }
 
     const events = ['mousedown', 'keydown', 'touchstart', 'scroll']
@@ -43,12 +72,12 @@ export function usePresence() {
     document.addEventListener('visibilitychange', handleVisibilityChange)
     window.addEventListener('beforeunload', handleBeforeUnload)
 
-    chatMutations.updatePresence(uid, 'online').catch(() => {})
+    upsertPresence(uid, 'online')
 
     syncIntervalRef.current = setInterval(() => {
       const elapsed = Date.now() - lastActivityRef.current
       const status = elapsed > AWAY_TIMEOUT ? 'away' : 'online'
-      chatMutations.updatePresence(uid, status).catch(() => {})
+      upsertPresence(uid, status)
     }, DB_SYNC_INTERVAL)
 
     return () => {
