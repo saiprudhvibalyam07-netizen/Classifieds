@@ -1,5 +1,5 @@
-import { test, expect } from '../../fixtures/testContext';
-import { SEARCH_QUERIES } from '../../utils/testData';
+import { test, expect } from '../../../fixtures/testContext';
+import { SEARCH_QUERIES } from '../../../utils/testData';
 
 test.describe('Listings - Browse & Search', () => {
   test.beforeEach(async ({ listingsPage }) => {

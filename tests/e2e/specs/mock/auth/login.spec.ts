@@ -1,5 +1,5 @@
-import { test, expect } from '../../fixtures/testContext';
-import { TEST_USERS } from '../../utils/testData';
+import { test, expect } from '../../../fixtures/testContext';
+import { TEST_USERS } from '../../../utils/testData';
 
 test.describe('Authentication - Login', () => {
   test.beforeEach(async ({ loginPage }) => {

@@ -1,34 +1,34 @@
 export const TEST_USERS = {
   buyer: {
-    email: process.env.TEST_BUYER_EMAIL || 'buyer@test.com',
-    password: process.env.TEST_BUYER_PASSWORD || 'TestPass123!',
-    name: 'Test Buyer',
+    email: process.env.TEST_BUYER_EMAIL || 'rajesh.kumar@valclassifieds.test',
+    password: process.env.TEST_BUYER_PASSWORD || 'Rajesh#99Kumar',
+    name: 'Rajesh Kumar',
   },
   seller: {
-    email: process.env.TEST_SELLER_EMAIL || 'seller@test.com',
-    password: process.env.TEST_SELLER_PASSWORD || 'TestPass123!',
-    name: 'Test Seller',
+    email: process.env.TEST_SELLER_EMAIL || 'priya.sharma@valclassifieds.test',
+    password: process.env.TEST_SELLER_PASSWORD || 'Pass123!',
+    name: 'Priya Sharma',
   },
   admin: {
-    email: process.env.TEST_ADMIN_EMAIL || 'admin@test.com',
+    email: process.env.TEST_ADMIN_EMAIL || 'admin@valclassifieds.test',
     password: process.env.TEST_ADMIN_PASSWORD || 'AdminPass123!',
     name: 'Test Admin',
   },
 } as const;
 
 export const TEST_LISTING = {
-  title: 'Test Listing - Vintage Camera',
-  description: 'A vintage film camera in excellent condition. Fully functional.',
-  price: '150',
-  category: 'Items for Sale',
-  city: 'Austin',
-  state: 'TX',
+  title: 'Vintage Royal Enfield Bullet 350 1998',
+  description: 'A classic Royal Enfield motorcycle in excellent condition. Fully restored.',
+  price: '185000',
+  category: 'Vehicles',
+  city: 'Pune',
+  state: 'MH',
 } as const;
 
 export const SEARCH_QUERIES = {
-  keyword: 'camera',
+  keyword: 'Camera',
   category: 'Vehicles',
-  city: 'Austin',
+  city: 'Mumbai',
   priceMin: '100',
-  priceMax: '500',
+  priceMax: '5000',
 } as const;

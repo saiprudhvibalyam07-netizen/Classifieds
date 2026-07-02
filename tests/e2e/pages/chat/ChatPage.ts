@@ -2,6 +2,7 @@ import { Page, expect } from '@playwright/test';
 
 export class ChatPage {
   constructor(private page: Page) {}
+  getPage() { return this.page; }
 
   private conversationList = () => this.page.locator('[data-testid="chat-conversation-list"]');
   private conversationItem = () => this.page.locator('[data-testid="chat-conversation-item"]');

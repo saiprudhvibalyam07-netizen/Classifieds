@@ -1,12 +1,29 @@
 import { defineConfig, devices } from '@playwright/test';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { readFileSync, existsSync } from 'fs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// Load .env.test into process.env manually (no dotenv dependency)
+const envPath = path.resolve(__dirname, '.env.test');
+if (existsSync(envPath)) {
+  const content = readFileSync(envPath, 'utf-8');
+  for (const line of content.split('\n')) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const eqIdx = trimmed.indexOf('=');
+    if (eqIdx === -1) continue;
+    const key = trimmed.slice(0, eqIdx).trim();
+    const value = trimmed.slice(eqIdx + 1).trim();
+    if (!process.env[key]) {
+      process.env[key] = value;
+    }
+  }
+}
+
 export default defineConfig({
-  testDir: './specs',
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 4 : 1,
@@ -15,7 +32,7 @@ export default defineConfig({
     ['list'],
     ['allure-playwright', { outputFolder: 'allure-results' }],
   ],
-  timeout: 30000,
+  timeout: 60000,
   expect: {
     timeout: 10000,
   },
@@ -31,7 +48,13 @@ export default defineConfig({
   globalTeardown: path.resolve(__dirname, 'global-teardown.ts'),
   projects: [
     {
-      name: 'chromium',
+      name: 'mock',
+      testDir: './specs/mock',
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'e2e',
+      testDir: './specs/e2e',
       use: { ...devices['Desktop Chrome'] },
     },
   ],
