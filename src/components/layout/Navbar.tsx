@@ -45,11 +45,12 @@ export function Navbar() {
               onClick={() => setMobileOpen(true)}
               className="rounded-lg p-2 text-gray-600 transition hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 lg:hidden"
               aria-label="Open menu"
+              data-testid="navbar-mobile-toggle"
             >
               <Menu className="h-5 w-5" />
             </button>
 
-            <Link to="/" className="flex items-center gap-2 text-xl font-bold text-primary-900">
+            <Link to="/" className="flex items-center gap-2 text-xl font-bold text-primary-900" data-testid="navbar-logo">
               <Building2 className="h-6 w-6" />
               ValClassifieds
             </Link>
@@ -62,6 +63,7 @@ export function Navbar() {
                   icon={item.icon}
                   label={item.label}
                   exact={item.exact}
+                  testId={item.label === 'Post Ad' ? 'navbar-create-listing' : undefined}
                 />
               ))}
             </nav>
@@ -92,6 +94,7 @@ export function Navbar() {
                 <Link
                   to="/login"
                   className="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+                  data-testid="navbar-login-link"
                 >
                   Sign In
                 </Link>

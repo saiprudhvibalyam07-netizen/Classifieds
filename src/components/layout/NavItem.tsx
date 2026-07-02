@@ -9,9 +9,10 @@ type Props = {
   label: string
   exact?: boolean
   onClick?: () => void
+  testId?: string
 }
 
-export const NavItem = memo(function NavItem({ to, icon: Icon, label, exact, onClick }: Props) {
+export const NavItem = memo(function NavItem({ to, icon: Icon, label, exact, onClick, testId }: Props) {
   const { pathname } = useLocation()
   const isActive = exact ? pathname === to : pathname.startsWith(to)
 
@@ -19,6 +20,7 @@ export const NavItem = memo(function NavItem({ to, icon: Icon, label, exact, onC
     <Link
       to={to}
       onClick={onClick}
+      data-testid={testId}
       className={`relative flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-all duration-200 ${
         isActive
           ? 'text-primary-600'

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "688b843e-110e-44d6-afed-e757923ce728",
+    "conversation_id": "acbc2faf-c6d2-46a4-b8cf-9cc6678a3b9e",
+    "listing_id": "879ef63f-44c2-4e9d-8f63-333340904f3d",
+    "buyer_id": "70581985-3607-4627-b0c3-e6c9edbde741",
+    "amount": 17000,
+    "status": "pending",
+    "created_at": "2026-07-01T08:41:17.199774Z",
+    "updated_at": "2026-07-01T08:41:17.199777Z"
+  },
+  {
+    "id": "ddb46eb7-15c1-4c1a-bfee-0a775ec0196e",
+    "conversation_id": "bcbff924-e709-4244-8d2b-becad51f17b1",
+    "listing_id": "49aa42b0-26af-45f3-9d22-6bcb76ee1eee",
+    "buyer_id": "59f51284-9d84-46ad-9252-590af3852505",
+    "amount": 400000,
+    "status": "accepted",
+    "created_at": "2026-06-29T08:41:17.199783Z",
+    "updated_at": "2026-06-29T08:41:17.199786Z"
+  },
+  {
+    "id": "a990f34e-35ad-4693-bf50-159416648c0d",
+    "conversation_id": "7b49f347-6150-4cfb-8da2-d434926817f6",
+    "listing_id": "cbaa6c39-3b81-4342-85b7-793418e44969",
+    "buyer_id": "977cda1f-a4f3-46ef-951e-58ff21be04f4",
+    "amount": 26000,
+    "status": "pending",
+    "created_at": "2026-07-01T08:41:17.199792Z",
+    "updated_at": "2026-07-01T08:41:17.199795Z"
+  },
+  {
+    "id": "189f705d-53b0-400b-9f31-0e5fe47d7eb1",
+    "conversation_id": "372b1c8e-4524-470d-a7b8-bbeaf4694aa3",
+    "listing_id": "19d2d83e-608d-49ef-9727-344931dc5b33",
+    "buyer_id": "2c59529b-7467-4396-be89-c58b3ba7ae1d",
+    "amount": 68000,
+    "status": "accepted",
+    "created_at": "2026-07-01T08:41:17.199800Z",
+    "updated_at": "2026-07-01T08:41:17.199803Z"
+  }
+]

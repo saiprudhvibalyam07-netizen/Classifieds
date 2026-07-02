@@ -1,0 +1,56 @@
+[
+  {
+    "id": "c4e81a30-4fdd-4a83-ad8d-782f1edf3626",
+    "user_id": "70581985-3607-4627-b0c3-e6c9edbde741",
+    "type": "message",
+    "title": "New message from Rajesh Kumar",
+    "body": "Thanks for your interest! Let me know when you'd like to meet.",
+    "is_read": false,
+    "created_at": "2026-07-01T08:41:17.199815Z"
+  },
+  {
+    "id": "b48f676e-ca65-4289-8fda-c33bdc01e4b6",
+    "user_id": "59f51284-9d84-46ad-9252-590af3852505",
+    "type": "message",
+    "title": "New message from Rajesh Kumar",
+    "body": "The Swift is still available. Let's connect.",
+    "is_read": true,
+    "created_at": "2026-06-29T08:41:17.199822Z"
+  },
+  {
+    "id": "b2b4f319-4b12-4938-a298-416f223c4625",
+    "user_id": "977cda1f-a4f3-46ef-951e-58ff21be04f4",
+    "type": "message",
+    "title": "New message from Rajesh Kumar",
+    "body": "I can show you the flat tomorrow.",
+    "is_read": false,
+    "created_at": "2026-07-01T08:41:17.199828Z"
+  },
+  {
+    "id": "22fb4945-a813-4217-9fca-60171549cf6c",
+    "user_id": "5d224e32-de87-4d14-b620-ae86471c7e0f",
+    "type": "listing_approved",
+    "title": "Listing Approved",
+    "body": "Your listing 'Vintage Royal Enfield' has been approved.",
+    "is_read": true,
+    "created_at": "2026-06-30T08:41:17.199833Z"
+  },
+  {
+    "id": "3cf0be74-7e64-4632-8d14-35a07d143e9a",
+    "user_id": "2c59529b-7467-4396-be89-c58b3ba7ae1d",
+    "type": "offer_accepted",
+    "title": "Offer Accepted",
+    "body": "Your offer of Rs 68,000 on Samsung TV was accepted!",
+    "is_read": false,
+    "created_at": "2026-07-01T08:41:17.199839Z"
+  },
+  {
+    "id": "3e9ed48a-a400-43a4-bd92-faa6ea199a30",
+    "user_id": "f0fedbfd-119c-4d2f-95d8-8c6e0a6ff7de",
+    "type": "message",
+    "title": "New message from Priya Sharma",
+    "body": "I'd like to take a test ride this weekend.",
+    "is_read": false,
+    "created_at": "2026-07-01T08:41:17.199845Z"
+  }
+]

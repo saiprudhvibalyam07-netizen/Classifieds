@@ -1,0 +1,558 @@
+[
+  {
+    "id": "a480e7a6-796b-4453-a6d1-1f9cf9aed21b",
+    "email": "guest.smoke@valclassifieds.test",
+    "password": "",
+    "name": "Guest",
+    "role": "guest",
+    "email_verified": true,
+    "created_at": "2026-06-01T08:41:17.195448Z",
+    "dataset_tags": [
+      "smoke",
+      "uat",
+      "regression"
+    ],
+    "notes": "Used by SMK_003, SMK_015, UAT_001 — guest browsing without login"
+  },
+  {
+    "id": "70581985-3607-4627-b0c3-e6c9edbde741",
+    "email": "priya.sharma@valclassifieds.test",
+    "password": "Priya@2024!",
+    "name": "Priya Sharma",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-11T08:41:17.195479Z",
+    "dataset_tags": [
+      "smoke",
+      "regression",
+      "uat"
+    ],
+    "notes": "Buyer: SMK_002 login, UAT_002 search+filter, REG_AUTH_001, F_TC_0070 favorites"
+  },
+  {
+    "id": "5d224e32-de87-4d14-b620-ae86471c7e0f",
+    "email": "rajesh.kumar@valclassifieds.test",
+    "password": "Rajesh#99Kumar",
+    "name": "Rajesh Kumar",
+    "role": "seller",
+    "email_verified": true,
+    "created_at": "2026-06-06T08:41:17.195490Z",
+    "dataset_tags": [
+      "smoke",
+      "regression",
+      "uat"
+    ],
+    "notes": "Seller: SMK_014 create-listing, UAT_006, REG_LST_001, REG_LST_002, REG_LST_003"
+  },
+  {
+    "id": "faeb33c7-beaa-45a2-bdf8-cc035a6bb49b",
+    "email": "arun.pillai@valclassifieds.test",
+    "password": "Admin@2024Secure!",
+    "name": "Dr. Arun Pillai",
+    "role": "admin",
+    "email_verified": true,
+    "created_at": "2026-05-02T08:41:17.195497Z",
+    "dataset_tags": [
+      "smoke",
+      "regression",
+      "uat",
+      "security"
+    ],
+    "notes": "Admin: SMK_011, UAT_010, UAT_011, UAT_012, REG_ADM_001-004, AP_TC_0081-0088"
+  },
+  {
+    "id": "59f51284-9d84-46ad-9252-590af3852505",
+    "email": "arjun.mehta@valclassifieds.test",
+    "password": "Mehta@2024!",
+    "name": "Arjun Mehta",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-16T08:41:17.195504Z",
+    "dataset_tags": [
+      "regression"
+    ],
+    "notes": "REG_AUTH_004 session persistence, REG_FAV_001-002 favorites"
+  },
+  {
+    "id": "2b503112-5f86-49ce-bf18-79c6ebd0b4d0",
+    "email": "deepika.joshi@valclassifieds.test",
+    "password": "Joshi$2024!",
+    "name": "Deepika Joshi",
+    "role": "seller",
+    "email_verified": true,
+    "created_at": "2026-06-21T08:41:17.195510Z",
+    "dataset_tags": [
+      "regression"
+    ],
+    "notes": "REG_LST_002 edit-own, REG_LST_003 delete-own, REG_DSH_001 dashboard"
+  },
+  {
+    "id": "361b9bf2-b2b0-4ae9-9ac5-ac2df9a87d69",
+    "email": "no.listings@valclassifieds.test",
+    "password": "Empty@2024!",
+    "name": "Sneha Patel",
+    "role": "seller",
+    "email_verified": true,
+    "created_at": "2026-06-26T08:41:17.195516Z",
+    "dataset_tags": [
+      "regression"
+    ],
+    "notes": "REG_DSH_002 empty dashboard, D_TC_0077 zero-listings, PM_TC_0031 zero active"
+  },
+  {
+    "id": "34ec97c4-7984-46be-a8ff-6dae1e7ab4bf",
+    "email": "xss.user@valclassifieds.test",
+    "password": "Xss@2024!",
+    "name": "<script>alert('XSS')</script>Priya",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-23T08:41:17.195522Z",
+    "dataset_tags": [
+      "security"
+    ],
+    "notes": "SEC_002 XSS in registration name field; listing titles also carry XSS payloads"
+  },
+  {
+    "id": "81767fed-4e15-424d-8996-91c69ae6f86a",
+    "email": "sqli.user@valclassifieds.test",
+    "password": "Sqli@2024!",
+    "name": "Robert'); DROP TABLE users;--",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-24T08:41:17.195528Z",
+    "dataset_tags": [
+      "security"
+    ],
+    "notes": "SEC_001 SQL-injection attempt in login; name carries SQLi payload for registration test"
+  },
+  {
+    "id": "42278e26-c4d2-4814-b3cd-86b2b488d600",
+    "email": "special.chars@valclassifieds.test",
+    "password": "Spec!@l#2024",
+    "name": "Kavita!@#$%^&*()Reddy",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-25T08:41:17.195535Z",
+    "dataset_tags": [
+      "security"
+    ],
+    "notes": "SEC_016 special characters injection in all input fields"
+  },
+  {
+    "id": "977cda1f-a4f3-46ef-951e-58ff21be04f4",
+    "email": "rahul.verma@valclassifieds.test",
+    "password": "Verma@2024!",
+    "name": "Rahul Verma",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-17T08:41:17.195541Z",
+    "dataset_tags": [
+      "regression"
+    ],
+    "notes": "REG_ADM_004 admin-users-table visibility; general buyer regression data"
+  },
+  {
+    "id": "f0fedbfd-119c-4d2f-95d8-8c6e0a6ff7de",
+    "email": "manoj.tiwari@valclassifieds.test",
+    "password": "Tiwari@2024!",
+    "name": "Manoj Tiwari",
+    "role": "seller",
+    "email_verified": true,
+    "created_at": "2026-06-19T08:41:17.195547Z",
+    "dataset_tags": [
+      "regression"
+    ],
+    "notes": "REG_LST_004 cannot-edit-other, REG_MSG_001-006 messaging"
+  },
+  {
+    "id": "7efc283d-5dd2-49d4-a2eb-5ab1900779ca",
+    "email": "perf.buyer1@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Ananya Gupta",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195553Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing"
+  },
+  {
+    "id": "53a34a66-0ec3-44e1-aa51-6235bcb4e27f",
+    "email": "perf.buyer2@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Vikram Singh",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195558Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing"
+  },
+  {
+    "id": "d1af6835-264c-4716-9be3-660e29cadedf",
+    "email": "perf.seller1@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Amit Joshi",
+    "role": "seller",
+    "email_verified": true,
+    "created_at": "2026-06-27T08:41:17.195564Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_002 listing-page-load with 50 results"
+  },
+  {
+    "id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "email": "perf.seller2@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Neha Kapoor",
+    "role": "seller",
+    "email_verified": true,
+    "created_at": "2026-06-27T08:41:17.195570Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_008 conversation-list-load"
+  },
+  {
+    "id": "2ccda772-c48b-4a5e-9640-7647e17b8c59",
+    "email": "perf.buyer3@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Rohit Sharma",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195579Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 3"
+  },
+  {
+    "id": "7d6788ef-d900-4062-9122-50fb0b45e6f4",
+    "email": "perf.buyer4@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Pooja Patel",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195587Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 4"
+  },
+  {
+    "id": "224c4099-5334-4332-859c-f48fde470ef3",
+    "email": "perf.buyer5@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Sunil Verma",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195594Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 5"
+  },
+  {
+    "id": "92603488-e7b4-4cf0-b843-63e6a24d3176",
+    "email": "perf.buyer6@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Meera Nair",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195600Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 6"
+  },
+  {
+    "id": "c23fc80c-fd81-4981-807b-1180fe52ca4d",
+    "email": "perf.buyer7@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Kiran Desai",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195605Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 7"
+  },
+  {
+    "id": "544158d8-5dc5-40ff-a021-a8944e23c80a",
+    "email": "perf.buyer8@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Ravi Shankar",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195611Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 8"
+  },
+  {
+    "id": "7ba2225a-279b-40f4-a482-c03799309adc",
+    "email": "perf.buyer9@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Lakshmi Iyer",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195617Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 9"
+  },
+  {
+    "id": "023d8d62-f275-42ac-9893-eb2e39afdcbe",
+    "email": "perf.buyer10@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Dinesh Rao",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195623Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 10"
+  },
+  {
+    "id": "18b195a5-8493-4b36-875a-ee7158eafe9a",
+    "email": "perf.buyer11@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Asha Menon",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195629Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 11"
+  },
+  {
+    "id": "c0373b1a-fc1f-4d7c-9a5f-d02b60aad993",
+    "email": "perf.buyer12@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Prakash Joshi",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195634Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 12"
+  },
+  {
+    "id": "055d33a5-d6b7-4567-b054-7032d7b6cd8f",
+    "email": "perf.buyer13@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Swati Kulkarni",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195641Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 13"
+  },
+  {
+    "id": "9d449fa4-e2fb-49a2-9ad5-53cfb44ddf5a",
+    "email": "perf.buyer14@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Gaurav Shah",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195651Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 14"
+  },
+  {
+    "id": "5263a9a6-9fb1-477b-9b1a-1659a90a4e79",
+    "email": "perf.buyer15@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Nalini Krishna",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195657Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 15"
+  },
+  {
+    "id": "d08513b7-543b-457f-95cd-69a8a6359371",
+    "email": "perf.buyer16@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Vijay Anand",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195663Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 16"
+  },
+  {
+    "id": "514108f7-6569-4eb2-b3db-cf4ee8479c84",
+    "email": "perf.buyer17@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Shweta Mishra",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195670Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 17"
+  },
+  {
+    "id": "698b06a1-07e4-49b3-a66b-c01f83b77837",
+    "email": "perf.buyer18@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Alok Kapoor",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195676Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 18"
+  },
+  {
+    "id": "471a1da5-b378-4cdd-a358-f6332a9c680d",
+    "email": "perf.buyer19@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Deepa Srinivas",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195682Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 19"
+  },
+  {
+    "id": "692e414b-7d99-4437-afd5-9f2430eeb89c",
+    "email": "perf.buyer20@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Harish Nambiar",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195687Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 20"
+  },
+  {
+    "id": "de824b75-6fed-4a96-b40e-bbc89cb127db",
+    "email": "perf.buyer21@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Radhika Rao",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195693Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 21"
+  },
+  {
+    "id": "29e0a661-138e-4f03-8095-6aa0c2450cb8",
+    "email": "perf.buyer22@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Siddharth Verma",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195699Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 22"
+  },
+  {
+    "id": "f3ed2f2b-5f01-4ef7-beb4-f0a827db8a12",
+    "email": "perf.buyer23@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Tanvi Mehta",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195705Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 23"
+  },
+  {
+    "id": "e30a9146-58f4-4f97-af84-4d5f31fd2a98",
+    "email": "perf.buyer24@valclassifieds.test",
+    "password": "Perf@2024!",
+    "name": "Uday Kumar",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-28T08:41:17.195710Z",
+    "dataset_tags": [
+      "performance"
+    ],
+    "notes": "PERF_016 concurrent browsing — buyer 24"
+  },
+  {
+    "id": "2c59529b-7467-4396-be89-c58b3ba7ae1d",
+    "email": "uat.buyer@valclassifieds.test",
+    "password": "UatBuyer@2024!",
+    "name": "Divya Nair",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-29T08:41:17.195717Z",
+    "dataset_tags": [
+      "uat"
+    ],
+    "notes": "UAT_002 search+filter, UAT_003 details, UAT_004 chat, UAT_005 favorites"
+  },
+  {
+    "id": "2b42835b-6f57-4605-a62b-8848950f50b0",
+    "email": "uat.seller@valclassifieds.test",
+    "password": "UatSeller@2024!",
+    "name": "Vivek Deshmukh",
+    "role": "seller",
+    "email_verified": true,
+    "created_at": "2026-06-27T08:41:17.195723Z",
+    "dataset_tags": [
+      "uat"
+    ],
+    "notes": "UAT_006 create-listing, UAT_007 manage, UAT_008 respond, UAT_009 status"
+  },
+  {
+    "id": "a9ad3784-db21-4f8c-909a-81fac5fea195",
+    "email": "uat.admin@valclassifieds.test",
+    "password": "UatAdmin@2024!",
+    "name": "Dr. Meera Krishnan",
+    "role": "admin",
+    "email_verified": true,
+    "created_at": "2026-06-01T08:41:17.195729Z",
+    "dataset_tags": [
+      "uat"
+    ],
+    "notes": "UAT_010 moderate, UAT_011 manage, UAT_012 view users"
+  },
+  {
+    "id": "4d479760-394e-4040-93da-f97503d2304a",
+    "email": "reset.user@valclassifieds.test",
+    "password": "Reset@2024!",
+    "name": "Suresh Nair",
+    "role": "buyer",
+    "email_verified": true,
+    "created_at": "2026-06-21T08:41:17.195735Z",
+    "dataset_tags": [
+      "regression",
+      "security"
+    ],
+    "notes": "A_TC_0010 password-reset, A_TC_0013 forgot, A_TC_0015 reset-link, REG_AUTH_003"
+  }
+]

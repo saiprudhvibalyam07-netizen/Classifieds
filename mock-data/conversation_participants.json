@@ -1,0 +1,312 @@
+[
+  {
+    "conversation_id": "acbc2faf-c6d2-46a4-b8cf-9cc6678a3b9e",
+    "user_id": "70581985-3607-4627-b0c3-e6c9edbde741",
+    "joined_at": "2026-06-26T08:41:17.197851Z"
+  },
+  {
+    "conversation_id": "acbc2faf-c6d2-46a4-b8cf-9cc6678a3b9e",
+    "user_id": "5d224e32-de87-4d14-b620-ae86471c7e0f",
+    "joined_at": "2026-06-26T08:41:17.197854Z"
+  },
+  {
+    "conversation_id": "bcbff924-e709-4244-8d2b-becad51f17b1",
+    "user_id": "59f51284-9d84-46ad-9252-590af3852505",
+    "joined_at": "2026-06-26T08:41:17.197929Z"
+  },
+  {
+    "conversation_id": "bcbff924-e709-4244-8d2b-becad51f17b1",
+    "user_id": "5d224e32-de87-4d14-b620-ae86471c7e0f",
+    "joined_at": "2026-06-26T08:41:17.197932Z"
+  },
+  {
+    "conversation_id": "7b49f347-6150-4cfb-8da2-d434926817f6",
+    "user_id": "977cda1f-a4f3-46ef-951e-58ff21be04f4",
+    "joined_at": "2026-06-26T08:41:17.197948Z"
+  },
+  {
+    "conversation_id": "7b49f347-6150-4cfb-8da2-d434926817f6",
+    "user_id": "5d224e32-de87-4d14-b620-ae86471c7e0f",
+    "joined_at": "2026-06-26T08:41:17.197951Z"
+  },
+  {
+    "conversation_id": "5923ae56-1982-4f6b-8a72-1840dfee857f",
+    "user_id": "70581985-3607-4627-b0c3-e6c9edbde741",
+    "joined_at": "2026-06-26T08:41:17.197964Z"
+  },
+  {
+    "conversation_id": "5923ae56-1982-4f6b-8a72-1840dfee857f",
+    "user_id": "f0fedbfd-119c-4d2f-95d8-8c6e0a6ff7de",
+    "joined_at": "2026-06-26T08:41:17.197967Z"
+  },
+  {
+    "conversation_id": "372b1c8e-4524-470d-a7b8-bbeaf4694aa3",
+    "user_id": "2c59529b-7467-4396-be89-c58b3ba7ae1d",
+    "joined_at": "2026-06-26T08:41:17.197980Z"
+  },
+  {
+    "conversation_id": "372b1c8e-4524-470d-a7b8-bbeaf4694aa3",
+    "user_id": "2b42835b-6f57-4605-a62b-8848950f50b0",
+    "joined_at": "2026-06-26T08:41:17.197983Z"
+  },
+  {
+    "conversation_id": "42897578-1133-4c8f-9bc0-e6265b1a5960",
+    "user_id": "59f51284-9d84-46ad-9252-590af3852505",
+    "joined_at": "2026-06-26T08:41:17.197996Z"
+  },
+  {
+    "conversation_id": "42897578-1133-4c8f-9bc0-e6265b1a5960",
+    "user_id": "f0fedbfd-119c-4d2f-95d8-8c6e0a6ff7de",
+    "joined_at": "2026-06-26T08:41:17.197998Z"
+  },
+  {
+    "conversation_id": "e2ca70c8-07d5-4a3f-9561-a1c5e7891c6b",
+    "user_id": "7efc283d-5dd2-49d4-a2eb-5ab1900779ca",
+    "joined_at": "2026-06-28T08:41:17.198019Z"
+  },
+  {
+    "conversation_id": "e2ca70c8-07d5-4a3f-9561-a1c5e7891c6b",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198021Z"
+  },
+  {
+    "conversation_id": "9517da17-3641-4427-80e1-149cc970465d",
+    "user_id": "53a34a66-0ec3-44e1-aa51-6235bcb4e27f",
+    "joined_at": "2026-06-28T08:41:17.198037Z"
+  },
+  {
+    "conversation_id": "9517da17-3641-4427-80e1-149cc970465d",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198040Z"
+  },
+  {
+    "conversation_id": "a007e773-de47-49e2-8754-34b5d90a73b9",
+    "user_id": "2ccda772-c48b-4a5e-9640-7647e17b8c59",
+    "joined_at": "2026-06-28T08:41:17.198054Z"
+  },
+  {
+    "conversation_id": "a007e773-de47-49e2-8754-34b5d90a73b9",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198056Z"
+  },
+  {
+    "conversation_id": "ed5faa02-882a-49f6-9b68-bd581123aa92",
+    "user_id": "7d6788ef-d900-4062-9122-50fb0b45e6f4",
+    "joined_at": "2026-06-28T08:41:17.198070Z"
+  },
+  {
+    "conversation_id": "ed5faa02-882a-49f6-9b68-bd581123aa92",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198072Z"
+  },
+  {
+    "conversation_id": "2ee80899-789b-4fe5-a226-4976feeb7673",
+    "user_id": "224c4099-5334-4332-859c-f48fde470ef3",
+    "joined_at": "2026-06-28T08:41:17.198086Z"
+  },
+  {
+    "conversation_id": "2ee80899-789b-4fe5-a226-4976feeb7673",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198088Z"
+  },
+  {
+    "conversation_id": "da52ba19-edd6-4c9f-831b-4553295adddb",
+    "user_id": "92603488-e7b4-4cf0-b843-63e6a24d3176",
+    "joined_at": "2026-06-28T08:41:17.198101Z"
+  },
+  {
+    "conversation_id": "da52ba19-edd6-4c9f-831b-4553295adddb",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198103Z"
+  },
+  {
+    "conversation_id": "4fb334fa-3823-4446-9c6a-9e2e0453901e",
+    "user_id": "c23fc80c-fd81-4981-807b-1180fe52ca4d",
+    "joined_at": "2026-06-28T08:41:17.198116Z"
+  },
+  {
+    "conversation_id": "4fb334fa-3823-4446-9c6a-9e2e0453901e",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198119Z"
+  },
+  {
+    "conversation_id": "f0931a9a-2221-4ed4-9049-06b4e6e9827d",
+    "user_id": "544158d8-5dc5-40ff-a021-a8944e23c80a",
+    "joined_at": "2026-06-28T08:41:17.198132Z"
+  },
+  {
+    "conversation_id": "f0931a9a-2221-4ed4-9049-06b4e6e9827d",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198134Z"
+  },
+  {
+    "conversation_id": "8c3e9b71-239e-41e3-8f4c-5ae0fcaea1f0",
+    "user_id": "7ba2225a-279b-40f4-a482-c03799309adc",
+    "joined_at": "2026-06-28T08:41:17.198153Z"
+  },
+  {
+    "conversation_id": "8c3e9b71-239e-41e3-8f4c-5ae0fcaea1f0",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198156Z"
+  },
+  {
+    "conversation_id": "5f7399d1-d563-4730-b456-baca1b6a0aab",
+    "user_id": "023d8d62-f275-42ac-9893-eb2e39afdcbe",
+    "joined_at": "2026-06-28T08:41:17.198169Z"
+  },
+  {
+    "conversation_id": "5f7399d1-d563-4730-b456-baca1b6a0aab",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198171Z"
+  },
+  {
+    "conversation_id": "87ce0cfd-ec1a-4fe5-a819-d9dd0fc6b18a",
+    "user_id": "18b195a5-8493-4b36-875a-ee7158eafe9a",
+    "joined_at": "2026-06-28T08:41:17.198185Z"
+  },
+  {
+    "conversation_id": "87ce0cfd-ec1a-4fe5-a819-d9dd0fc6b18a",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198187Z"
+  },
+  {
+    "conversation_id": "6710bfd8-67b0-4ba4-8ee4-f11df13649ac",
+    "user_id": "c0373b1a-fc1f-4d7c-9a5f-d02b60aad993",
+    "joined_at": "2026-06-28T08:41:17.198201Z"
+  },
+  {
+    "conversation_id": "6710bfd8-67b0-4ba4-8ee4-f11df13649ac",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198203Z"
+  },
+  {
+    "conversation_id": "087d851f-e404-49cf-8601-d3f5750c2b38",
+    "user_id": "055d33a5-d6b7-4567-b054-7032d7b6cd8f",
+    "joined_at": "2026-06-28T08:41:17.198220Z"
+  },
+  {
+    "conversation_id": "087d851f-e404-49cf-8601-d3f5750c2b38",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198223Z"
+  },
+  {
+    "conversation_id": "1e299111-fc16-48bb-9e4f-db9443016a42",
+    "user_id": "9d449fa4-e2fb-49a2-9ad5-53cfb44ddf5a",
+    "joined_at": "2026-06-28T08:41:17.198236Z"
+  },
+  {
+    "conversation_id": "1e299111-fc16-48bb-9e4f-db9443016a42",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198239Z"
+  },
+  {
+    "conversation_id": "9c3ccd7e-4adb-45d9-a349-abad77941f8d",
+    "user_id": "5263a9a6-9fb1-477b-9b1a-1659a90a4e79",
+    "joined_at": "2026-06-28T08:41:17.198252Z"
+  },
+  {
+    "conversation_id": "9c3ccd7e-4adb-45d9-a349-abad77941f8d",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198254Z"
+  },
+  {
+    "conversation_id": "f6770531-ef8c-46c4-994b-4387ca9a3165",
+    "user_id": "d08513b7-543b-457f-95cd-69a8a6359371",
+    "joined_at": "2026-06-28T08:41:17.198267Z"
+  },
+  {
+    "conversation_id": "f6770531-ef8c-46c4-994b-4387ca9a3165",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198269Z"
+  },
+  {
+    "conversation_id": "a4b32fa6-c83c-45bd-9f04-8b6c6ee3adcb",
+    "user_id": "514108f7-6569-4eb2-b3db-cf4ee8479c84",
+    "joined_at": "2026-06-28T08:41:17.198282Z"
+  },
+  {
+    "conversation_id": "a4b32fa6-c83c-45bd-9f04-8b6c6ee3adcb",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198285Z"
+  },
+  {
+    "conversation_id": "fd8169d3-6886-4dda-9a36-552f7d62c8be",
+    "user_id": "698b06a1-07e4-49b3-a66b-c01f83b77837",
+    "joined_at": "2026-06-28T08:41:17.198298Z"
+  },
+  {
+    "conversation_id": "fd8169d3-6886-4dda-9a36-552f7d62c8be",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198300Z"
+  },
+  {
+    "conversation_id": "7b41287e-9b2f-43ad-9bac-aa1b6aa422d0",
+    "user_id": "471a1da5-b378-4cdd-a358-f6332a9c680d",
+    "joined_at": "2026-06-28T08:41:17.198313Z"
+  },
+  {
+    "conversation_id": "7b41287e-9b2f-43ad-9bac-aa1b6aa422d0",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198316Z"
+  },
+  {
+    "conversation_id": "e7da5fe4-e49b-4f60-90cd-c5f8e2a147ce",
+    "user_id": "692e414b-7d99-4437-afd5-9f2430eeb89c",
+    "joined_at": "2026-06-28T08:41:17.198329Z"
+  },
+  {
+    "conversation_id": "e7da5fe4-e49b-4f60-90cd-c5f8e2a147ce",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198331Z"
+  },
+  {
+    "conversation_id": "581a71b0-2591-4cf1-b361-8b50855219df",
+    "user_id": "de824b75-6fed-4a96-b40e-bbc89cb127db",
+    "joined_at": "2026-06-28T08:41:17.198344Z"
+  },
+  {
+    "conversation_id": "581a71b0-2591-4cf1-b361-8b50855219df",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198346Z"
+  },
+  {
+    "conversation_id": "da163f5b-2064-46cb-ab24-88fa5ba24005",
+    "user_id": "29e0a661-138e-4f03-8095-6aa0c2450cb8",
+    "joined_at": "2026-06-28T08:41:17.198359Z"
+  },
+  {
+    "conversation_id": "da163f5b-2064-46cb-ab24-88fa5ba24005",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198362Z"
+  },
+  {
+    "conversation_id": "f07dff74-6fa9-49e0-abef-f71c34c4acc2",
+    "user_id": "7efc283d-5dd2-49d4-a2eb-5ab1900779ca",
+    "joined_at": "2026-06-28T08:41:17.198375Z"
+  },
+  {
+    "conversation_id": "f07dff74-6fa9-49e0-abef-f71c34c4acc2",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198377Z"
+  },
+  {
+    "conversation_id": "cc8a438f-1c11-4760-b7a2-5f499ab548a2",
+    "user_id": "53a34a66-0ec3-44e1-aa51-6235bcb4e27f",
+    "joined_at": "2026-06-28T08:41:17.198390Z"
+  },
+  {
+    "conversation_id": "cc8a438f-1c11-4760-b7a2-5f499ab548a2",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198392Z"
+  },
+  {
+    "conversation_id": "fee6736d-6641-4ff1-93d4-f41d809c1ffb",
+    "user_id": "2ccda772-c48b-4a5e-9640-7647e17b8c59",
+    "joined_at": "2026-06-28T08:41:17.198405Z"
+  },
+  {
+    "conversation_id": "fee6736d-6641-4ff1-93d4-f41d809c1ffb",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "joined_at": "2026-06-28T08:41:17.198408Z"
+  }
+]

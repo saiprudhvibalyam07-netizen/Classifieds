@@ -48,6 +48,7 @@ export function Register() {
             id="name"
             type="text"
             required
+            data-testid="register-name-input"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
@@ -62,6 +63,7 @@ export function Register() {
             id="email"
             type="email"
             required
+            data-testid="register-email-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
@@ -77,6 +79,7 @@ export function Register() {
             type="password"
             required
             minLength={6}
+            data-testid="register-password-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
@@ -88,6 +91,7 @@ export function Register() {
         <button
           type="submit"
           disabled={loading}
+          data-testid="register-submit-button"
           className="w-full rounded-lg bg-primary-600 px-4 py-2 font-semibold text-white transition hover:bg-primary-700 disabled:opacity-50"
         >
           {loading ? 'Creating account...' : 'Create Account'}

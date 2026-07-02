@@ -52,7 +52,7 @@ export function MessageBubble({ message, isOwn, onEdit, onDelete }: Props) {
   const hasAttachments = message.message_attachments && message.message_attachments.length > 0
 
   return (
-    <div className={`group flex ${isOwn ? 'justify-end' : 'justify-start'} px-1`}>
+    <div className={`group flex ${isOwn ? 'justify-end' : 'justify-start'} px-1`} data-testid="chat-message-bubble">
       <div className={`max-w-[75%] ${isOwn ? 'items-end' : 'items-start'}`}>
         {isOwn && !editing && (
           <div className={`mb-1 flex gap-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100 ${isOwn ? 'justify-end' : 'justify-start'}`}>

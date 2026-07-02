@@ -83,7 +83,7 @@ export function ConversationSidebar({
 
       <ConversationSearch value={searchQuery} onChange={setSearchQuery} />
 
-      <div className="flex-1 overflow-y-auto" onScroll={handleScroll} role="list" aria-label="Conversations">
+      <div className="flex-1 overflow-y-auto" onScroll={handleScroll} role="list" aria-label="Conversations" data-testid="chat-conversation-list">
         {loading ? (
           <SidebarSkeleton />
         ) : error ? (

@@ -111,6 +111,7 @@ export function MessageComposer({
             disabled={uploading}
             className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600 disabled:opacity-50"
             aria-label="Attach file"
+            data-testid="chat-attachment-button"
           >
             <Paperclip className="h-5 w-5" />
           </button>
@@ -163,6 +164,7 @@ export function MessageComposer({
             rows={1}
             className="block w-full resize-none rounded-xl border border-gray-300 bg-white px-4 py-2.5 pr-12 text-sm text-gray-900 placeholder:text-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             aria-label="Message input"
+            data-testid="chat-message-input"
           />
           {text.length > MAX_LENGTH * 0.9 && (
             <span className={`absolute bottom-2 right-3 text-[10px] font-medium ${
@@ -173,12 +175,13 @@ export function MessageComposer({
           )}
         </div>
 
-        <button
-          type="submit"
-          disabled={!canSend}
-          className="mb-0.5 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary-600 text-white transition hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:hover:bg-primary-600"
-          aria-label="Send message"
-        >
+<button
+            type="submit"
+            disabled={!canSend}
+            className="mb-0.5 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary-600 text-white transition hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:hover:bg-primary-600"
+            aria-label="Send message"
+            data-testid="chat-send-button"
+          >
           {sending || uploading ? (
             <Loader className="h-5 w-5 animate-spin" />
           ) : (

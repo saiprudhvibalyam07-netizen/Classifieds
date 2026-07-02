@@ -40,6 +40,7 @@ export const ConversationItem = memo(function ConversationItem({
   return (
     <Link
       to={`/messages?conversation=${conversation.id}`}
+      data-testid="chat-conversation-item"
       className={`group relative flex items-center gap-3 px-4 py-3.5 transition-colors duration-150 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-inset ${
         isActive ? 'bg-primary-50' : ''
       } ${isUnread ? 'bg-blue-50/40' : ''}`}
@@ -89,7 +90,7 @@ export const ConversationItem = memo(function ConversationItem({
             {truncateMessage(conversation.last_message, 80) || 'No messages yet'}
           </p>
           {isUnread && (
-            <span className="flex-shrink-0 rounded-full bg-primary-600 px-1.5 py-0.5 text-[10px] font-bold text-white" aria-label="Unread messages" title="Unread messages" />
+            <span data-testid="chat-unread-badge" className="flex-shrink-0 rounded-full bg-primary-600 px-1.5 py-0.5 text-[10px] font-bold text-white" aria-label="Unread messages" title="Unread messages" />
           )}
         </div>
       </div>

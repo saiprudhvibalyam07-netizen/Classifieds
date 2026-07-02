@@ -1,0 +1,22 @@
+[
+  {
+    "id": "c4a7e0d4-0729-472a-8341-b3896da1d756",
+    "reported_by": "70581985-3607-4627-b0c3-e6c9edbde741",
+    "listing_id": "9a8aeb33-8840-4404-b111-9afe6a35afee",
+    "reason": "duplicate",
+    "description": "This listing appears to be a duplicate of another active listing.",
+    "status": "open",
+    "created_at": "2026-06-30T08:41:17.199855Z",
+    "resolved_at": null
+  },
+  {
+    "id": "4a313673-e530-4d9f-88b2-71256a4b75c6",
+    "reported_by": "59f51284-9d84-46ad-9252-590af3852505",
+    "listing_id": "b43f5331-1f66-42bc-a758-aee43a4f1d04",
+    "reason": "inappropriate",
+    "description": "Listing title contains code that renders as script.",
+    "status": "open",
+    "created_at": "2026-06-29T08:41:17.199862Z",
+    "resolved_at": null
+  }
+]

@@ -166,6 +166,7 @@ export function Listings() {
             value={query}
             onChange={(e) => setParam('q', e.target.value)}
             placeholder="Search listings..."
+            data-testid="listings-search-input"
             className="w-full rounded-lg border border-gray-300 py-2.5 pl-10 pr-4 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             aria-label="Search listings"
           />
@@ -193,6 +194,7 @@ export function Listings() {
                 id="filter-category"
                 value={categorySlug}
                 onChange={(e) => setParam('category', e.target.value)}
+                data-testid="listings-category-select"
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               >
                 <option value="">All Categories</option>
@@ -208,6 +210,7 @@ export function Listings() {
                 id="filter-location"
                 value={location}
                 onChange={(e) => setParam('location', e.target.value)}
+                data-testid="listings-city-select"
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               >
                 <option value="">All Locations</option>
@@ -240,6 +243,7 @@ export function Listings() {
                 value={minPrice}
                 onChange={(e) => setParam('minPrice', e.target.value)}
                 placeholder="$0"
+                data-testid="listings-price-min"
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               />
             </div>
@@ -253,6 +257,7 @@ export function Listings() {
                 value={maxPrice}
                 onChange={(e) => setParam('maxPrice', e.target.value)}
                 placeholder="$99999"
+                data-testid="listings-price-max"
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               />
             </div>
@@ -277,23 +282,23 @@ export function Listings() {
 
       {/* Listings grid */}
       {loading ? (
-        <div className="flex justify-center py-20">
+        <div className="flex justify-center py-20" data-testid="listings-loading-skeleton">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary-600 border-t-transparent" />
         </div>
       ) : error ? (
         <p className="py-10 text-center text-sm text-red-500">{error}</p>
       ) : listings.length === 0 ? (
-        <p className="py-10 text-center text-sm text-gray-500">
+        <p className="py-10 text-center text-sm text-gray-500" data-testid="listings-empty-state">
           No listings match your criteria. Try adjusting your filters.
         </p>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {listings.map((listing) => (
-            <div key={listing.id} className="group relative flex flex-col rounded-xl bg-white shadow-sm transition hover:shadow-md">
+            <div key={listing.id} className="group relative flex flex-col rounded-xl bg-white shadow-sm transition hover:shadow-md" data-testid="listing-card">
               <Link to={`/listings/${listing.id}`} className="flex flex-1 flex-col">
                 <div className="aspect-[4/3] overflow-hidden rounded-t-xl bg-gray-100">
                   {listing.images && listing.images[0] ? (
-                    <img src={listing.images[0].url} alt={listing.title} className="h-full w-full object-cover transition group-hover:scale-105" loading="lazy" />
+                    <img src={listing.images[0].url} alt={listing.title} data-testid="listing-card-image" className="h-full w-full object-cover transition group-hover:scale-105" loading="lazy" />
                   ) : (
                     <div className="flex h-full items-center justify-center text-gray-400">No image</div>
                   )}
@@ -302,15 +307,15 @@ export function Listings() {
                   {listing.is_featured && (
                     <span className="mb-2 inline-block self-start rounded bg-yellow-100 px-2 py-0.5 text-xs font-semibold text-yellow-800">Featured</span>
                   )}
-                  <h3 className="line-clamp-2 font-semibold text-gray-900 group-hover:text-primary-600">
+                  <h3 className="line-clamp-2 font-semibold text-gray-900 group-hover:text-primary-600" data-testid="listing-card-title">
                     {listing.title}
                   </h3>
-                  <p className="mt-1 text-lg font-bold text-primary-700">
+                  <p className="mt-1 text-lg font-bold text-primary-700" data-testid="listing-card-price">
                     ${listing.price.toLocaleString()}
                   </p>
                   <div className="mt-auto pt-2">
                     {listing.location && (
-                      <p className="text-sm text-gray-500">{listing.location}</p>
+                      <p className="text-sm text-gray-500" data-testid="listing-card-location">{listing.location}</p>
                     )}
                     <p className="text-xs text-gray-400">
                       {formatTimeAgo(listing.created_at)}
@@ -334,7 +339,7 @@ export function Listings() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <nav className="mt-8 flex justify-center gap-2" aria-label="Pagination">
+        <nav className="mt-8 flex justify-center gap-2" aria-label="Pagination" data-testid="listings-pagination">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <button
               key={p}

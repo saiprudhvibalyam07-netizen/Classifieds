@@ -16,6 +16,7 @@ export function ConversationSearch({ value, onChange }: Props) {
         placeholder="Search conversations..."
         className="w-full rounded-lg border-0 bg-gray-100 py-2 pl-9 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
         aria-label="Search conversations"
+        data-testid="chat-conversation-search"
       />
     </div>
   )

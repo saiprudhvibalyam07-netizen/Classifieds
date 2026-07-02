@@ -1,6 +1,6 @@
 export function SidebarSkeleton() {
   return (
-    <div className="space-y-1 p-4">
+    <div className="space-y-1 p-4" data-testid="chat-loading-skeleton">
       {[1, 2, 3, 4, 5].map((n) => (
         <div key={n} className="flex animate-pulse items-center gap-3 rounded-lg p-3">
           <div className="h-12 w-12 flex-shrink-0 rounded-full bg-gray-200" />
@@ -17,7 +17,7 @@ export function SidebarSkeleton() {
 
 export function MessagesSkeleton() {
   return (
-    <div className="space-y-4 px-6 py-4">
+    <div className="space-y-4 px-6 py-4" data-testid="chat-loading-skeleton">
       {[1, 2, 3, 4].map((n) => {
         const isRight = n % 2 === 0
         return (

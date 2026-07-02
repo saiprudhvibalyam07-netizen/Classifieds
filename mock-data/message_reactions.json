@@ -1,0 +1,37 @@
+[
+  {
+    "id": "73b9a3ba-0942-4d18-b7be-d9f3fca201ef",
+    "message_id": "a6e4c2d4-c6dc-4c59-94ac-098f52a3b5eb",
+    "user_id": "70581985-3607-4627-b0c3-e6c9edbde741",
+    "emoji": "👍",
+    "created_at": "2026-07-01T07:41:17.199731Z"
+  },
+  {
+    "id": "988c3264-9007-436d-b69d-bcdf7e76af95",
+    "message_id": "62cdf55d-0cf3-438c-bf88-e6cc00861aa7",
+    "user_id": "75b6c34d-9af4-456c-b820-bae1758e5399",
+    "emoji": "❤️",
+    "created_at": "2026-07-01T07:41:17.199741Z"
+  },
+  {
+    "id": "2ae45135-f5ea-43cf-93f9-53bed628ab8c",
+    "message_id": "88c28a9a-c80f-4eaf-82df-83064ae027e8",
+    "user_id": "70581985-3607-4627-b0c3-e6c9edbde741",
+    "emoji": "😂",
+    "created_at": "2026-07-01T07:41:17.199747Z"
+  },
+  {
+    "id": "67ca3731-7c2b-46a2-9fcb-b4872a099dba",
+    "message_id": "3a68b137-71ac-4d35-b4ee-4fca3cd0139e",
+    "user_id": "1e587d9e-2dbe-4e51-9e97-51b2bd75128b",
+    "emoji": "😮",
+    "created_at": "2026-07-01T07:41:17.199756Z"
+  },
+  {
+    "id": "fbfb858a-9771-4fec-a653-a4e4406b720e",
+    "message_id": "52b47ccf-70f2-4ae5-9e80-0912224cd2e9",
+    "user_id": "70581985-3607-4627-b0c3-e6c9edbde741",
+    "emoji": "🎉",
+    "created_at": "2026-07-01T07:41:17.199762Z"
+  }
+]

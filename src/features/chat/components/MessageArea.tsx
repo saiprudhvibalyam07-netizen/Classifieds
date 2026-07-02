@@ -102,6 +102,7 @@ export function MessageArea({
       ref={containerRef}
       className="flex-1 overflow-y-auto bg-gray-50"
       onScroll={handleScroll}
+      data-testid="chat-message-area"
     >
       {loadingOlder && (
         <div className="flex justify-center py-3">

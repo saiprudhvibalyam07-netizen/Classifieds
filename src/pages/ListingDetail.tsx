@@ -78,7 +78,9 @@ export function ListingDetail() {
 
       <div className="grid gap-8 lg:grid-cols-5">
         <div className="space-y-8 lg:col-span-3">
-          <ImageGallery images={listing.images} title={listing.title} />
+          <div data-testid="listing-detail-gallery">
+            <ImageGallery images={listing.images} title={listing.title} />
+          </div>
 
           {listing.latitude && listing.longitude && (
             <ListingMap
@@ -98,25 +100,26 @@ export function ListingDetail() {
                   Featured
                 </span>
               )}
-              <h1 className="text-2xl font-bold">{listing.title}</h1>
+              <h1 className="text-2xl font-bold" data-testid="listing-detail-title">{listing.title}</h1>
             </div>
             {user && (
               <button
                 onClick={() => toggle(listing.id)}
                 className="rounded-full p-2 transition hover:bg-gray-100"
+                data-testid="listing-favorite-button"
               >
                 <Heart className={`h-6 w-6 ${favoriteIds.has(listing.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
               </button>
             )}
           </div>
 
-          <p className="mt-2 text-3xl font-bold text-primary-700">
+          <p className="mt-2 text-3xl font-bold text-primary-700" data-testid="listing-detail-price">
             ${listing.price.toLocaleString()}
           </p>
 
           <div className="mt-4 space-y-2 text-sm text-gray-600">
-            {listing.city && (
-              <div className="flex items-center gap-2">
+                {listing.city && (
+              <div className="flex items-center gap-2" data-testid="listing-detail-location">
                 <MapPin className="h-4 w-4" />
                 {listing.city}{listing.state ? `, ${listing.state}` : ''}
               </div>
@@ -136,7 +139,7 @@ export function ListingDetail() {
               </p>
             )}
             {listing.category && (
-              <p>
+              <p data-testid="listing-detail-category">
                 <span className="font-medium">Category:</span> {listing.category.name}
               </p>
             )}
@@ -144,9 +147,9 @@ export function ListingDetail() {
 
           <div className="mt-6">
             <h2 className="mb-2 font-semibold">Description</h2>
-            <p className="whitespace-pre-wrap text-gray-700">
-              {listing.description}
-            </p>
+              <p className="whitespace-pre-wrap text-gray-700" data-testid="listing-detail-description">
+                {listing.description}
+              </p>
           </div>
 
           {listing.profile && (
@@ -172,6 +175,7 @@ export function ListingDetail() {
             <Link
               to={`/messages?new=true&listing=${listing.id}&seller=${listing.profile.id}`}
               className="mt-4 flex items-center justify-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-primary-700"
+              data-testid="listing-contact-seller"
             >
               <MessageSquare className="h-4 w-4" />
               Chat with Seller
@@ -189,6 +193,7 @@ export function ListingDetail() {
               <Link
                 to={`/edit/${listing.id}`}
                 className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
+                data-testid="listing-edit-button"
               >
                 Edit Listing
               </Link>

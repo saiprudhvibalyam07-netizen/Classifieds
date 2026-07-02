@@ -49,6 +49,7 @@ export function ProfileDropdown({ profile, onSignOut }: Props) {
         aria-haspopup="true"
         aria-expanded={open}
         aria-label="User menu"
+        data-testid="navbar-user-menu"
       >
         {profile?.avatar_url ? (
           <img
@@ -93,6 +94,7 @@ export function ProfileDropdown({ profile, onSignOut }: Props) {
             onClick={() => { onSignOut(); close() }}
             className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-red-600 transition-colors duration-150 hover:bg-red-50 focus-visible:outline-none focus-visible:bg-red-50"
             role="menuitem"
+            data-testid="navbar-logout-button"
           >
             <LogOut className="h-4 w-4" />
             Logout

@@ -8,7 +8,7 @@ type Props = {
 
 export function EmptyState({ icon, title, description }: Props) {
   return (
-    <div className="flex h-full flex-col items-center justify-center px-6 py-16 text-center">
+    <div className="flex h-full flex-col items-center justify-center px-6 py-16 text-center" data-testid="chat-empty-state">
       <div className="mb-4 text-gray-300">
         {icon ?? <MessageSquare className="h-12 w-12" />}
       </div>

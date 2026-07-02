@@ -1,0 +1,50 @@
+[
+  {
+    "id": "cat-vehicles",
+    "slug": "vehicles",
+    "name": "Vehicles",
+    "icon": "car",
+    "display_order": 1,
+    "description": "Cars, bikes, scooters, and other vehicles"
+  },
+  {
+    "id": "cat-housing",
+    "slug": "housing",
+    "name": "Housing",
+    "icon": "building",
+    "display_order": 2,
+    "description": "Apartments, houses, rooms for rent or sale"
+  },
+  {
+    "id": "cat-jobs",
+    "slug": "jobs",
+    "name": "Jobs",
+    "icon": "briefcase",
+    "display_order": 3,
+    "description": "Job openings and employment opportunities"
+  },
+  {
+    "id": "cat-services",
+    "slug": "services",
+    "name": "Services",
+    "icon": "tools",
+    "display_order": 4,
+    "description": "Professional and personal services"
+  },
+  {
+    "id": "cat-items",
+    "slug": "items-for-sale",
+    "name": "Items for Sale",
+    "icon": "package",
+    "display_order": 5,
+    "description": "New and used items for sale"
+  },
+  {
+    "id": "cat-community",
+    "slug": "community",
+    "name": "Community",
+    "icon": "users",
+    "display_order": 6,
+    "description": "Community events, activities, and groups"
+  }
+]

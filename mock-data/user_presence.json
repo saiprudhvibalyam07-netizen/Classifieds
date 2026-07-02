@@ -1,0 +1,100 @@
+[
+  {
+    "id": "d5f16c7e-4ecd-4f4f-b1cf-dc602f551c53",
+    "user_id": "70581985-3607-4627-b0c3-e6c9edbde741",
+    "status": "online",
+    "last_seen_at": "2026-07-01T07:41:17.199873Z",
+    "is_online": true
+  },
+  {
+    "id": "23dd4fd4-0327-48fd-bf1b-a02259914408",
+    "user_id": "5d224e32-de87-4d14-b620-ae86471c7e0f",
+    "status": "online",
+    "last_seen_at": "2026-07-01T07:41:17.199879Z",
+    "is_online": true
+  },
+  {
+    "id": "47b2a78a-af74-4d6c-8bf9-e3455d520e4e",
+    "user_id": "faeb33c7-beaa-45a2-bdf8-cc035a6bb49b",
+    "status": "online",
+    "last_seen_at": "2026-07-01T07:41:17.199884Z",
+    "is_online": true
+  },
+  {
+    "id": "e496990b-f09e-483a-894d-2b2e9efb8937",
+    "user_id": "42c1b507-c16a-4a48-b70a-e29595889929",
+    "status": "online",
+    "last_seen_at": "2026-07-01T07:41:17.199890Z",
+    "is_online": true
+  },
+  {
+    "id": "2a07a97f-ce79-4fb8-a37c-ad144cfde768",
+    "user_id": "7efc283d-5dd2-49d4-a2eb-5ab1900779ca",
+    "status": "online",
+    "last_seen_at": "2026-07-01T07:41:17.199895Z",
+    "is_online": true
+  },
+  {
+    "id": "6ad6c88c-bb06-4115-b528-627e6ceace27",
+    "user_id": "53a34a66-0ec3-44e1-aa51-6235bcb4e27f",
+    "status": "online",
+    "last_seen_at": "2026-07-01T07:41:17.199900Z",
+    "is_online": true
+  },
+  {
+    "id": "2d6bd4a7-cd03-4294-9be4-635de33588de",
+    "user_id": "2c59529b-7467-4396-be89-c58b3ba7ae1d",
+    "status": "online",
+    "last_seen_at": "2026-07-01T07:41:17.199906Z",
+    "is_online": true
+  },
+  {
+    "id": "8cf31e8b-dd8c-4620-9304-52bc3e60d8e9",
+    "user_id": "2b42835b-6f57-4605-a62b-8848950f50b0",
+    "status": "online",
+    "last_seen_at": "2026-07-01T07:41:17.199911Z",
+    "is_online": true
+  },
+  {
+    "id": "90743b10-f781-48d5-a2d7-0c76d3a0ecf5",
+    "user_id": "59f51284-9d84-46ad-9252-590af3852505",
+    "status": "offline",
+    "last_seen_at": "2026-06-30T08:41:17.199917Z",
+    "is_online": false
+  },
+  {
+    "id": "2877bed6-671d-4948-bc92-c39132d99c16",
+    "user_id": "2b503112-5f86-49ce-bf18-79c6ebd0b4d0",
+    "status": "offline",
+    "last_seen_at": "2026-06-30T08:41:17.199925Z",
+    "is_online": false
+  },
+  {
+    "id": "1d16492a-71e0-49f0-8327-39261c3c844d",
+    "user_id": "f0fedbfd-119c-4d2f-95d8-8c6e0a6ff7de",
+    "status": "offline",
+    "last_seen_at": "2026-06-30T08:41:17.199931Z",
+    "is_online": false
+  },
+  {
+    "id": "a7fd3137-fae0-4844-98d5-e8e74def4217",
+    "user_id": "977cda1f-a4f3-46ef-951e-58ff21be04f4",
+    "status": "offline",
+    "last_seen_at": "2026-06-30T08:41:17.199936Z",
+    "is_online": false
+  },
+  {
+    "id": "c2bfebcf-a61a-4d88-b243-46ac350af246",
+    "user_id": "361b9bf2-b2b0-4ae9-9ac5-ac2df9a87d69",
+    "status": "offline",
+    "last_seen_at": "2026-06-30T08:41:17.199941Z",
+    "is_online": false
+  },
+  {
+    "id": "889187e4-f020-46dd-aaf0-1da2df11c840",
+    "user_id": "4d479760-394e-4040-93da-f97503d2304a",
+    "status": "offline",
+    "last_seen_at": "2026-06-30T08:41:17.199947Z",
+    "is_online": false
+  }
+]
