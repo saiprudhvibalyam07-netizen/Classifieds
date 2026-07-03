@@ -1,168 +1,307 @@
-import { useState, useRef, useEffect } from 'react'
-import { Pencil, Trash2, X, Check, File } from 'lucide-react'
-import type { ChatMessage } from '../types'
-import { formatMessageTime } from '../utils/messageUtils'
+import { useState, useCallback } from 'react'
+import { CheckCheck, Pencil, Trash2, Copy, Reply, MoreHorizontal, X } from 'lucide-react'
+import type { ChatMessage, MessageReactionGroup } from '../types'
+import { ImageBubble } from './ImageBubble'
+import { VideoBubble } from './VideoBubble'
+import { DocumentBubble } from './DocumentBubble'
+import { VoiceNoteBubble } from './VoiceNoteBubble'
+import { ReactionPicker } from './ReactionPicker'
+import { MessageStatus } from './MessageStatus'
+
+const REACTION_ORDER = ['👍', '❤️', '😂', '😮', '😢', '👎']
+
+function formatMessageTime(dateString: string): string {
+  return new Date(dateString).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+}
+
+function groupReactions(msg: ChatMessage, currentUserId: string): MessageReactionGroup[] {
+  if (!msg.reactions || msg.reactions.length === 0) return []
+  const counts = new Map<string, { count: number; hasReacted: boolean }>()
+  for (const r of msg.reactions) {
+    const existing = counts.get(r.emoji) || { count: 0, hasReacted: false }
+    existing.count++
+    if (r.profile_id === currentUserId) existing.hasReacted = true
+    counts.set(r.emoji, existing)
+  }
+  return REACTION_ORDER
+    .filter((e) => counts.has(e))
+    .map((emoji) => ({ emoji, ...counts.get(emoji)! }))
+}
+
+function isImageType(t: string | undefined | null): boolean {
+  return t === 'image' || t === 'jpg' || t === 'jpeg' || t === 'png' || t === 'webp' || t === 'gif'
+}
+
+function isVideoType(t: string | undefined | null): boolean {
+  return t === 'video' || t === 'mp4' || t === 'mov' || t === 'avi' || t === 'mkv'
+}
+
+function isVoiceType(t: string | undefined | null): boolean {
+  return t === 'voice' || t === 'audio'
+}
+
+function isDocumentType(t: string | undefined | null): boolean {
+  return t === 'document' || t === 'file'
+}
 
 type Props = {
   message: ChatMessage
   isOwn: boolean
-  onEdit: (id: string, newText: string) => Promise<boolean>
-  onDelete: (id: string) => Promise<boolean>
+  currentUserId: string
+  onReply?: (messageId: string, senderName: string, content: string) => void
+  onEdit?: (messageId: string, currentContent: string) => void
+  onDelete?: (messageId: string, forEveryone?: boolean) => void
+  onCopy?: (content: string) => void
+  onReact?: (messageId: string, emoji: string) => void
+  onRemoveReaction?: (messageId: string, emoji: string) => void
 }
 
-export function MessageBubble({ message, isOwn, onEdit, onDelete }: Props) {
+export function MessageBubble({ message, isOwn, currentUserId, onReply, onEdit, onDelete, onCopy, onReact, onRemoveReaction }: Props) {
+  const [menuOpen, setMenuOpen] = useState(false)
   const [editing, setEditing] = useState(false)
-  const [editText, setEditText] = useState(message.message)
-  const [saving, setSaving] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [editText, setEditText] = useState(message.message || message.content || '')
+  const editInputRef = useCallback((node: HTMLInputElement | null) => {
+    if (node) node.focus()
+  }, [])
 
-  useEffect(() => {
-    if (editing) inputRef.current?.focus()
-  }, [editing])
+  const isDeleted = message.is_deleted
+  const isEdited = message.is_edited
+  const hasAttachments = message.message_attachments && message.message_attachments.length > 0
+  const reactions = groupReactions(message, currentUserId)
+  const textContent = message.message || message.content || ''
 
-  async function handleSave() {
-    if (!editText.trim() || editText.trim() === message.message) {
-      setEditing(false)
-      return
+  function handleEditSubmit() {
+    if (editText.trim() && editText.trim() !== (message.message || message.content)) {
+      onEdit?.(message.id, editText.trim())
     }
-    setSaving(true)
-    const ok = await onEdit(message.id, editText)
-    setSaving(false)
-    if (ok) setEditing(false)
-  }
-
-  function handleCancel() {
-    setEditText(message.message)
     setEditing(false)
   }
 
-  function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSave()
+  function handleCopy() {
+    onCopy?.(textContent)
+    setMenuOpen(false)
+  }
+
+  function handleReply() {
+    const senderName = message.profile?.full_name || 'Unknown'
+    onReply?.(message.id, senderName, textContent)
+    setMenuOpen(false)
+  }
+
+  function handleReact(emoji: string) {
+    const existing = message.reactions?.find((r) => r.emoji === emoji && r.profile_id === currentUserId)
+    if (existing) {
+      onRemoveReaction?.(message.id, emoji)
+    } else {
+      onReact?.(message.id, emoji)
     }
-    if (e.key === 'Escape') handleCancel()
   }
 
-  async function handleDelete() {
-    if (!window.confirm('Delete this message?')) return
-    await onDelete(message.id)
+  if (isDeleted) {
+    return (
+      <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
+        <div className="max-w-[75%] rounded-2xl bg-gray-100 px-4 py-2.5">
+          <p className="text-xs italic text-gray-400">This message was deleted</p>
+        </div>
+      </div>
+    )
   }
-
-  const hasAttachments = message.message_attachments && message.message_attachments.length > 0
 
   return (
-    <div className={`group flex ${isOwn ? 'justify-end' : 'justify-start'} px-1`} data-testid="chat-message-bubble">
-      <div className={`max-w-[75%] ${isOwn ? 'items-end' : 'items-start'}`}>
-        {isOwn && !editing && (
-          <div className={`mb-1 flex gap-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100 ${isOwn ? 'justify-end' : 'justify-start'}`}>
-            <button
-              onClick={() => { setEditText(message.message); setEditing(true) }}
-              className="rounded p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
-              aria-label="Edit message"
-            >
-              <Pencil className="h-3.5 w-3.5" />
-            </button>
-            <button
-              onClick={handleDelete}
-              className="rounded p-1 text-gray-400 transition hover:bg-red-50 hover:text-red-500"
-              aria-label="Delete message"
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        )}
-
+    <div className={`group flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
+      <div className={`max-w-[75%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
         <div
-          className={`rounded-2xl px-4 py-2.5 shadow-sm ${
+          className={`relative rounded-2xl px-4 py-2 ${
             isOwn
-              ? 'rounded-br-sm bg-primary-600 text-white'
-              : 'rounded-bl-sm bg-white text-gray-900 ring-1 ring-gray-200'
+              ? 'bg-primary-600 text-white rounded-br-md'
+              : 'bg-white text-gray-900 rounded-bl-md shadow-sm'
           }`}
+          data-testid="chat-message-bubble"
         >
+          {message.reply_to && message.reply_message && (
+            <div className={`mb-1.5 rounded-lg border-l-4 px-2 py-1 text-xs ${
+              isOwn ? 'border-primary-300 bg-primary-500/30' : 'border-gray-300 bg-gray-50'
+            }`}>
+              <p className={`font-medium ${isOwn ? 'text-primary-100' : 'text-gray-600'}`}>
+                {message.reply_message.profile?.full_name || 'Unknown'}
+              </p>
+              <p className={`truncate ${isOwn ? 'text-primary-200' : 'text-gray-500'}`}>
+                {message.reply_message.message || message.reply_message.content || ''}
+              </p>
+            </div>
+          )}
+
+          {hasAttachments && message.message_attachments.map((att) => {
+            const attType = att.type || ''
+            if (isImageType(attType)) {
+              return (
+                <ImageBubble
+                  key={att.id}
+                  src={att.public_url}
+                  alt={att.filename}
+                  width={att.width}
+                  height={att.height}
+                />
+              )
+            }
+            if (isVideoType(attType)) {
+              return (
+                <VideoBubble
+                  key={att.id}
+                  src={att.public_url}
+                  filename={att.filename}
+                  mimeType={att.mime_type}
+                  thumbnailUrl={att.thumbnail_url}
+                />
+              )
+            }
+            if (isVoiceType(attType)) {
+              return (
+                <VoiceNoteBubble
+                  key={att.id}
+                  src={att.public_url}
+                  duration={null}
+                />
+              )
+            }
+            if (isDocumentType(attType)) {
+              return (
+                <DocumentBubble
+                  key={att.id}
+                  filename={att.filename}
+                  mimeType={att.mime_type}
+                  sizeBytes={att.size_bytes}
+                  url={att.public_url}
+                />
+              )
+            }
+            return null
+          })}
+
           {editing ? (
-            <div className="flex items-center gap-2">
+            <div className="flex gap-1">
               <input
-                ref={inputRef}
+                ref={editInputRef}
                 type="text"
                 value={editText}
                 onChange={(e) => setEditText(e.target.value)}
-                onKeyDown={handleKeyDown}
-                maxLength={1000}
-                className="flex-1 rounded-lg border border-primary-300 bg-white px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                onKeyDown={(e) => { if (e.key === 'Enter') handleEditSubmit(); if (e.key === 'Escape') setEditing(false) }}
+                className={`flex-1 rounded border bg-transparent px-2 py-1 text-sm outline-none ${
+                  isOwn ? 'border-primary-400 text-white placeholder:text-primary-200' : 'border-gray-300'
+                }`}
+                aria-label="Edit message"
               />
-              <button
-                onClick={handleSave}
-                disabled={saving || !editText.trim()}
-                className="rounded p-1 text-primary-200 transition hover:text-white disabled:opacity-40"
-                aria-label="Save edit"
-              >
-                <Check className="h-4 w-4" />
+              <button onClick={handleEditSubmit} className="self-start rounded p-1 hover:bg-black/10" aria-label="Save edit">
+                <CheckCheck className="h-3.5 w-3.5" />
               </button>
-              <button
-                onClick={handleCancel}
-                className="rounded p-1 text-primary-200 transition hover:text-white"
-                aria-label="Cancel edit"
-              >
-                <X className="h-4 w-4" />
+              <button onClick={() => setEditing(false)} className="self-start rounded p-1 hover:bg-black/10" aria-label="Cancel edit">
+                <X className="h-3.5 w-3.5" />
               </button>
             </div>
           ) : (
-            <>
-              {message.message && (
-                <p className="whitespace-pre-wrap break-words text-sm leading-relaxed">
-                  {message.message}
-                </p>
-              )}
+            textContent && (
+              <p className="text-sm whitespace-pre-wrap break-words">{textContent}</p>
+            )
+          )}
 
-              {hasAttachments && (
-                <div className={message.message ? 'mt-2 space-y-2' : 'space-y-2'}>
-                  {message.message_attachments.map((att, i) =>
-                    att.type === 'image' ? (
-                      <a
-                        key={i}
-                        href={att.public_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block overflow-hidden rounded-lg"
-                      >
-                        <img
-                          src={att.public_url}
-                          alt={att.filename}
-                          className="max-h-60 w-full rounded-lg object-cover transition hover:opacity-90"
-                        />
-                      </a>
-                    ) : (
-                      <a
-                        key={i}
-                        href={att.public_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`flex items-center gap-2 rounded-lg p-2.5 text-xs transition ${
-                          isOwn
-                            ? 'bg-primary-700 text-primary-100 hover:bg-primary-800'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
-                      >
-                        <File className="h-4 w-4 flex-shrink-0" />
-                        <span className="truncate">{att.filename}</span>
-                      </a>
-                    )
-                  )}
-                </div>
-              )}
+          <div className={`mt-1 flex items-center justify-end gap-1 ${isOwn ? '' : 'flex-row-reverse'}`}>
+            <span className={`text-[10px] ${isOwn ? 'text-primary-200' : 'text-gray-400'}`}>
+              {formatMessageTime(message.created_at)}
+            </span>
+            {isEdited && (
+              <span className={`text-[10px] ${isOwn ? 'text-primary-200' : 'text-gray-400'}`}>
+                edited
+              </span>
+            )}
+            {isOwn && <MessageStatus status={message.status || 'read'} />}
+          </div>
+        </div>
 
-              <div className={`mt-1 flex items-center gap-2 ${isOwn ? 'justify-end' : 'justify-start'}`}>
-                {message.updated_at && (
-                  <span className={`text-[10px] ${isOwn ? 'text-primary-300' : 'text-gray-500'}`}>
-                    edited
-                  </span>
-                )}
-                <span className={`text-[10px] ${isOwn ? 'text-primary-200' : 'text-gray-500'}`}>
-                  {formatMessageTime(message.created_at)}
-                </span>
-              </div>
-            </>
+        {reactions.length > 0 && (
+          <div className={`mt-0.5 flex gap-0.5 ${isOwn ? 'justify-end' : 'justify-start'}`} data-testid="message-reactions">
+            {reactions.map((r) => (
+              <button
+                key={r.emoji}
+                onClick={() => handleReact(r.emoji)}
+                className={`inline-flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-xs transition hover:scale-110 ${
+                  r.hasReacted
+                    ? 'border-primary-300 bg-primary-50'
+                    : 'border-gray-200 bg-white'
+                }`}
+                aria-label={`${r.emoji} ${r.count}`}
+                aria-pressed={r.hasReacted}
+              >
+                <span className="text-xs">{r.emoji}</span>
+                <span className="text-[10px] text-gray-500">{r.count}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className={`relative mt-0.5 flex items-center gap-0.5 ${isOwn ? 'justify-end' : 'justify-start'}`}>
+          <ReactionPicker
+            messageId={message.id}
+            onReact={handleReact}
+            currentReactions={reactions.filter((r) => r.hasReacted).map((r) => r.emoji)}
+          />
+
+          {!editing && (
+            <button
+              onClick={handleReply}
+              className="rounded-full p-1 text-gray-400 opacity-0 transition hover:bg-gray-100 hover:text-gray-600 group-hover:opacity-100"
+              aria-label="Reply"
+            >
+              <Reply className="h-3.5 w-3.5" />
+            </button>
+          )}
+
+          {(isOwn && !editing) && (
+            <div className="relative">
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="rounded-full p-1 text-gray-400 opacity-0 transition hover:bg-gray-100 hover:text-gray-600 group-hover:opacity-100"
+                aria-label="Message actions"
+              >
+                <MoreHorizontal className="h-3.5 w-3.5" />
+              </button>
+              {menuOpen && (
+                <>
+                  <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
+                  <div className={`absolute z-20 mt-1 w-36 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg ${
+                    isOwn ? 'right-0' : 'left-0'
+                  }`}>
+                    <button
+                      onClick={() => { handleCopy(); setMenuOpen(false) }}
+                      className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-gray-700 hover:bg-gray-50"
+                    >
+                      <Copy className="h-3.5 w-3.5" /> Copy
+                    </button>
+                    {isOwn && (
+                      <>
+                        <button
+                          onClick={() => { setEditing(true); setMenuOpen(false) }}
+                          className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-gray-700 hover:bg-gray-50"
+                        >
+                          <Pencil className="h-3.5 w-3.5" /> Edit
+                        </button>
+                        <button
+                          onClick={() => { onDelete?.(message.id); setMenuOpen(false) }}
+                          className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-red-600 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" /> Delete for me
+                        </button>
+                        <button
+                          onClick={() => { onDelete?.(message.id, true); setMenuOpen(false) }}
+                          className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-red-600 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" /> Delete for everyone
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
           )}
         </div>
       </div>

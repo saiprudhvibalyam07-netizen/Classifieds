@@ -1,214 +1,205 @@
 {
-  "report": {
-    "project": "ValClassifieds v1",
-    "generated": "July 2, 2026",
-    "total_features_tested": 22,
-    "total_passed": 22,
-    "pass_percentage": 100
-  },
-  "modules": [
+  "report": "Tested Features",
+  "version": "v1",
+  "generated": "2026-07-02T17:41:41.327389",
+  "test_cases": [
     {
-      "module": "Authentication",
-      "tests": 6,
-      "passed": 6,
-      "failed": 0,
-      "pass_percentage": 100,
-      "test_cases": [
-        {
-          "id": "AUTH-01",
-          "name": "Login Page Rendering",
-          "description": "Verify login page loads with email and password inputs, submit button, and registration link",
-          "status": "PASSED",
-          "priority": "High",
-          "type": "Functional"
-        },
-        {
-          "id": "AUTH-02",
-          "name": "Form Validation",
-          "description": "Verify validation messages appear for empty fields and invalid email format",
-          "status": "PASSED",
-          "priority": "High",
-          "type": "Negative"
-        },
-        {
-          "id": "AUTH-03",
-          "name": "Invalid Credentials",
-          "description": "Verify appropriate error message when invalid credentials are submitted",
-          "status": "PASSED",
-          "priority": "High",
-          "type": "Negative"
-        },
-        {
-          "id": "AUTH-04",
-          "name": "Successful Login",
-          "description": "Verify user is redirected to home page upon successful authentication",
-          "status": "PASSED",
-          "priority": "High",
-          "type": "Functional"
-        },
-        {
-          "id": "AUTH-05",
-          "name": "Navigation",
-          "description": "Verify user can navigate to register page and back to login page",
-          "status": "PASSED",
-          "priority": "Medium",
-          "type": "Functional"
-        },
-        {
-          "id": "AUTH-06",
-          "name": "Accessibility",
-          "description": "Verify keyboard navigation, ARIA labels, and focus management on login form",
-          "status": "PASSED",
-          "priority": "Medium",
-          "type": "Accessibility"
-        }
-      ]
+      "Module": "Authentication",
+      "Test Case ID": "AUTH-01",
+      "Test Case": "Login Page Rendering",
+      "Description": "Verify login page loads with email and password inputs submit button and registration link",
+      "Status": "PASSED",
+      "Priority": "High",
+      "Test Type": "Functional"
     },
     {
-      "module": "Chat Messaging",
-      "tests": 8,
-      "passed": 8,
-      "failed": 0,
-      "pass_percentage": 100,
-      "test_cases": [
-        {
-          "id": "CHAT-01",
-          "name": "Conversation List",
-          "description": "Verify conversation list displays correct number of conversations with participant names",
-          "status": "PASSED",
-          "priority": "High",
-          "type": "Functional"
-        },
-        {
-          "id": "CHAT-02",
-          "name": "Logged-in User Display",
-          "description": "Verify the logged-in user's name is displayed in the conversation area",
-          "status": "PASSED",
-          "priority": "High",
-          "type": "Functional"
-        },
-        {
-          "id": "CHAT-03",
-          "name": "Send Message",
-          "description": "Verify user can type and send a message, seeing it appear in the chat area",
-          "status": "PASSED",
-          "priority": "High",
-          "type": "Functional"
-        },
-        {
-          "id": "CHAT-04",
-          "name": "Unread Badge",
-          "description": "Verify conversation with unread messages displays an unread count badge",
-          "status": "PASSED",
-          "priority": "High",
-          "type": "Functional"
-        },
-        {
-          "id": "CHAT-05",
-          "name": "Search Conversations",
-          "description": "Verify search by participant name filters the conversation list correctly",
-          "status": "PASSED",
-          "priority": "Medium",
-          "type": "Functional"
-        },
-        {
-          "id": "CHAT-06",
-          "name": "No Results Filter",
-          "description": "Verify search with non-matching text shows empty state with appropriate message",
-          "status": "PASSED",
-          "priority": "Medium",
-          "type": "Functional"
-        },
-        {
-          "id": "CHAT-07",
-          "name": "Message Input Accessibility",
-          "description": "Verify message input has proper ARIA labels and keyboard support",
-          "status": "PASSED",
-          "priority": "Medium",
-          "type": "Accessibility"
-        },
-        {
-          "id": "CHAT-08",
-          "name": "Back Navigation",
-          "description": "Verify user can return from conversation view to conversation list",
-          "status": "PASSED",
-          "priority": "Medium",
-          "type": "Functional"
-        }
-      ]
+      "Module": "Authentication",
+      "Test Case ID": "AUTH-02",
+      "Test Case": "Form Validation",
+      "Description": "Verify validation messages appear for empty fields and invalid email format",
+      "Status": "PASSED",
+      "Priority": "High",
+      "Test Type": "Negative"
     },
     {
-      "module": "Listings Management",
-      "tests": 8,
-      "passed": 8,
-      "failed": 0,
-      "pass_percentage": 100,
-      "test_cases": [
-        {
-          "id": "LIST-01",
-          "name": "Listing Cards",
-          "description": "Verify listings page displays listing cards with title, price, location, and image",
-          "status": "PASSED",
-          "priority": "High",
-          "type": "Functional"
-        },
-        {
-          "id": "LIST-02",
-          "name": "Search Functionality",
-          "description": "Verify search input filters listings by title in real-time",
-          "status": "PASSED",
-          "priority": "High",
-          "type": "Functional"
-        },
-        {
-          "id": "LIST-03",
-          "name": "Category Filter",
-          "description": "Verify category dropdown filters listings by selected category",
-          "status": "PASSED",
-          "priority": "High",
-          "type": "Functional"
-        },
-        {
-          "id": "LIST-04",
-          "name": "Location Filter",
-          "description": "Verify location input filters listings by city",
-          "status": "PASSED",
-          "priority": "Medium",
-          "type": "Functional"
-        },
-        {
-          "id": "LIST-05",
-          "name": "Price Filter",
-          "description": "Verify price range inputs filter listings within specified range",
-          "status": "PASSED",
-          "priority": "Medium",
-          "type": "Functional"
-        },
-        {
-          "id": "LIST-06",
-          "name": "Empty State",
-          "description": "Verify appropriate empty state message when no listings match filters",
-          "status": "PASSED",
-          "priority": "Medium",
-          "type": "Functional"
-        },
-        {
-          "id": "LIST-07",
-          "name": "Listing Details",
-          "description": "Verify clicking a listing card navigates to detail page with full information",
-          "status": "PASSED",
-          "priority": "High",
-          "type": "Functional"
-        },
-        {
-          "id": "LIST-08",
-          "name": "Accessibility",
-          "description": "Verify listing cards have proper ARIA labels and keyboard navigation",
-          "status": "PASSED",
-          "priority": "Medium",
-          "type": "Accessibility"
-        }
-      ]
+      "Module": "Authentication",
+      "Test Case ID": "AUTH-03",
+      "Test Case": "Invalid Credentials",
+      "Description": "Verify appropriate error message when invalid credentials are submitted",
+      "Status": "PASSED",
+      "Priority": "High",
+      "Test Type": "Negative"
+    },
+    {
+      "Module": "Authentication",
+      "Test Case ID": "AUTH-04",
+      "Test Case": "Successful Login",
+      "Description": "Verify user is redirected to home page upon successful authentication",
+      "Status": "PASSED",
+      "Priority": "High",
+      "Test Type": "Functional"
+    },
+    {
+      "Module": "Authentication",
+      "Test Case ID": "AUTH-05",
+      "Test Case": "Navigation",
+      "Description": "Verify user can navigate to register page and back to login page",
+      "Status": "PASSED",
+      "Priority": "Medium",
+      "Test Type": "Functional"
+    },
+    {
+      "Module": "Authentication",
+      "Test Case ID": "AUTH-06",
+      "Test Case": "Accessibility",
+      "Description": "Verify keyboard navigation ARIA labels and focus management on login form",
+      "Status": "PASSED",
+      "Priority": "Medium",
+      "Test Type": "Accessibility"
+    },
+    {
+      "Module": "Chat",
+      "Test Case ID": "CHAT-01",
+      "Test Case": "Conversation List",
+      "Description": "Verify conversation list displays correct number of conversations with participant names",
+      "Status": "PASSED",
+      "Priority": "High",
+      "Test Type": "Functional"
+    },
+    {
+      "Module": "Chat",
+      "Test Case ID": "CHAT-02",
+      "Test Case": "Logged-in User Display",
+      "Description": "Verify the logged-in user name is displayed in the conversation area",
+      "Status": "PASSED",
+      "Priority": "High",
+      "Test Type": "Functional"
+    },
+    {
+      "Module": "Chat",
+      "Test Case ID": "CHAT-03",
+      "Test Case": "Send Message",
+      "Description": "Verify user can type and send a message seeing it appear in the chat area",
+      "Status": "PASSED",
+      "Priority": "High",
+      "Test Type": "Functional"
+    },
+    {
+      "Module": "Chat",
+      "Test Case ID": "CHAT-04",
+      "Test Case": "Unread Badge",
+      "Description": "Verify conversation with unread messages displays an unread count badge",
+      "Status": "PASSED",
+      "Priority": "High",
+      "Test Type": "Functional"
+    },
+    {
+      "Module": "Chat",
+      "Test Case ID": "CHAT-05",
+      "Test Case": "Search Conversations",
+      "Description": "Verify search by participant name filters the conversation list correctly",
+      "Status": "PASSED",
+      "Priority": "Medium",
+      "Test Type": "Functional"
+    },
+    {
+      "Module": "Chat",
+      "Test Case ID": "CHAT-06",
+      "Test Case": "No Results Filter",
+      "Description": "Verify search with non-matching text shows empty state with appropriate message",
+      "Status": "PASSED",
+      "Priority": "Medium",
+      "Test Type": "Functional"
+    },
+    {
+      "Module": "Chat",
+      "Test Case ID": "CHAT-07",
+      "Test Case": "Message Input Accessibility",
+      "Description": "Verify message input has proper ARIA labels and keyboard support",
+      "Status": "PASSED",
+      "Priority": "Medium",
+      "Test Type": "Accessibility"
+    },
+    {
+      "Module": "Chat",
+      "Test Case ID": "CHAT-08",
+      "Test Case": "Back Navigation",
+      "Description": "Verify user can return from conversation view to conversation list",
+      "Status": "PASSED",
+      "Priority": "Medium",
+      "Test Type": "Functional"
+    },
+    {
+      "Module": "Listings",
+      "Test Case ID": "LIST-01",
+      "Test Case": "Listing Cards",
+      "Description": "Verify listings page displays listing cards with title price location and image",
+      "Status": "PASSED",
+      "Priority": "High",
+      "Test Type": "Functional"
+    },
+    {
+      "Module": "Listings",
+      "Test Case ID": "LIST-02",
+      "Test Case": "Search Functionality",
+      "Description": "Verify search input filters listings by title in real-time",
+      "Status": "PASSED",
+      "Priority": "High",
+      "Test Type": "Functional"
+    },
+    {
+      "Module": "Listings",
+      "Test Case ID": "LIST-03",
+      "Test Case": "Category Filter",
+      "Description": "Verify category dropdown filters listings by selected category",
+      "Status": "PASSED",
+      "Priority": "High",
+      "Test Type": "Functional"
+    },
+    {
+      "Module": "Listings",
+      "Test Case ID": "LIST-04",
+      "Test Case": "Location Filter",
+      "Description": "Verify location input filters listings by city",
+      "Status": "PASSED",
+      "Priority": "Medium",
+      "Test Type": "Functional"
+    },
+    {
+      "Module": "Listings",
+      "Test Case ID": "LIST-05",
+      "Test Case": "Price Filter",
+      "Description": "Verify price range inputs filter listings within specified range",
+      "Status": "PASSED",
+      "Priority": "Medium",
+      "Test Type": "Functional"
+    },
+    {
+      "Module": "Listings",
+      "Test Case ID": "LIST-06",
+      "Test Case": "Empty State",
+      "Description": "Verify appropriate empty state message when no listings match filters",
+      "Status": "PASSED",
+      "Priority": "Medium",
+      "Test Type": "Functional"
+    },
+    {
+      "Module": "Listings",
+      "Test Case ID": "LIST-07",
+      "Test Case": "Listing Details",
+      "Description": "Verify clicking a listing card navigates to detail page with full information",
+      "Status": "PASSED",
+      "Priority": "High",
+      "Test Type": "Functional"
+    },
+    {
+      "Module": "Listings",
+      "Test Case ID": "LIST-08",
+      "Test Case": "Accessibility",
+      "Description": "Verify listing cards have proper ARIA labels and keyboard navigation",
+      "Status": "PASSED",
+      "Priority": "Medium",
+      "Test Type": "Accessibility"
     }
   ]
 }

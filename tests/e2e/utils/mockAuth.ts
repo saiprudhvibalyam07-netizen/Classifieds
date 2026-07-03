@@ -67,14 +67,14 @@ function extractConversationId(rawUrl: string): string | null {
   const url = decodeUrl(rawUrl)
   const match = url.match(/conversation_id=eq\.([^&]+)/)
   if (match) return match[1]
-  const idEqMatch = url.match(/id=eq\.([a-f0-9-]+)/)
+  const idEqMatch = url.match(/id=eq\.([a-zA-Z0-9-]+)/)
   if (idEqMatch) return idEqMatch[1]
   const inMatch = url.match(/conversation_id=in\.\(([^)]+)\)/)
   if (inMatch) return inMatch[1]
   return null
 }
 
-export async function mockSupabaseAuth(page: Page) {
+export async function mockSupabaseAuth(page: Page, overrides?: { role?: string; email?: string }) {
   const sessionData = buildSessionData()
 
   await page.route('**/auth/v1/token*', async (route) => {
@@ -85,13 +85,22 @@ export async function mockSupabaseAuth(page: Page) {
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(MOCK_USER) })
   })
 
-  await page.route('**/rest/v1/profiles*', async (route) => {
+  const mockRole = overrides?.role || 'user';
+  const mockEmail = overrides?.email || 'buyer@test.com';
+  const mockProfile = { id: MOCK_USER_ID, full_name: 'Test User', email: mockEmail, phone: '+91-9876543210', role: mockRole, city: 'Mumbai', state: 'Maharashtra' };
+  const profileResponseBody = JSON.stringify([mockProfile]);
+  const profileObjectBody = JSON.stringify(mockProfile);
+
+  await page.route('**/rest/v1/profiles**', async (route) => {
+    const url = route.request().url();
+    // If the request uses Accept: application/vnd.pgrst.object+json (single()), return a plain object
+    const headers = route.request().headers();
+    const accept = headers['accept'] || '';
+    const body = accept.includes('application/vnd.pgrst.object+json') ? profileObjectBody : profileResponseBody;
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify([
-        { id: MOCK_USER_ID, full_name: 'Test Buyer', email: 'buyer@test.com', phone: '+91-9876543210', city: 'Mumbai', state: 'Maharashtra' },
-      ]),
+      body,
     })
   })
 
@@ -132,7 +141,7 @@ export async function mockSupabaseAuth(page: Page) {
       return
     }
 
-    const idMatch = url.match(/id=eq\.([a-f0-9-]+)/)
+    const idMatch = url.match(/id=eq\.([a-zA-Z0-9-]+)/)
     if (idMatch) {
       const conv = getConversationById(idMatch[1])
       await route.fulfill({
@@ -168,7 +177,10 @@ export async function mockSupabaseAuth(page: Page) {
         type: body.type || 'text',
         content: body.content || null,
         metadata: body.metadata || {},
+        reply_to: body.reply_to || null,
         is_deleted: false,
+        is_edited: false,
+        edited_at: null,
         updated_at: null,
         created_at: new Date().toISOString(),
         profile: { id: MOCK_USER_ID, full_name: 'Test Buyer', avatar_url: null },
@@ -257,6 +269,19 @@ export async function mockSupabaseAuth(page: Page) {
     }
     const result = getNotifications(MOCK_USER_ID)
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(result) })
+  })
+
+  await page.route('**/rest/v1/message_reactions*', async (route) => {
+    const method = route.request().method()
+    if (method === 'POST') {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ id: 'reaction-new-' + Date.now() }) })
+      return
+    }
+    if (method === 'DELETE') {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: '[]' })
+      return
+    }
+    await route.fulfill({ status: 200, contentType: 'application/json', body: '[]' })
   })
 
   await page.route('**/storage/v1/object/*', async (route) => {

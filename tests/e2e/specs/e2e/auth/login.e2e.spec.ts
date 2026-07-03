@@ -12,7 +12,7 @@ test.describe('E2E: Authentication - Login', () => {
   test('should show error for invalid credentials', async ({ loginPage }) => {
     await loginPage.goto();
     await loginPage.login('wrong@email.com', 'wrongpassword');
-    await loginPage.expectErrorMessage('Invalid login credentials');
+    await loginPage.expectErrorMessage('Invalid email or password. Please try again.');
   });
 
   test('should not submit form with empty email', async ({ loginPage, page }) => {
@@ -46,5 +46,18 @@ test.describe('E2E: Authentication - Login', () => {
     const password = process.env.TEST_BUYER_PASSWORD || 'Rajesh#99Kumar';
     await loginPage.login(email, password);
     await loginPage.expectLoginSuccess();
+  });
+
+  test('should show email confirmation success banner when ?confirmed=true', async ({ loginPage, page }) => {
+    await page.goto('/login?confirmed=true');
+    await page.waitForSelector('[data-testid="login-confirmed-banner"]');
+    await expect(page.locator('[data-testid="login-confirmed-banner"]')).toContainText('Email confirmed successfully');
+  });
+
+  test('should navigate to auth callback page', async ({ page }) => {
+    await page.goto('/auth/callback');
+    await page.waitForLoadState('networkidle');
+    // Should show processing state or error since no tokens
+    await expect(page.locator('h2')).not.toBeEmpty();
   });
 });

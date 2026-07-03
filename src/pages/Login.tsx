@@ -1,9 +1,21 @@
 import { FormEvent, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+
+const ERROR_MESSAGES: Record<string, string> = {
+  'Invalid login credentials': 'Invalid email or password. Please try again.',
+  'Email not confirmed': 'Please confirm your email address before signing in. Check your inbox for the confirmation link.',
+  'email_not_confirmed': 'Please confirm your email address before signing in. Check your inbox for the confirmation link.',
+}
+
+function userFriendlyError(message: string): string {
+  return ERROR_MESSAGES[message] || message
+}
 
 export function Login() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const justConfirmed = searchParams.get('confirmed') === 'true'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -20,7 +32,7 @@ export function Login() {
     })
 
     if (err) {
-      setError(err.message)
+      setError(userFriendlyError(err.message))
       setLoading(false)
     } else {
       navigate('/')
@@ -29,6 +41,11 @@ export function Login() {
 
   return (
     <div className="mx-auto mt-16 max-w-md px-4">
+      {justConfirmed && (
+        <div className="mb-6 rounded-xl bg-green-50 p-4 text-center text-sm text-green-700 shadow-sm" data-testid="login-confirmed-banner">
+          Email confirmed successfully! You can now sign in.
+        </div>
+      )}
       <h1 className="mb-6 text-3xl font-bold">Sign In</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">

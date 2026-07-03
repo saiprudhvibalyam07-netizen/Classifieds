@@ -1,50 +1,20 @@
 [
-  {
-    "id": "cat-vehicles",
-    "slug": "vehicles",
-    "name": "Vehicles",
-    "icon": "car",
-    "display_order": 1,
-    "description": "Cars, bikes, scooters, and other vehicles"
-  },
-  {
-    "id": "cat-housing",
-    "slug": "housing",
-    "name": "Housing",
-    "icon": "building",
-    "display_order": 2,
-    "description": "Apartments, houses, rooms for rent or sale"
-  },
-  {
-    "id": "cat-jobs",
-    "slug": "jobs",
-    "name": "Jobs",
-    "icon": "briefcase",
-    "display_order": 3,
-    "description": "Job openings and employment opportunities"
-  },
-  {
-    "id": "cat-services",
-    "slug": "services",
-    "name": "Services",
-    "icon": "tools",
-    "display_order": 4,
-    "description": "Professional and personal services"
-  },
-  {
-    "id": "cat-items",
-    "slug": "items-for-sale",
-    "name": "Items for Sale",
-    "icon": "package",
-    "display_order": 5,
-    "description": "New and used items for sale"
-  },
-  {
-    "id": "cat-community",
-    "slug": "community",
-    "name": "Community",
-    "icon": "users",
-    "display_order": 6,
-    "description": "Community events, activities, and groups"
-  }
+  { "id": "cat-property",        "slug": "property",           "name": "Property",           "icon": "building2",   "display_order": 7,  "description": "Real estate: houses, apartments, land, and commercial properties" },
+  { "id": "cat-vehicles",        "slug": "vehicles",           "name": "Vehicles",           "icon": "car",         "display_order": 1,  "description": "Cars, bikes, scooters, and other vehicles" },
+  { "id": "cat-jobs",            "slug": "jobs",               "name": "Jobs",               "icon": "briefcase",   "display_order": 3,  "description": "Job openings and employment opportunities" },
+  { "id": "cat-mobiles",         "slug": "mobiles-tablets",    "name": "Mobiles & Tablets",  "icon": "smartphone",  "display_order": 8,  "description": "Mobile phones, tablets, and accessories" },
+  { "id": "cat-electronics",     "slug": "electronics",        "name": "Electronics",        "icon": "monitor",     "display_order": 9,  "description": "TVs, laptops, audio equipment, and gadgets" },
+  { "id": "cat-furniture",       "slug": "furniture-home",     "name": "Furniture & Home",   "icon": "sofa",        "display_order": 10, "description": "Furniture, home decor, and household items" },
+  { "id": "cat-services",        "slug": "services",           "name": "Services",           "icon": "wrench",      "display_order": 4,  "description": "Professional and personal services" },
+  { "id": "cat-education",       "slug": "education",          "name": "Education",          "icon": "book-open",   "display_order": 11, "description": "Courses, tutoring, and educational services" },
+  { "id": "cat-business",        "slug": "business-industrial","name": "Business & Industrial", "icon": "building",  "display_order": 12, "description": "Business equipment, industrial machinery, and commercial listings" },
+  { "id": "cat-pets",            "slug": "pets",               "name": "Pets",               "icon": "dog",         "display_order": 13, "description": "Pets for adoption, sale, and pet supplies" },
+  { "id": "cat-kids",            "slug": "kids",               "name": "Kids",               "icon": "baby",        "display_order": 14, "description": "Baby gear, kids clothing, toys, and children items" },
+  { "id": "cat-sports",          "slug": "sports-hobbies",     "name": "Sports & Hobbies",   "icon": "trophy",      "display_order": 15, "description": "Sports equipment, gym gear, hobbies, and collectibles" },
+  { "id": "cat-fashion",         "slug": "fashion-lifestyle",  "name": "Fashion & Lifestyle", "icon": "shirt",      "display_order": 16, "description": "Clothing, accessories, beauty, and personal care" },
+  { "id": "cat-events",          "slug": "events",             "name": "Events",             "icon": "calendar",    "display_order": 17, "description": "Event tickets, planning, and party supplies" },
+  { "id": "cat-matrimonial",     "slug": "matrimonial",        "name": "Matrimonial",        "icon": "heart",       "display_order": 18, "description": "Matrimonial profiles and wedding services" },
+  { "id": "cat-community",       "slug": "community",          "name": "Community",          "icon": "users",       "display_order": 6,  "description": "Community events, activities, and groups" },
+  { "id": "cat-items",           "slug": "items-for-sale",     "name": "Items for Sale",     "icon": "package",     "display_order": 5,  "description": "New and used items for sale" },
+  { "id": "cat-housing",         "slug": "housing",            "name": "Housing",            "icon": "building",    "display_order": 2,  "description": "Apartments, houses, rooms for rent or sale" }
 ]

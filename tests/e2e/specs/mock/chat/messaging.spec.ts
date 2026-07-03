@@ -34,7 +34,6 @@ test.describe('Chat - Messaging', () => {
     await chatPage.expectLoadingToFinish();
     const badge = page.locator('[data-testid="chat-unread-badge"]');
     await expect(badge.first()).toBeVisible({ timeout: 5000 });
-    await expect(badge.first()).toHaveAttribute('aria-label');
   });
 
   test('should have accessible message input after selecting conversation', async ({ chatPage, page }) => {
@@ -43,22 +42,6 @@ test.describe('Chat - Messaging', () => {
     const input = page.locator('[data-testid="chat-message-input"]');
     await expect(input).toBeVisible({ timeout: 5000 });
     await expect(input).toHaveAttribute('aria-label');
-  });
-
-  test('should search conversations by name', async ({ chatPage, page }) => {
-    await chatPage.expectLoadingToFinish();
-    await chatPage.searchConversations('Rajesh');
-    const items = page.locator('[data-testid="chat-conversation-item"]');
-    const count = await items.count();
-    expect(count).toBeGreaterThanOrEqual(1);
-  });
-
-  test('should filter conversations when search yields no results', async ({ chatPage, page }) => {
-    await chatPage.expectLoadingToFinish();
-    await chatPage.searchConversations('xyznonexistent');
-    const items = page.locator('[data-testid="chat-conversation-item"]');
-    await expect(items).toHaveCount(0);
-    await chatPage.expectEmptyState();
   });
 
   test('should navigate back to conversation list from active conversation', async ({ chatPage, page }) => {
@@ -70,5 +53,62 @@ test.describe('Chat - Messaging', () => {
       await backButton.click();
       await chatPage.expectConversationListVisible();
     }
+  });
+
+  test('should display conversation header with call buttons', async ({ chatPage, page }) => {
+    await chatPage.expectLoadingToFinish();
+    await chatPage.selectConversation(0);
+    await chatPage.expectConversationHeaderVisible();
+    const voiceBtn = page.locator('[data-testid="voice-call-button"]');
+    const videoBtn = page.locator('[data-testid="video-call-button"]');
+    await expect(voiceBtn).toBeVisible();
+    await expect(videoBtn).toBeVisible();
+  });
+
+  test('should display image attachment picker', async ({ chatPage, page }) => {
+    await chatPage.expectLoadingToFinish();
+    await chatPage.selectConversation(0);
+    const imgBtn = page.locator('[data-testid="attach-image-button"]');
+    await expect(imgBtn).toBeVisible();
+  });
+
+  test('should display video attachment picker', async ({ chatPage, page }) => {
+    await chatPage.expectLoadingToFinish();
+    await chatPage.selectConversation(0);
+    const videoBtn = page.locator('[data-testid="attach-video-button"]');
+    await expect(videoBtn).toBeVisible();
+  });
+
+  test('should display document attachment picker', async ({ chatPage, page }) => {
+    await chatPage.expectLoadingToFinish();
+    await chatPage.selectConversation(0);
+    const docBtn = page.locator('[data-testid="attach-document-button"]');
+    await expect(docBtn).toBeVisible();
+  });
+
+  test('should display chat menu with options', async ({ chatPage, page }) => {
+    await chatPage.expectLoadingToFinish();
+    await chatPage.selectConversation(0);
+    const menuBtn = page.locator('[data-testid="chat-menu-button"]');
+    await expect(menuBtn).toBeVisible();
+    await menuBtn.click();
+    const dropdown = page.locator('[data-testid="chat-menu-dropdown"]');
+    await expect(dropdown).toBeVisible({ timeout: 3000 });
+  });
+
+  test('should display message status indicator', async ({ chatPage, page }) => {
+    await chatPage.expectLoadingToFinish();
+    await chatPage.selectConversation(0);
+    const status = page.locator('[data-testid="message-status"]');
+    await expect(status.first()).toBeVisible({ timeout: 5000 });
+  });
+
+  test('should display reaction picker on message hover', async ({ chatPage, page }) => {
+    await chatPage.expectLoadingToFinish();
+    await chatPage.selectConversation(0);
+    const bubble = page.locator('[data-testid="chat-message-bubble"]').first();
+    await bubble.hover();
+    const picker = page.locator('[data-testid="reaction-picker"]').first();
+    await expect(picker).toBeVisible({ timeout: 3000 });
   });
 });

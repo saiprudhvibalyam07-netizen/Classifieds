@@ -1,14 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAuth } from '../../../hooks/useAuth'
-import { chatApi } from '../api/chatApi'
-import { chatMutations } from '../api/chatMutations'
-import { subscribeToConversations } from '../api/chatSubscriptions'
-import { useChatStore } from '../state/chatStore'
+import { conversationService } from '../services/conversationService'
+import { realtimeService } from '../services/realtimeService'
 import type { ChatConversation } from '../types'
 
 export function useConversations() {
   const { user } = useAuth()
-  const addToast = useChatStore((s) => s.addToast)
   const [conversations, setConversations] = useState<ChatConversation[]>([])
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
@@ -31,8 +28,8 @@ export function useConversations() {
 
     try {
       const [page, unreadData] = await Promise.all([
-        chatApi.fetchConversations(user.id),
-        chatApi.fetchUnreadConversationIds(user.id),
+        conversationService.fetchConversations(user.id),
+        conversationService.fetchUnreadIds(user.id),
       ])
       if (mountedRef.current) {
         setConversations(page.data)
@@ -56,7 +53,7 @@ export function useConversations() {
     setError(null)
 
     try {
-      const page = await chatApi.fetchConversations(user.id, nextCursor)
+      const page = await conversationService.fetchConversations(user.id, nextCursor)
       if (mountedRef.current) {
         setConversations((prev) => [...prev, ...page.data])
         setNextCursor(page.nextCursor)
@@ -65,7 +62,6 @@ export function useConversations() {
     } catch (err) {
       if (mountedRef.current) {
         setError(err instanceof Error ? err.message : 'Failed to load more conversations')
-        addToast({ type: 'error', message: 'Failed to load more conversations' })
       }
     } finally {
       if (mountedRef.current) setLoadingMore(false)
@@ -78,7 +74,7 @@ export function useConversations() {
 
     let unsubscribe: (() => void) | null = null
     if (user) {
-      unsubscribe = subscribeToConversations(user.id, () => { fetchAll() })
+      unsubscribe = realtimeService.subscribeToConversations(user.id, () => { fetchAll() })
     }
 
     return () => {
@@ -87,37 +83,14 @@ export function useConversations() {
     }
   }, [user, fetchAll])
 
-  const markConversationRead = useCallback((conversationId: string) => {
-    setUnreadIds((prev) => {
-      const next = new Set(prev)
-      next.delete(conversationId)
-      return next
-    })
-  }, [])
-
-  const removeConversation = useCallback(async (conversationId: string): Promise<boolean> => {
+  const refreshUnread = useCallback(async () => {
+    if (!user) return
     try {
-      await chatMutations.deleteConversation(conversationId)
-      if (mountedRef.current) {
-        setConversations((prev) => prev.filter((c) => c.id !== conversationId))
-      }
-      return true
-    } catch (err) {
-      if (mountedRef.current) {
-        setError(err instanceof Error ? err.message : 'Failed to delete conversation')
-        addToast({ type: 'error', message: 'Failed to delete conversation' })
-      }
-      return false
-    }
-  }, [])
-
-  const getConversationById = useCallback(async (id: string): Promise<ChatConversation | null> => {
-    try {
-      return await chatApi.fetchConversationById(id)
+      const ids = await conversationService.fetchUnreadIds(user.id)
+      if (mountedRef.current) setUnreadIds(ids)
     } catch {
-      return null
     }
-  }, [])
+  }, [user])
 
   return {
     conversations,
@@ -128,8 +101,6 @@ export function useConversations() {
     hasMore,
     refetch: fetchAll,
     loadMore,
-    deleteConversation: removeConversation,
-    markConversationRead,
-    getConversationById,
+    refreshUnread,
   }
 }

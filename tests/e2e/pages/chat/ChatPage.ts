@@ -6,16 +6,30 @@ export class ChatPage {
 
   private conversationList = () => this.page.locator('[data-testid="chat-conversation-list"]');
   private conversationItem = () => this.page.locator('[data-testid="chat-conversation-item"]');
-  private conversationSearch = () => this.page.locator('[data-testid="chat-conversation-search"]');
   private messageArea = () => this.page.locator('[data-testid="chat-message-area"]');
   private messageBubble = () => this.page.locator('[data-testid="chat-message-bubble"]');
   private messageInput = () => this.page.locator('[data-testid="chat-message-input"]');
   private sendButton = () => this.page.locator('[data-testid="chat-send-button"]');
-  private attachmentButton = () => this.page.locator('[data-testid="chat-attachment-button"]');
-  private typingIndicator = () => this.page.locator('[data-testid="chat-typing-indicator"]');
   private unreadBadge = () => this.page.locator('[data-testid="chat-unread-badge"]');
   private emptyState = () => this.page.locator('[data-testid="chat-empty-state"]');
   private loadingSkeleton = () => this.page.locator('[data-testid="chat-loading-skeleton"]');
+  private conversationHeader = () => this.page.locator('[data-testid="conversation-header"]');
+  private attachImageButton = () => this.page.locator('[data-testid="attach-image-button"]');
+  private attachVideoButton = () => this.page.locator('[data-testid="attach-video-button"]');
+  private attachDocumentButton = () => this.page.locator('[data-testid="attach-document-button"]');
+  private imageBubble = () => this.page.locator('[data-testid="image-bubble"]');
+  private videoBubble = () => this.page.locator('[data-testid="video-bubble"]');
+  private documentBubble = () => this.page.locator('[data-testid="document-bubble"]');
+  private voiceNoteBubble = () => this.page.locator('[data-testid="voice-note-bubble"]');
+  private reactionPicker = () => this.page.locator('[data-testid="reaction-picker"]');
+  private messageReactions = () => this.page.locator('[data-testid="message-reactions"]');
+  private replyPreview = () => this.page.locator('[data-testid="reply-preview"]');
+  private messageStatus = () => this.page.locator('[data-testid="message-status"]');
+  private chatMenuButton = () => this.page.locator('[data-testid="chat-menu-button"]');
+  private voiceCallButton = () => this.page.locator('[data-testid="voice-call-button"]');
+  private videoCallButton = () => this.page.locator('[data-testid="video-call-button"]');
+  private searchMessagesButton = () => this.page.locator('[data-testid="search-messages-button"]');
+  private uploadProgress = () => this.page.locator('[data-testid="upload-progress"]');
 
   async goto() {
     await this.page.goto('/messages');
@@ -30,10 +44,6 @@ export class ChatPage {
   async sendMessage(text: string) {
     await this.messageInput().fill(text);
     await this.sendButton().click();
-  }
-
-  async searchConversations(query: string) {
-    await this.conversationSearch().fill(query);
   }
 
   async expectConversationListVisible() {
@@ -59,5 +69,45 @@ export class ChatPage {
       return parseInt(text || '0', 10);
     }
     return 0;
+  }
+
+  async expectConversationHeaderVisible() {
+    await expect(this.conversationHeader()).toBeVisible({ timeout: 5000 });
+  }
+
+  async expectImageBubbleVisible() {
+    await expect(this.imageBubble().first()).toBeVisible({ timeout: 5000 });
+  }
+
+  async expectVideoBubbleVisible() {
+    await expect(this.videoBubble().first()).toBeVisible({ timeout: 5000 });
+  }
+
+  async expectDocumentBubbleVisible() {
+    await expect(this.documentBubble().first()).toBeVisible({ timeout: 5000 });
+  }
+
+  async expectVoiceNoteBubbleVisible() {
+    await expect(this.voiceNoteBubble().first()).toBeVisible({ timeout: 5000 });
+  }
+
+  async expectMessageReactionsVisible() {
+    await expect(this.messageReactions().first()).toBeVisible({ timeout: 5000 });
+  }
+
+  async expectReplyPreviewVisible() {
+    await expect(this.replyPreview()).toBeVisible({ timeout: 5000 });
+  }
+
+  async expectMessageStatusVisible() {
+    await expect(this.messageStatus().first()).toBeVisible({ timeout: 5000 });
+  }
+
+  async clickVoiceCall() {
+    await this.voiceCallButton().click();
+  }
+
+  async clickVideoCall() {
+    await this.videoCallButton().click();
   }
 }

@@ -3,6 +3,8 @@ export type Category = {
   name: string
   slug: string
   icon: string
+  description: string | null
+  display_order: number
   created_at: string
 }
 

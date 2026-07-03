@@ -1,24 +1,16 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { ArrowLeft, User } from 'lucide-react'
 import { useAuth } from '../../../hooks/useAuth'
 import { useConversations } from '../hooks/useConversations'
+import { useConversation } from '../hooks/useConversation'
 import { useMessages } from '../hooks/useMessages'
-import { usePresence } from '../hooks/usePresence'
-import { useTypingIndicator } from '../hooks/useTypingIndicator'
-import { useToast } from '../hooks/useToast'
-import { useOfflineQueue } from '../hooks/useOfflineQueue'
-import { useChatStore } from '../state/chatStore'
-import { chatMutations } from '../api/chatMutations'
-import { getOtherParticipant } from '../utils/messageUtils'
-import { ConversationSidebar } from '../components/ConversationSidebar'
-import { ConversationHeader } from '../components/ConversationHeader'
-import { MessageArea } from '../components/MessageArea'
-import { MessageComposer } from '../components/MessageComposer'
+import { conversationService } from '../services/conversationService'
+import { messageService } from '../services/messageService'
+import { ConversationList } from '../components/ConversationList'
+import { ConversationDetail } from '../components/ConversationDetail'
+import { SidebarSkeleton, MessagesSkeleton } from '../components/LoadingSkeleton'
+import { ErrorState } from '../components/ErrorState'
 import { EmptyState } from '../components/EmptyState'
-import { ConnectionBanner } from '../components/ConnectionBanner'
-import { ToastContainer } from '../components/ToastContainer'
-import type { ChatConversation } from '../types'
 
 const DESKTOP_BREAKPOINT = 768
 
@@ -45,30 +37,6 @@ function useIsMobile() {
   return mobile
 }
 
-function MobileHeader({ name, avatarUrl, onBack }: { name: string; avatarUrl: string | null | undefined; onBack: () => void }) {
-  return (
-    <div className="flex items-center gap-2 border-b border-gray-200 bg-white px-2 py-2">
-      <button
-        onClick={onBack}
-        className="rounded-lg p-2 text-gray-600 transition hover:bg-gray-100"
-        aria-label="Back to conversations"
-      >
-        <ArrowLeft className="h-5 w-5" />
-      </button>
-      <div className="flex items-center gap-2">
-        {avatarUrl ? (
-          <img src={avatarUrl} alt={name ?? ''} className="h-8 w-8 rounded-full object-cover" />
-        ) : (
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200">
-            <User className="h-4 w-4 text-gray-500" />
-          </div>
-        )}
-        <p className="text-sm font-medium text-gray-900">{name}</p>
-      </div>
-    </div>
-  )
-}
-
 export function MessagesPage() {
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -81,21 +49,17 @@ export function MessagesPage() {
     loading: convLoading,
     loadingMore,
     error: convError,
-    refetch,
     unreadIds,
     hasMore: convHasMore,
-    markConversationRead,
+    refetch,
     loadMore,
-    getConversationById,
+    refreshUnread,
   } = useConversations()
 
   const [activeConvId, setActiveConvId] = useState<string | null>(null)
-  const [activeConv, setActiveConv] = useState<ChatConversation | null>(null)
   const [showList, setShowList] = useState(true)
-  const { show } = useToast()
-  const fetchedConvRef = useRef(false)
-  const setActiveConversation = useChatStore((s) => s.setActiveConversation)
-  const { queueSize, syncStatus, isOnline } = useOfflineQueue()
+
+  const { conversation: activeConv, loading: convDetailLoading } = useConversation(activeConvId)
 
   const {
     messages,
@@ -105,40 +69,12 @@ export function MessagesPage() {
     sending,
     hasMore: msgHasMore,
     send,
-    edit,
-    remove,
-    upload,
     loadOlder,
-    retry,
+    editMessage,
+    deleteMessage,
+    addReaction,
+    removeReaction,
   } = useMessages(activeConvId)
-
-  const { broadcastTyping } = useTypingIndicator(activeConvId)
-  usePresence()
-
-  const createOrOpenConversation = useCallback(async (listingId: string, sellerId: string) => {
-    if (!user) return
-
-    const existing = conversations.find(
-      (c) => c.listing_id === listingId && c.seller_id === sellerId && c.buyer_id === user.id
-    )
-
-    if (existing) {
-      setActiveConvId(existing.id)
-      navigate(`/messages?conversation=${existing.id}`, { replace: true })
-      setShowList(false)
-      return
-    }
-
-    try {
-      const data = await chatMutations.createConversation(listingId, user.id, sellerId)
-      await refetch()
-      setActiveConvId(data.id)
-      navigate(`/messages?conversation=${data.id}`, { replace: true })
-      setShowList(false)
-    } catch (err) {
-      show({ type: 'error', message: err instanceof Error ? err.message : 'Failed to create conversation' })
-    }
-  }, [conversations, navigate, refetch, user, show])
 
   useEffect(() => {
     const params = new URLSearchParams(searchParamsStr)
@@ -150,40 +86,51 @@ export function MessagesPage() {
       setActiveConvId(convParam)
       setShowList(false)
     } else if (listingParam && sellerParam && user) {
-      createOrOpenConversation(listingParam, sellerParam)
+      if (sellerParam === user.id) {
+        navigate('/messages?new=true&listing=' + listingParam + '&seller=' + sellerParam, { replace: true })
+        return
+      }
+
+      conversationService.findOrCreate(listingParam, user.id, sellerParam)
+        .then((conv) => {
+          setActiveConvId(conv.id)
+          setShowList(false)
+          navigate(`/messages?conversation=${conv.id}`, { replace: true })
+          refetch()
+        })
+        .catch(() => {
+          navigate('/messages', { replace: true })
+        })
     }
-  }, [searchParamsStr, user, createOrOpenConversation])
+  }, [searchParamsStr, user, navigate, refetch])
 
   useEffect(() => {
-    if (!activeConvId) {
-      setActiveConv(null)
-      setActiveConversation(null)
-      return
+    if (activeConvId && user) {
+      conversationService.markRead(activeConvId, user.id).catch(() => {})
+      refreshUnread()
     }
+  }, [activeConvId, user, refreshUnread])
 
-    markConversationRead(activeConvId)
-    setActiveConversation(activeConvId)
-
-    const found = conversations.find((c) => c.id === activeConvId)
-    if (found) {
-      setActiveConv(found)
-      return
-    }
-
-    if (conversations.length === 0 && !convLoading && !fetchedConvRef.current) {
-      fetchedConvRef.current = true
-      getConversationById(activeConvId).then((conv) => {
-        if (conv) setActiveConv(conv)
-      })
-    }
-  }, [activeConvId, conversations, convLoading, markConversationRead, setActiveConversation, getConversationById])
+  function handleSelectConversation(id: string) {
+    setActiveConvId(id)
+    setShowList(false)
+    navigate(`/messages?conversation=${id}`, { replace: true })
+  }
 
   function handleBack() {
     setActiveConvId(null)
-    setActiveConv(null)
     setShowList(true)
     navigate('/messages', { replace: true })
   }
+
+  function handleSend(text: string, attachments?: { type: string; url: string; name: string; size: number; storage_path: string; mime_type: string }[], replyTo?: string | null) {
+    send(text, attachments, replyTo)
+  }
+
+  const handleSearch = useCallback(async (query: string) => {
+    if (!activeConvId) return []
+    return messageService.searchMessages(activeConvId, query)
+  }, [activeConvId])
 
   if (!user) {
     return (
@@ -193,67 +140,68 @@ export function MessagesPage() {
     )
   }
 
-  const otherUser = activeConv ? getOtherParticipant(activeConv, user.id) : null
-
   return (
     <div className="mx-auto flex h-[calc(100vh-4rem)] max-w-6xl flex-col">
-      {!isOnline && <ConnectionBanner />}
-
       <div className="flex flex-1 overflow-hidden">
         {(!isMobile || showList) && (
           <div className={`flex flex-col border-r border-gray-200 bg-white ${
             isMobile ? 'w-full' : 'w-[360px] xl:w-[400px]'
           }`}>
-            <ConversationSidebar
-              conversations={conversations}
-              activeConvId={activeConvId}
-              loading={convLoading}
-              loadingMore={loadingMore}
-              error={convError}
-              unreadIds={unreadIds}
-              hasMore={convHasMore}
-              isOnline={isOnline}
-              queueSize={queueSize}
-              syncStatus={syncStatus}
-              onLoadMore={loadMore}
-              onRetry={refetch}
-            />
+            <div className="border-b border-gray-200 px-4 py-3">
+              <h2 className="text-lg font-semibold text-gray-900">Messages</h2>
+            </div>
+
+            {convLoading ? (
+              <SidebarSkeleton />
+            ) : convError ? (
+              <ErrorState message={convError} onRetry={refetch} />
+            ) : (
+              <ConversationList
+                conversations={conversations}
+                activeConvId={activeConvId}
+                unreadIds={unreadIds}
+                currentUserId={user.id}
+                onSelect={handleSelectConversation}
+              />
+            )}
+
+            {convHasMore && !convLoading && (
+              <div className="border-t border-gray-100 p-3">
+                <button
+                  onClick={loadMore}
+                  disabled={loadingMore}
+                  className="w-full rounded-lg py-2 text-center text-xs text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                >
+                  {loadingMore ? 'Loading...' : 'Load more'}
+                </button>
+              </div>
+            )}
           </div>
         )}
 
         {(!isMobile || !showList) && (
           <div className="flex flex-1 flex-col bg-gray-50">
             {activeConv ? (
-              <>
-                {isMobile && (
-                  <MobileHeader
-                    name={otherUser?.full_name ?? 'Unknown'}
-                    avatarUrl={otherUser?.avatar_url}
-                    onBack={handleBack}
-                  />
-                )}
-
-                <ConversationHeader conversation={activeConv} />
-
-                <MessageArea
-                  messages={messages}
-                  loading={msgLoading}
-                  loadingOlder={loadingOlder}
-                  error={msgError}
-                  hasMore={msgHasMore}
-                  onLoadOlder={loadOlder}
-                  onEdit={edit}
-                  onDelete={remove}
-                  onRetry={retry ?? (() => {})}
-                />
-
-                <MessageComposer
-                  onSend={send}
-                  sending={sending}
-                  onUpload={upload}
-                  onTyping={broadcastTyping}
-                />
-              </>
+              <ConversationDetail
+                conversation={activeConv}
+                currentUserId={user.id}
+                messages={messages}
+                loading={msgLoading}
+                loadingOlder={loadingOlder}
+                error={msgError}
+                sending={sending}
+                hasMore={msgHasMore}
+                onSend={handleSend}
+                onLoadOlder={loadOlder}
+                onBack={isMobile ? handleBack : undefined}
+                onEditMessage={editMessage}
+                onDeleteMessage={deleteMessage}
+                onAddReaction={addReaction}
+                onRemoveReaction={removeReaction}
+                onSearch={handleSearch}
+              />
+            ) : msgLoading || convDetailLoading ? (
+              <MessagesSkeleton />
             ) : (
               <div className="flex flex-1 items-center justify-center">
                 <EmptyState
@@ -265,8 +213,6 @@ export function MessagesPage() {
           </div>
         )}
       </div>
-
-      <ToastContainer />
     </div>
   )
 }

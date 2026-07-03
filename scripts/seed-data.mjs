@@ -46,6 +46,41 @@ function symbolToUuid(symbol) {
 
 function uuid(v) { return v ? (isUuid(v) ? v.toLowerCase() : symbolToUuid(v)) : null; }
 
+// ===== PLACEHOLDER IMAGE =====
+
+async function ensurePlaceholderImage() {
+  const path = 'seed-placeholder.svg';
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600"><rect fill="#f1f5f9" width="800" height="600"/><text fill="#94a3b8" font-family="system-ui,sans-serif" font-size="24" text-anchor="middle" x="400" y="300">Listing Image</text></svg>';
+  const { error } = await supabase.storage.from('listing-images').upload(path, svg, { contentType: 'image/svg+xml;charset=utf-8', upsert: true });
+  if (error && !error.message.includes('already exists') && !error.message.includes('duplicate')) {
+    console.warn(`Placeholder upload: ${error.message}`);
+  }
+  const { data } = supabase.storage.from('listing-images').getPublicUrl(path);
+  return data.publicUrl;
+}
+
+// ===== AUTO-CREATE MISSING PROFILES FOR REAL AUTH USERS =====
+
+async function ensureAuthProfiles() {
+  const { data: authUsers, error } = await supabase.auth.admin.listUsers();
+  if (error) { console.warn(`Cannot list auth users: ${error.message}`); return 0; }
+  const { data: existingProfiles } = await supabase.from('profiles').select('id');
+  const existingIds = new Set((existingProfiles || []).map(p => p.id));
+  let created = 0;
+  for (const u of authUsers.users) {
+    if (!existingIds.has(u.id)) {
+      const { error: insErr } = await supabase.from('profiles').insert({
+        id: u.id,
+        email: u.email || '',
+        full_name: u.user_metadata?.full_name || u.email?.split('@')[0] || 'User',
+      });
+      if (insErr) console.warn(`Cannot create profile for ${u.email}: ${insErr.message.slice(0, 80)}`);
+      else created++;
+    }
+  }
+  return created;
+}
+
 function loadJson(name) {
   const p = resolve(ROOT, 'mock-data', name);
   return existsSync(p) ? JSON.parse(readFileSync(p, 'utf-8')) : [];
@@ -62,7 +97,7 @@ const SCHEMA = {
     skip_insert: [],
   },
   categories: {
-    columns: ['id', 'name', 'slug', 'icon', 'created_at'],
+    columns: ['id', 'name', 'slug', 'icon', 'description', 'display_order', 'created_at'],
     skip_insert: [],
   },
   listings: {
@@ -254,6 +289,8 @@ function transformCategories() {
     name: c.name,
     slug: c.slug,
     icon: c.icon || 'tag',
+    description: c.description || null,
+    display_order: c.display_order || 0,
     created_at: c.created_at || null,
   }));
 }
@@ -281,11 +318,11 @@ function transformListings(ctx) {
   }));
 }
 
-function transformListingImages() {
+function transformListingImages(placeholderUrl) {
   return loadJson('listing_images.json').map(img => ({
     id: uuid(img.id) || symbolToUuid(img.url),
     listing_id: uuid(img.listing_id),
-    url: img.url,
+    url: placeholderUrl,
     sort_order: img.display_order || img.sort_order || 0,
   }));
 }
@@ -488,9 +525,14 @@ async function main() {
     }
 
     await seedTable('profiles', transformProfiles(ctx));
+    const autoCreatedProfiles = await ensureAuthProfiles();
+    if (autoCreatedProfiles > 0) {
+      report.warnings.push(`Auto-created ${autoCreatedProfiles} profiles for auth users missing profiles`);
+    }
     await seedTable('categories', transformCategories());
     await seedTable('listings', transformListings(ctx));
-    await seedTable('listing_images', transformListingImages());
+    const placeholderUrl = await ensurePlaceholderImage();
+    await seedTable('listing_images', transformListingImages(placeholderUrl));
     await seedTable('favorites', transformFavorites());
 
     // Conversations: the on_conversation_created trigger auto-creates participants.

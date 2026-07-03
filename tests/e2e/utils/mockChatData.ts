@@ -157,7 +157,10 @@ interface MockMessage {
   type: string
   content: string | null
   metadata: Record<string, unknown>
+  reply_to: string | null
   is_deleted: boolean
+  is_edited: boolean
+  edited_at: string | null
   updated_at: string | null
   created_at: string
 }
@@ -168,7 +171,7 @@ function msg(
   senderId: string,
   text: string,
   createdAt: string,
-  opts?: { isRead?: boolean; attachments?: Record<string, unknown>[]; isDeleted?: boolean; isEdited?: boolean }
+  opts?: { isRead?: boolean; attachments?: Record<string, unknown>[]; isDeleted?: boolean; isEdited?: boolean; replyTo?: string }
 ): MockMessage {
   return {
     id,
@@ -180,7 +183,10 @@ function msg(
     type: 'text',
     content: null,
     metadata: {},
+    reply_to: opts?.replyTo ?? null,
     is_deleted: opts?.isDeleted ?? false,
+    is_edited: opts?.isEdited ?? false,
+    edited_at: opts?.isEdited ? createdAt : null,
     updated_at: opts?.isEdited ? createdAt : null,
     created_at: createdAt,
   }
@@ -190,6 +196,7 @@ function buildMessageResponse(m: MockMessage) {
   return {
     ...m,
     profile: profiles[m.sender_id] ?? null,
+    reactions: [],
   }
 }
 

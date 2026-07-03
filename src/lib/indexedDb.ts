@@ -69,7 +69,8 @@ export async function setItem<T>(storeName: string, key: string, value: T): Prom
     return new Promise((resolve, reject) => {
       const tx = db.transaction(storeName, 'readwrite')
       const store = tx.objectStore(storeName)
-      store.put({ key, value })
+      const keyPath = store.keyPath as string
+      store.put({ [keyPath]: key, value })
       tx.oncomplete = () => resolve()
       tx.onerror = () => reject(tx.error)
     })

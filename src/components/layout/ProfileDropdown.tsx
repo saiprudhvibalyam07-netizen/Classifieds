@@ -1,24 +1,32 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { User, LayoutDashboard, Heart, MessageCircle, Settings, LogOut, ChevronDown } from 'lucide-react'
+import { User, LayoutDashboard, Heart, MessageCircle, Settings, LogOut, ChevronDown, Shield } from 'lucide-react'
 import type { Profile } from '../../types'
+import { isAdmin } from '../../lib/admin'
 
 type Props = {
   profile: Profile | null
   onSignOut: () => void
 }
 
-const menuItems = [
-  { to: '/profile', icon: User, label: 'My Profile' },
-  { to: '/dashboard', icon: LayoutDashboard, label: 'My Listings' },
-  { to: '/favorites', icon: Heart, label: 'Favorites' },
-  { to: '/messages', icon: MessageCircle, label: 'Messages' },
-  { to: '/profile', icon: Settings, label: 'Settings' },
-]
+function getMenuItems(profile: Profile | null) {
+  const items = [
+    { to: '/profile', icon: User, label: 'My Profile' },
+    { to: '/dashboard', icon: LayoutDashboard, label: 'My Listings' },
+    { to: '/favorites', icon: Heart, label: 'Favorites' },
+    { to: '/messages', icon: MessageCircle, label: 'Messages' },
+    { to: '/profile', icon: Settings, label: 'Settings' },
+  ]
+  if (isAdmin(profile)) {
+    items.splice(1, 0, { to: '/admin', icon: Shield, label: 'Admin Panel' })
+  }
+  return items
+}
 
 export function ProfileDropdown({ profile, onSignOut }: Props) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+  const menuItems = getMenuItems(profile)
 
   const close = useCallback(() => setOpen(false), [])
 

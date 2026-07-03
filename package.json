@@ -18,7 +18,9 @@
     "test:e2e:report": "allure generate allure-results --clean -o allure-report && echo Report generated to allure-report/index.html",
     "db:seed:auth": "node scripts/seed-auth.mjs",
     "db:seed:data": "node scripts/seed-data.mjs",
-    "db:seed": "npm run db:seed:auth && npm run db:seed:data"
+    "db:seed": "npm run db:seed:auth && npm run db:seed:data",
+    "promote-admin": "node scripts/promote-admin.mjs",
+    "setup-supabase": "node scripts/setup-supabase.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
@@ -33,6 +35,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",
+    "@testing-library/jest-dom": "^6.9.1",
     "@types/leaflet": "^1.9.21",
     "@types/node": "^26.0.1",
     "@types/react": "^18.3.3",
@@ -43,8 +46,11 @@
     "autoprefixer": "^10.4.19",
     "eslint": "^9.8.0",
     "eslint-plugin-playwright": "^2.10.4",
+    "fake-indexeddb": "^6.2.5",
+    "jsdom": "^29.1.1",
     "pg": "^8.22.0",
     "postcss": "^8.4.40",
+    "supabase": "^2.109.0",
     "tailwindcss": "^3.4.7",
     "typescript": "^5.5.4",
     "vite": "^5.4.0",

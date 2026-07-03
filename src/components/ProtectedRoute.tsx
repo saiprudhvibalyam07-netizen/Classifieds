@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
+import { requireAdmin } from '../lib/admin'
 import type { ReactNode } from 'react'
 
 export function ProtectedRoute({ children, adminOnly = false }: { children: ReactNode; adminOnly?: boolean }) {
@@ -14,7 +15,11 @@ export function ProtectedRoute({ children, adminOnly = false }: { children: Reac
   }
 
   if (!user) return <Navigate to="/login" replace />
-  if (adminOnly && profile?.role !== 'admin') return <Navigate to="/" replace />
+
+  if (adminOnly) {
+    const { allowed } = requireAdmin(profile)
+    if (!allowed) return <Navigate to="/access-denied" replace />
+  }
 
   return <>{children}</>
 }

@@ -1,38 +1,72 @@
 import { FormEvent, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 
+const ERROR_MESSAGES: Record<string, string> = {
+  'User already registered': 'This email is already registered. Please sign in instead.',
+  'Password should be at least 6 characters': 'Password must be at least 6 characters long.',
+  'signup_disabled': 'Registration is currently disabled. Please try again later.',
+}
+
+function userFriendlyError(message: string): string {
+  return ERROR_MESSAGES[message] || message
+}
+
 export function Register() {
-  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [fullName, setFullName] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setError('')
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long.')
+      return
+    }
+
     setLoading(true)
 
-    const { data, error: err } = await supabase.auth.signUp({
+    const { error: err } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName } },
+      options: {
+        data: { full_name: fullName },
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
     })
 
     if (err) {
-      setError(err.message)
+      setError(userFriendlyError(err.message))
       setLoading(false)
-    } else if (data.user) {
-      await supabase.from('profiles').insert({
-        id: data.user.id,
-        email,
-        full_name: fullName,
-        role: 'user',
-      })
-      navigate('/')
+    } else {
+      setSuccess(true)
+      setLoading(false)
     }
+  }
+
+  if (success) {
+    return (
+      <div className="mx-auto mt-16 max-w-md px-4">
+        <div className="rounded-xl bg-green-50 p-8 text-center shadow-sm">
+          <div className="mb-4 text-4xl">📧</div>
+          <h1 className="mb-4 text-2xl font-bold text-green-800">Account Created Successfully</h1>
+          <p className="mb-6 text-green-700">
+            Please check your email and click the confirmation link before signing in.
+          </p>
+          <Link
+            to="/login"
+            className="inline-block rounded-lg bg-primary-600 px-6 py-2.5 font-medium text-white transition hover:bg-primary-700"
+            data-testid="register-success-login-link"
+          >
+            Go to Sign In
+          </Link>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -86,7 +120,7 @@ export function Register() {
           />
         </div>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-red-600" data-testid="register-error-message">{error}</p>}
 
         <button
           type="submit"

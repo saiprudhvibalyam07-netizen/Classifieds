@@ -1,7 +1,4 @@
-export type NotificationType =
-  | 'new_message' | 'offer_received' | 'offer_accepted' | 'offer_rejected'
-  | 'offer_countered' | 'listing_shared' | 'mention' | 'reaction'
-  | 'conversation_added' | 'message_edited' | 'message_deleted'
+import type { MessageType, AttachmentType, MessageStatus } from './constants'
 
 export interface ChatConversation {
   id: string
@@ -22,7 +19,7 @@ export interface ChatConversation {
 export interface MessageAttachmentRow {
   id: string
   message_id: string
-  type: 'image' | 'file' | 'voice'
+  type: AttachmentType
   storage_path: string
   public_url: string
   filename: string
@@ -40,6 +37,20 @@ export interface MessageAttachmentRow {
   sort_order: number
 }
 
+export interface MessageReaction {
+  id: string
+  message_id: string
+  profile_id: string
+  emoji: string
+  created_at: string
+}
+
+export interface MessageReactionGroup {
+  emoji: string
+  count: number
+  hasReacted: boolean
+}
+
 export interface ChatMessage {
   id: string
   conversation_id: string
@@ -47,28 +58,60 @@ export interface ChatMessage {
   message: string
   message_attachments: MessageAttachmentRow[]
   is_read: boolean
-  type: 'text' | 'image' | 'file' | 'system' | 'offer' | 'listing_share' | 'call_start' | 'call_end' | 'call_missed' | null
+  type: MessageType | null
   content: string | null
   metadata: Record<string, unknown>
+  reply_to: string | null
   is_deleted: boolean
+  is_edited: boolean
+  edited_at: string | null
   updated_at: string | null
   created_at: string
   profile?: { id: string; full_name: string | null; avatar_url: string | null }
-}
-
-export interface NotificationEvent {
-  id: string
-  user_id: string
-  type: NotificationType
-  title: string
-  body: string | null
-  data: Record<string, unknown>
-  is_read: boolean
-  created_at: string
+  reply_message?: ChatMessage | null
+  reactions?: MessageReaction[]
+  status?: MessageStatus
 }
 
 export interface Toast {
   id: string
   type: 'success' | 'error' | 'info'
   message: string
+}
+
+export interface Page<T> {
+  data: T[]
+  nextCursor: string | null
+  hasMore: boolean
+}
+
+export interface AttachmentUpload {
+  id: string
+  file: File
+  type: AttachmentType
+  previewUrl?: string
+  progress: number
+  status: 'pending' | 'uploading' | 'done' | 'error'
+  result?: {
+    type: AttachmentType
+    url: string
+    name: string
+    size: number
+    storage_path: string
+    mime_type: string
+  }
+  error?: string
+}
+
+export interface ReplyInfo {
+  messageId: string
+  senderName: string
+  content: string
+}
+
+export interface ConversationSearchResult {
+  messageId: string
+  content: string
+  createdAt: string
+  matchIndex: number
 }

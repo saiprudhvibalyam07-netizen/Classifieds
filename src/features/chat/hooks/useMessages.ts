@@ -1,14 +1,27 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAuth } from '../../../hooks/useAuth'
-import { chatApi } from '../api/chatApi'
-import { chatMutations } from '../api/chatMutations'
-import { subscribeToMessages } from '../api/chatSubscriptions'
+import { messageService } from '../services/messageService'
+import { realtimeService } from '../services/realtimeService'
 import type { ChatMessage } from '../types'
-import { generateStoragePath, validateFile } from '../utils/uploadUtils'
-import { useChatStore } from '../state/chatStore'
-import { useOfflineQueue } from './useOfflineQueue'
+import { MESSAGE_STATUS } from '../constants'
 
-export function useMessages(conversationId: string | null) {
+export interface UseMessagesReturn {
+  messages: ChatMessage[]
+  loading: boolean
+  loadingOlder: boolean
+  error: string | null
+  sending: boolean
+  hasMore: boolean
+  send: (text: string, attachments?: { type: string; url: string; name: string; size: number; storage_path: string; mime_type: string }[], replyTo?: string | null) => void
+  loadOlder: () => void
+  editMessage: (messageId: string, newContent: string) => Promise<void>
+  deleteMessage: (messageId: string, forEveryone?: boolean) => Promise<void>
+  addReaction: (messageId: string, emoji: string) => Promise<void>
+  removeReaction: (messageId: string, emoji: string) => Promise<void>
+  refreshMessage: (messageId: string) => void
+}
+
+export function useMessages(conversationId: string | null): UseMessagesReturn {
   const { user } = useAuth()
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [loading, setLoading] = useState(false)
@@ -17,16 +30,15 @@ export function useMessages(conversationId: string | null) {
   const [sending, setSending] = useState(false)
   const [nextCursor, setNextCursor] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(false)
-  const addToast = useChatStore((s) => s.addToast)
   const mountedRef = useRef(true)
-  const { enqueue, isOnline } = useOfflineQueue()
+  const loadingOlderRef = useRef(false)
 
   const loadMessages = useCallback(async (id: string) => {
     setLoading(true)
     setError(null)
 
     try {
-      const page = await chatApi.fetchMessages(id)
+      const page = await messageService.fetchMessages(id)
       if (mountedRef.current) {
         setMessages(page.data)
         setNextCursor(page.nextCursor)
@@ -35,14 +47,11 @@ export function useMessages(conversationId: string | null) {
     } catch (err) {
       if (mountedRef.current) {
         setError(err instanceof Error ? err.message : 'Failed to load messages')
-        addToast({ type: 'error', message: 'Failed to load messages' })
       }
     } finally {
       if (mountedRef.current) setLoading(false)
     }
-  }, [addToast])
-
-  const loadingOlderRef = useRef(false)
+  }, [])
 
   const loadOlder = useCallback(async () => {
     if (!conversationId || !nextCursor || loadingOlderRef.current) return
@@ -52,7 +61,7 @@ export function useMessages(conversationId: string | null) {
     setError(null)
 
     try {
-      const page = await chatApi.fetchMessages(conversationId, nextCursor)
+      const page = await messageService.fetchMessages(conversationId, nextCursor)
       if (mountedRef.current) {
         setMessages((prev) => [...page.data, ...prev])
         setNextCursor(page.nextCursor)
@@ -61,7 +70,6 @@ export function useMessages(conversationId: string | null) {
     } catch (err) {
       if (mountedRef.current) {
         setError(err instanceof Error ? err.message : 'Failed to load older messages')
-        addToast({ type: 'error', message: 'Failed to load older messages' })
       }
     } finally {
       if (mountedRef.current) {
@@ -69,7 +77,17 @@ export function useMessages(conversationId: string | null) {
         setLoadingOlder(false)
       }
     }
-  }, [conversationId, nextCursor, addToast])
+  }, [conversationId, nextCursor])
+
+  const handleRealtimeReaction = useCallback((msgId: string) => {
+    messageService.fetchReactions(msgId).then((reactions) => {
+      if (mountedRef.current) {
+        setMessages((prev) => prev.map((m) =>
+          m.id === msgId ? { ...m, reactions } : m
+        ))
+      }
+    }).catch(() => {})
+  }, [])
 
   useEffect(() => {
     mountedRef.current = true
@@ -81,159 +99,179 @@ export function useMessages(conversationId: string | null) {
     }
 
     loadMessages(conversationId)
-    chatMutations.markConversationRead(conversationId, user.id).catch(() => {})
 
-    const unsubscribe = subscribeToMessages(
+    const unsubscribe = realtimeService.subscribeToMessages(
+      conversationId,
+      async (payload) => {
+        if (!mountedRef.current) return
+        const raw = payload.new as Record<string, unknown>
+        const newId = raw.id as string
+        setMessages((prev) => {
+          const existing = prev.find((m) => m.id === newId)
+          if (existing) {
+            return prev.map((m) =>
+              m.id === newId
+                ? { ...m, ...raw, status: MESSAGE_STATUS.DELIVERED }
+                : m
+            )
+          }
+          return [...prev, { ...raw, status: MESSAGE_STATUS.DELIVERED } as unknown as ChatMessage]
+        })
+        const hydrated = await messageService.fetchMessage(newId)
+        if (mountedRef.current && hydrated) {
+          setMessages((prev) => prev.map((m) =>
+            m.id === newId ? { ...hydrated, status: MESSAGE_STATUS.DELIVERED } : m
+          ))
+        }
+      },
+      (payload) => {
+        if (!mountedRef.current) return
+        const raw = payload.new as Record<string, unknown>
+        const updatedId = raw.id as string
+        setMessages((prev) => prev.map((m) =>
+          m.id === updatedId ? { ...m, ...raw } : m
+        ))
+      },
+      (payload) => {
+        if (!mountedRef.current) return
+        const deletedId = (payload.old as Record<string, unknown>).id as string
+        setMessages((prev) => prev.filter((m) => m.id !== deletedId))
+      }
+    )
+
+    const unsubReactions = realtimeService.subscribeToReactions(
       conversationId,
       (payload) => {
         if (mountedRef.current) {
-          const newMsg = payload.new as unknown as ChatMessage
-          setMessages((prev) => prev.some((m) => m.id === newMsg.id) ? prev : [...prev, newMsg])
+          const msgId = payload.new
+            ? (payload.new as Record<string, unknown>).message_id as string
+            : (payload.old as Record<string, unknown>).message_id as string
+          if (msgId) handleRealtimeReaction(msgId)
         }
-      },
+      }
+    )
+
+    const unsubReads = realtimeService.subscribeToReadReceipts(
+      conversationId,
       (payload) => {
-        if (mountedRef.current) {
-          const updated = payload.new as unknown as ChatMessage
-          setMessages((prev) => prev.map((m) => (m.id === updated.id ? updated : m)))
-        }
-      },
-      (payload) => {
-        if (mountedRef.current) {
-          const deletedId = (payload.old as Record<string, unknown>).id as string
-          setMessages((prev) => prev.filter((m) => m.id !== deletedId))
-        }
+        if (!mountedRef.current) return
+        const readMsgId = (payload.new as Record<string, unknown>).message_id as string
+        if (!readMsgId) return
+        setMessages((prev) => prev.map((m) =>
+          m.id === readMsgId ? { ...m, status: MESSAGE_STATUS.READ } : m
+        ))
       }
     )
 
     return () => {
       mountedRef.current = false
       unsubscribe()
+      unsubReactions()
+      unsubReads()
     }
-  }, [conversationId, user?.id, loadMessages])
+  }, [conversationId, user?.id, loadMessages, handleRealtimeReaction])
 
-  const send = useCallback(async (text: string, oldAttachments?: { type: 'image' | 'file'; url: string; name: string; size: number; storage_path: string; mime_type: string }[]) => {
-    if (!conversationId || !user) {
-      addToast({ type: 'error', message: 'Cannot send message' })
-      return
-    }
+  const send = useCallback(async (
+    text: string,
+    attachments?: { type: string; url: string; name: string; size: number; storage_path: string; mime_type: string }[],
+    replyTo?: string | null
+  ) => {
+    if (!conversationId || !user) return
 
     const trimmed = text.trim()
-    if (!trimmed && (!oldAttachments || oldAttachments.length === 0)) return
-
-    if (!isOnline) {
-      const queueAttachments = oldAttachments?.map((a) => ({
-        type: a.type,
-        url: a.url,
-        name: a.name,
-        size: a.size,
-        storage_path: a.storage_path,
-        mime_type: a.mime_type,
-      }))
-      const hasImage = oldAttachments?.some((a) => a.type === 'image')
-      await enqueue('send_message', {
-        conversation_id: conversationId,
-        sender_id: user.id,
-        message: trimmed || '',
-        content: trimmed || null,
-        type: oldAttachments && oldAttachments.length > 0 ? (hasImage ? 'image' : 'file') : 'text',
-        metadata: {},
-        attachments: queueAttachments,
-      })
-      addToast({ type: 'info', message: 'Message queued — you are offline' })
-      return
-    }
+    if (!trimmed && (!attachments || attachments.length === 0)) return
 
     setSending(true)
     setError(null)
 
     try {
-      const data = await chatMutations.sendMessage(conversationId, user.id, trimmed, oldAttachments)
+      const data = await messageService.sendMessage(conversationId, user.id, trimmed, attachments, replyTo)
       if (mountedRef.current) {
-        setMessages((prev) => prev.some((m) => m.id === data.id) ? prev : [...prev, data])
+        setMessages((prev) => prev.some((m) => m.id === data.id)
+          ? prev.map((m) => m.id === data.id ? { ...data, status: MESSAGE_STATUS.DELIVERED } : m)
+          : [...prev, { ...data, status: MESSAGE_STATUS.SENT }]
+        )
       }
-      window.dispatchEvent(new CustomEvent('unread-refresh'))
     } catch (err) {
       if (mountedRef.current) {
         setError(err instanceof Error ? err.message : 'Failed to send message')
-        addToast({ type: 'error', message: 'Failed to send message. Please try again.' })
       }
     } finally {
       if (mountedRef.current) setSending(false)
     }
-  }, [conversationId, user, addToast, enqueue, isOnline])
+  }, [conversationId, user])
 
-  const edit = useCallback(async (messageId: string, newText: string): Promise<boolean> => {
-    if (!user || !newText.trim()) return false
-
+  const editMessage = useCallback(async (messageId: string, newContent: string) => {
+    if (!user) return
+    const trimmed = newContent.trim().slice(0, 1000)
+    const now = new Date().toISOString()
+    let snapshot: ChatMessage | undefined
+    setMessages((prev) => {
+      snapshot = prev.find((m) => m.id === messageId)
+      return prev.map((m) =>
+        m.id === messageId
+          ? { ...m, message: trimmed, content: trimmed, is_edited: true, edited_at: now }
+          : m
+      )
+    })
     try {
-      await chatMutations.editMessage(messageId, user.id, newText)
-      if (mountedRef.current) {
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.id === messageId ? { ...m, message: newText.trim(), updated_at: new Date().toISOString() } : m
-          )
-        )
-      }
-      return true
+      await messageService.editMessage(messageId, user.id, newContent)
     } catch (err) {
-      if (mountedRef.current) {
-        setError(err instanceof Error ? err.message : 'Failed to edit message')
-        addToast({ type: 'error', message: 'Failed to edit message' })
+      if (snapshot && mountedRef.current) {
+        setMessages((prev) => prev.map((m) => m.id === messageId ? snapshot! : m))
       }
-      return false
+      setError(err instanceof Error ? err.message : 'Failed to edit message')
     }
-  }, [user, addToast])
+  }, [user])
 
-  const remove = useCallback(async (messageId: string): Promise<boolean> => {
-    if (!user) return false
-
+  const deleteMessage = useCallback(async (messageId: string, forEveryone?: boolean) => {
+    if (!user) return
+    let snapshot: ChatMessage | undefined
+    setMessages((prev) => {
+      snapshot = prev.find((m) => m.id === messageId)
+      if (forEveryone) {
+        return prev.filter((m) => m.id !== messageId)
+      }
+      return prev.map((m) =>
+        m.id === messageId
+          ? { ...m, is_deleted: true, message: '', content: null }
+          : m
+      )
+    })
     try {
-      await chatMutations.deleteMessage(messageId, user.id)
-      if (mountedRef.current) {
-        setMessages((prev) => prev.filter((m) => m.id !== messageId))
-      }
-      return true
-    } catch (err) {
-      if (mountedRef.current) {
-        setError(err instanceof Error ? err.message : 'Failed to delete message')
-        addToast({ type: 'error', message: 'Failed to delete message' })
-      }
-      return false
-    }
-  }, [user, addToast])
-
-  const upload = useCallback(async (file: File): Promise<{ type: 'image' | 'file'; url: string; name: string; size: number; storage_path: string; mime_type: string } | null> => {
-    if (!conversationId) return null
-
-    const isImage = file.type.startsWith('image/')
-
-    const validation = validateFile(file, isImage)
-    if (!validation.valid) {
-      addToast({ type: 'error', message: validation.error! })
-      return null
-    }
-
-    try {
-      const bucket = isImage ? 'chat-images' : 'chat-files'
-      const path = generateStoragePath(conversationId, file.name)
-      const result = await chatMutations.uploadFile(bucket, path, file)
-
-      return {
-        type: isImage ? 'image' : 'file',
-        url: result.signedUrl,
-        name: file.name,
-        size: file.size,
-        storage_path: result.path,
-        mime_type: file.type,
+      if (forEveryone) {
+        await messageService.deleteForEveryone(messageId, user.id)
+      } else {
+        await messageService.deleteMessage(messageId, user.id)
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Upload failed'
-      if (mountedRef.current) {
-        addToast({ type: 'error', message: `Upload failed: ${msg}` })
+      if (snapshot && mountedRef.current) {
+        setMessages((prev) => {
+          if (forEveryone) return [...prev, snapshot!]
+          return prev.map((m) => m.id === messageId ? snapshot! : m)
+        })
       }
-      return null
+      setError(err instanceof Error ? err.message : 'Failed to delete message')
     }
-  }, [conversationId, addToast])
+  }, [user])
+
+  const addReaction = useCallback(async (messageId: string, emoji: string) => {
+    if (!user) return
+    try {
+      await messageService.addReaction(messageId, user.id, emoji)
+    } catch {}
+  }, [user])
+
+  const removeReaction = useCallback(async (messageId: string, emoji: string) => {
+    if (!user) return
+    try {
+      await messageService.removeReaction(messageId, user.id, emoji)
+    } catch {}
+  }, [user])
+
+  const refreshMessage = useCallback((messageId: string) => {
+    handleRealtimeReaction(messageId)
+  }, [handleRealtimeReaction])
 
   return {
     messages,
@@ -243,10 +281,11 @@ export function useMessages(conversationId: string | null) {
     sending,
     hasMore,
     send,
-    edit,
-    remove,
-    upload,
     loadOlder,
-    retry: () => conversationId ? loadMessages(conversationId) : undefined,
+    editMessage,
+    deleteMessage,
+    addReaction,
+    removeReaction,
+    refreshMessage,
   }
 }

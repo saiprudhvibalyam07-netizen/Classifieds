@@ -3,6 +3,7 @@ import { Check, X } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
+import { requireAdmin } from '../lib/admin'
 import type { Listing, Profile } from '../types'
 
 type Tab = 'pending' | 'users' | 'listings'
@@ -16,8 +17,9 @@ export function Admin() {
   const [pendingListings, setPendingListings] = useState<Listing[]>([])
 
   useEffect(() => {
-    if (profile && profile.role !== 'admin') navigate('/')
-    if (profile?.role === 'admin') {
+    if (profile) {
+      const { allowed } = requireAdmin(profile)
+      if (!allowed) { navigate('/access-denied'); return }
       fetchUsers()
       fetchListings()
       fetchPending()
@@ -110,13 +112,14 @@ export function Admin() {
     await fetchListings()
   }
 
-  if (!profile || profile.role !== 'admin') return null
+  const { allowed } = requireAdmin(profile)
+  if (!allowed) return null
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
       <h1 className="mb-6 text-3xl font-bold">Admin Panel</h1>
 
-      <div className="mb-6 flex gap-4">
+      <div className="mb-6 flex flex-wrap gap-4">
         <button
           onClick={() => setTab('pending')}
           className={`relative rounded-lg px-4 py-2 text-sm font-medium ${
@@ -146,6 +149,7 @@ export function Admin() {
         >
           Listings ({listings.length})
         </button>
+
       </div>
 
       {tab === 'pending' && (

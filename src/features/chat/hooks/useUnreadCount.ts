@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAuth } from '../../../hooks/useAuth'
-import { chatApi } from '../api/chatApi'
-import { subscribeToUnread } from '../api/chatSubscriptions'
+import { conversationService } from '../services/conversationService'
+import { realtimeService } from '../services/realtimeService'
 
 export function useUnreadCount() {
   const { user } = useAuth()
   const [count, setCount] = useState(0)
-  const [error, setError] = useState<string | null>(null)
   const mountedRef = useRef(true)
 
   const refresh = useCallback(async () => {
@@ -16,12 +15,9 @@ export function useUnreadCount() {
     }
 
     try {
-      const total = await chatApi.fetchUnreadCount(user.id)
+      const total = await conversationService.fetchUnreadCount(user.id)
       if (mountedRef.current) setCount(total)
-    } catch (err) {
-      if (mountedRef.current) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch unread count')
-      }
+    } catch {
     }
   }, [user])
 
@@ -31,17 +27,15 @@ export function useUnreadCount() {
     mountedRef.current = true
     refresh()
 
-    const unsubscribe = subscribeToUnread(user.id, refresh)
-
-    function onRefresh() { refresh() }
-    window.addEventListener('unread-refresh', onRefresh)
+    const unsubConversations = realtimeService.subscribeToConversations(user.id, refresh)
+    const unsubReads = realtimeService.subscribeToMessageReads(user.id, refresh)
 
     return () => {
       mountedRef.current = false
-      unsubscribe()
-      window.removeEventListener('unread-refresh', onRefresh)
+      unsubConversations()
+      unsubReads()
     }
   }, [user, refresh])
 
-  return { count, error, refresh }
+  return { count, error: null, refresh }
 }

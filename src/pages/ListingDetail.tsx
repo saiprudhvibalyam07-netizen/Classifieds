@@ -173,13 +173,19 @@ export function ListingDetail() {
 
           {user && listing.profile && user.id !== listing.user_id && (
             <Link
-              to={`/messages?new=true&listing=${listing.id}&seller=${listing.profile.id}`}
+              to={`/messages?new=true&listing=${listing.id}&seller=${listing.user_id}`}
               className="mt-4 flex items-center justify-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-primary-700"
               data-testid="listing-contact-seller"
             >
               <MessageSquare className="h-4 w-4" />
               Chat with Seller
             </Link>
+          )}
+
+          {user && listing.profile && user.id === listing.user_id && (
+            <div className="mt-4 rounded-lg bg-gray-50 p-4 text-center text-sm text-gray-500">
+              This is your own listing
+            </div>
           )}
 
           {listing.status === 'pending' && user?.id === listing.user_id && (

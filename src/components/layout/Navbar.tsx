@@ -1,24 +1,26 @@
 import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Building2, Home, LayoutGrid, Search, PlusCircle, Heart, MessageCircle, Menu } from 'lucide-react'
+import { Building2, Home, Search, PlusCircle, Heart, MessageCircle, Menu, Shield } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { useUnreadCount } from '../../features/chat/hooks/useUnreadCount'
+import { isAdmin } from '../../lib/admin'
 import { NavItem } from './NavItem'
+import { CategoryDropdown } from './CategoryDropdown'
 import { ProfileDropdown } from './ProfileDropdown'
 import { NotificationBell } from './NotificationBell'
 import { MobileMenu } from './MobileMenu'
 
-const centerNav = [
-  { to: '/', icon: Home, label: 'Home', exact: true },
-  { to: '/listings', icon: LayoutGrid, label: 'Categories' },
-  { to: '/listings', icon: Search, label: 'Browse Ads' },
-  { to: '/create', icon: PlusCircle, label: 'Post Ad' },
-  { to: '/favorites', icon: Heart, label: 'Favorites' },
-  { to: '/messages', icon: MessageCircle, label: 'Messages' },
-]
-
 export function Navbar() {
   const { user, profile, loading, signOut } = useAuth()
+
+  const centerNav = [
+    { to: '/', icon: Home, label: 'Home', exact: true },
+    { to: '/listings', icon: Search, label: 'Browse Ads' },
+    { to: '/create', icon: PlusCircle, label: 'Post Ad' },
+    { to: '/favorites', icon: Heart, label: 'Favorites' },
+    { to: '/messages', icon: MessageCircle, label: 'Messages' },
+    ...(isAdmin(profile) ? [{ to: '/admin', icon: Shield, label: 'Admin' }] : []),
+  ]
   const { count: unread } = useUnreadCount()
   const [mobileOpen, setMobileOpen] = useState(false)
   const handleCloseMobile = useCallback(() => setMobileOpen(false), [])
@@ -56,6 +58,7 @@ export function Navbar() {
             </Link>
 
             <nav className="ml-10 hidden items-center gap-1 lg:flex" aria-label="Main navigation">
+              <CategoryDropdown />
               {centerNav.map((item) => (
                 <NavItem
                   key={item.label}

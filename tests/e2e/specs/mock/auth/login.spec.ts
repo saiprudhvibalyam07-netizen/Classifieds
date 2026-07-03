@@ -15,7 +15,7 @@ test.describe('Authentication - Login', () => {
 
   test('should show error for invalid credentials', async ({ loginPage }) => {
     await loginPage.login('wrong@email.com', 'wrongpassword');
-    await loginPage.expectErrorMessage('Invalid login credentials');
+    await loginPage.expectErrorMessage('Invalid email or password. Please try again.');
   });
 
   test('should not submit form with empty email', async ({ loginPage, page }) => {
@@ -37,5 +37,24 @@ test.describe('Authentication - Login', () => {
     await expect(page.locator('h1')).toBeVisible();
     await expect(page.locator('[data-testid="login-email-input"]')).toBeVisible();
     await expect(page.locator('[data-testid="login-submit-button"]')).toBeVisible();
+  });
+
+  test('should show email confirmation required error for unconfirmed emails', async ({ loginPage, page }) => {
+    // Intercept the auth request to simulate email_not_confirmed error
+    await page.route('**/auth/v1/token?grant_type=password', async (route) => {
+      await route.fulfill({
+        status: 400,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          error: 'email_not_confirmed',
+          error_description: 'Email not confirmed',
+          message: 'Email not confirmed',
+        }),
+      });
+    });
+
+    await loginPage.goto();
+    await loginPage.login('unconfirmed@test.com', 'somepassword');
+    await loginPage.expectErrorMessage('Please confirm your email address before signing in. Check your inbox for the confirmation link.');
   });
 });

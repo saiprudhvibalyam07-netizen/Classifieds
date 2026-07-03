@@ -16,7 +16,7 @@ export const CategoryCard = memo(function CategoryCard({ category, listingCount 
 
   return (
     <Link
-      to={`/listings?category=${category.slug}`}
+      to={`/category/${category.slug}`}
       className="group flex items-center gap-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
       aria-label={`Browse ${category.name} listings`}
     >
@@ -28,6 +28,7 @@ export const CategoryCard = memo(function CategoryCard({ category, listingCount 
         <p className="mt-0.5 text-xs text-gray-500">
           {listingCount != null ? `${listingCount.toLocaleString()} Listings` : '\u2014 Listings'}
         </p>
+        <p className="mt-0.5 text-xs text-gray-400 line-clamp-1">{category.description}</p>
       </div>
     </Link>
   )

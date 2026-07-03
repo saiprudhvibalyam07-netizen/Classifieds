@@ -10,9 +10,9 @@ export const TEST_USERS = {
     name: 'Priya Sharma',
   },
   admin: {
-    email: process.env.TEST_ADMIN_EMAIL || 'admin@valclassifieds.test',
-    password: process.env.TEST_ADMIN_PASSWORD || 'AdminPass123!',
-    name: 'Test Admin',
+    email: process.env.TEST_ADMIN_EMAIL || 'arun.pillai@valclassifieds.test',
+    password: process.env.TEST_ADMIN_PASSWORD || 'Admin@2024Secure!',
+    name: 'Dr. Arun Pillai',
   },
 } as const;
 
