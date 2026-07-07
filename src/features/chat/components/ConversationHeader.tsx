@@ -45,7 +45,7 @@ export function ConversationHeader({ conversation, currentUserId, onBack, onDele
       )}
       <div className="relative">
         {avatarUrl ? (
-          <img src={avatarUrl} alt={name} className="h-9 w-9 rounded-full object-cover" />
+          <img src={avatarUrl} alt={name} width={36} height={36} className="h-9 w-9 rounded-full object-cover" loading="lazy" />
         ) : (
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-200">
             <User className="h-5 w-5 text-gray-500" />

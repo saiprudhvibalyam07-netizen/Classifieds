@@ -3,6 +3,18 @@ import { MapPin, ExternalLink } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { LatLngExpression } from 'leaflet'
 
+let leafletCssLoaded = false
+
+function loadLeafletCss() {
+  if (leafletCssLoaded) return
+  leafletCssLoaded = true
+  const link = document.createElement('link')
+  link.rel = 'stylesheet'
+  link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
+  link.crossOrigin = 'anonymous'
+  document.head.appendChild(link)
+}
+
 type Props = {
   latitude: number
   longitude: number
@@ -14,6 +26,7 @@ export function ListingMap({ latitude, longitude, title, address }: Props) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    loadLeafletCss()
     setMounted(true)
   }, [])
 

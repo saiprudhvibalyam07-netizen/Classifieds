@@ -55,7 +55,7 @@ export function CallUI({ callType, callState, callerName, callerAvatar, duration
       <div className="flex flex-col items-center gap-6 px-8">
         <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-gray-700">
           {callerAvatar ? (
-            <img src={callerAvatar} alt={callerName} className="h-full w-full object-cover" />
+            <img src={callerAvatar} alt={callerName} className="h-full w-full object-cover" loading="lazy" />
           ) : (
             <Phone className="h-10 w-10 text-gray-400" />
           )}

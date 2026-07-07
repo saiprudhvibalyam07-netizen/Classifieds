@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { Edit, Trash2, PlusCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
+import { SEO } from '../components/SEO'
+import { OptimizedImage } from '../components/OptimizedImage'
 import type { Listing } from '../types'
 
 export function Dashboard() {
@@ -43,7 +45,9 @@ export function Dashboard() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+    <>
+      <SEO title="My Dashboard" description="Manage your classified listings on ValClassifieds." url="/dashboard" />
+      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">My Dashboard</h1>
         <Link
@@ -71,9 +75,9 @@ export function Dashboard() {
             >
               <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
                 {listing.images && listing.images[0] ? (
-                  <img
+                  <OptimizedImage
                     src={listing.images[0].url}
-                    alt=""
+                    alt={listing.title}
                     className="h-full w-full object-cover"
                   />
                 ) : (
@@ -122,5 +126,6 @@ export function Dashboard() {
         </div>
       )}
     </div>
+    </>
   )
 }

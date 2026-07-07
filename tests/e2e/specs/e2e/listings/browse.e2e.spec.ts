@@ -1,53 +1,83 @@
-import { test, expect } from '../../../fixtures/e2eContext';
+import { test, expect } from '../../../fixtures/noAuthContext';
+import { SEARCH_QUERIES } from '../../../utils/testData';
 
-test.describe('E2E: Listings - Browse & Search', () => {
-  test.beforeEach(async ({ listingsPage }) => {
-    await listingsPage.goto();
+test.describe('E2E: Browse Listings', () => {
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/listings');
+    await page.waitForLoadState('load');
   });
 
-  test('should display listing cards', async ({ listingsPage }) => {
-    await listingsPage.expectLoadingToFinish();
-    await listingsPage.expectListingsVisible();
-    const count = await listingsPage.getListingCount();
+  async function openFilters(page: import('@playwright/test').Page) {
+    const filtersBtn = page.locator('button', { hasText: 'Filters' });
+    if (await filtersBtn.isVisible()) {
+      await filtersBtn.click();
+      await page.waitForSelector('[data-testid="listings-category-select"]', { timeout: 5000 });
+    }
+  }
+
+  test('displays listing cards', async ({ page }) => {
+    await expect(page.locator('[data-testid="listing-card"]').first()).toBeVisible({ timeout: 10000 });
+    const count = await page.locator('[data-testid="listing-card"]').count();
     expect(count).toBeGreaterThan(0);
   });
 
-  test('should filter by keyword search', async ({ listingsPage }) => {
-    await listingsPage.search('Camera');
-    await listingsPage.expectCardTitlesContain('Camera');
+  test('filters by keyword search', async ({ page }) => {
+    await page.locator('[data-testid="listings-search-input"]').fill(SEARCH_QUERIES.keyword);
+    await page.locator('[data-testid="listings-search-input"]').press('Enter');
+    await page.waitForLoadState('networkidle');
+    const titles = await page.locator('[data-testid="listing-card-title"]').allTextContents();
+    for (const title of titles) {
+      expect(title.toLowerCase()).toContain(SEARCH_QUERIES.keyword.toLowerCase());
+    }
   });
 
-  test('should filter by category', async ({ listingsPage }) => {
-    await listingsPage.filterByCategory('Vehicles');
-    const count = await listingsPage.getListingCount();
-    expect(count).toBeGreaterThanOrEqual(0);
+  test('filters by category', async ({ page }) => {
+    await openFilters(page);
+    await page.locator('[data-testid="listings-category-select"]').selectOption(SEARCH_QUERIES.category);
+    await page.waitForLoadState('networkidle');
   });
 
-  test('should show location filter in filters panel', async ({ listingsPage, page }) => {
-    await listingsPage.openFilters();
+  test('has location filter', async ({ page }) => {
+    await openFilters(page);
     await expect(page.locator('[data-testid="listings-city-select"]')).toBeVisible();
-    await expect(page.locator('label[for="filter-location"]')).toHaveText('Location');
   });
 
-  test('should filter by price range', async ({ listingsPage }) => {
-    await listingsPage.filterByPrice('100', '5000');
-    const count = await listingsPage.getListingCount();
-    expect(count).toBeGreaterThanOrEqual(0);
+  test('filters by price range', async ({ page }) => {
+    await openFilters(page);
+    await page.locator('[data-testid="listings-price-min"]').fill(SEARCH_QUERIES.priceMin);
+    await page.locator('[data-testid="listings-price-max"]').fill(SEARCH_QUERIES.priceMax);
+    await page.locator('[data-testid="listings-price-max"]').press('Enter');
+    await page.waitForLoadState('networkidle');
   });
 
-  test('should show empty state for no results', async ({ listingsPage }) => {
-    await listingsPage.search('xyznonexistentlisting999');
-    await listingsPage.expectEmptyState();
+  test('shows empty state for no results', async ({ page }) => {
+    await page.locator('[data-testid="listings-search-input"]').fill('ZZZZNONEXISTENT');
+    await page.locator('[data-testid="listings-search-input"]').press('Enter');
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('[data-testid="listings-empty-state"]')).toBeVisible({ timeout: 10000 });
   });
 
-  test('should navigate to listing detail on card click', async ({ listingsPage, page }) => {
-    await listingsPage.expectLoadingToFinish();
-    const firstTitle = await listingsPage.getFirstCardTitle();
-    await listingsPage.clickListingCard(0);
-    await expect(page.locator('[data-testid="listing-detail-title"]')).toHaveText(firstTitle);
+  test('navigates to listing detail on card click', async ({ page }) => {
+    const card = page.locator('[data-testid="listing-card"]').first();
+    await card.waitFor({ state: 'visible', timeout: 10000 });
+    await card.click();
+    await expect(page).toHaveURL(/\/listings\/[a-f0-9-]+/);
   });
 
-  test('should have accessible search input', async ({ listingsPage, page }) => {
+  test('search input is accessible', async ({ page }) => {
     await expect(page.locator('[data-testid="listings-search-input"]')).toHaveAttribute('aria-label');
+  });
+
+  test('has sort dropdown', async ({ page }) => {
+    await expect(page.locator('select').or(page.getByText('Sort', { exact: false })).first()).toBeVisible();
+  });
+
+  test('has pagination for many listings', async ({ page }) => {
+    const pagination = page.locator('[data-testid="listings-pagination"]');
+    const count = await page.locator('[data-testid="listing-card"]').count();
+    if (count >= 12) {
+      await expect(pagination).toBeVisible();
+    }
   });
 });

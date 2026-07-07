@@ -11,6 +11,7 @@ import { ConversationDetail } from '../components/ConversationDetail'
 import { SidebarSkeleton, MessagesSkeleton } from '../components/LoadingSkeleton'
 import { ErrorState } from '../components/ErrorState'
 import { EmptyState } from '../components/EmptyState'
+import { SEO } from '../../../components/SEO'
 
 const DESKTOP_BREAKPOINT = 768
 
@@ -134,13 +135,18 @@ export function MessagesPage() {
 
   if (!user) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-16 text-center">
-        <p className="text-sm text-gray-500">Sign in to view your messages.</p>
-      </div>
+      <>
+        <SEO title="Messages" description="Sign in to view your conversations on ValClassifieds." url="/messages" />
+        <div className="mx-auto max-w-3xl px-4 py-16 text-center">
+          <p className="text-sm text-gray-500">Sign in to view your messages.</p>
+        </div>
+      </>
     )
   }
 
   return (
+    <>
+      <SEO title="Messages" description="View your conversations and messages on ValClassifieds." url="/messages" />
     <div className="mx-auto flex h-[calc(100vh-4rem)] max-w-6xl flex-col">
       <div className="flex flex-1 overflow-hidden">
         {(!isMobile || showList) && (
@@ -148,7 +154,7 @@ export function MessagesPage() {
             isMobile ? 'w-full' : 'w-[360px] xl:w-[400px]'
           }`}>
             <div className="border-b border-gray-200 px-4 py-3">
-              <h2 className="text-lg font-semibold text-gray-900">Messages</h2>
+              <h1 className="text-lg font-semibold text-gray-900">Messages</h1>
             </div>
 
             {convLoading ? (
@@ -214,5 +220,6 @@ export function MessagesPage() {
         )}
       </div>
     </div>
+    </>
   )
 }

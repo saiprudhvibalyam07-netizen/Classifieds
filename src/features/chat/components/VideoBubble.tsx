@@ -50,6 +50,7 @@ export function VideoBubble({ src, filename, mimeType, thumbnailUrl, onLoad }: P
               src={thumbnailUrl}
               alt={filename}
               className="max-h-64 w-full object-cover"
+              loading="lazy"
             />
           ) : (
             <div className="flex h-48 w-64 items-center justify-center bg-gray-900">

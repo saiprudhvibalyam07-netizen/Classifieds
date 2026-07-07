@@ -4,6 +4,8 @@ import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
 import { requireAdmin } from '../lib/admin'
+import { SEO } from '../components/SEO'
+import { OptimizedImage } from '../components/OptimizedImage'
 import type { Listing, Profile } from '../types'
 
 type Tab = 'pending' | 'users' | 'listings'
@@ -116,7 +118,9 @@ export function Admin() {
   if (!allowed) return null
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+    <>
+      <SEO title="Admin Panel" description="Administration panel for ValClassifieds." url="/admin" />
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
       <h1 className="mb-6 text-3xl font-bold">Admin Panel</h1>
 
       <div className="mb-6 flex flex-wrap gap-4">
@@ -162,7 +166,7 @@ export function Admin() {
                 <div key={l.id} className="flex items-center gap-4 rounded-xl bg-white p-4 shadow-sm">
                   <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
                     {l.images && l.images[0] ? (
-                      <img src={l.images[0].url} alt="" className="h-full w-full object-cover" />
+                      <OptimizedImage src={l.images[0].url} alt={l.title} className="h-full w-full object-cover" />
                     ) : (
                       <div className="flex h-full items-center justify-center text-xs text-gray-400">No img</div>
                     )}
@@ -272,5 +276,6 @@ export function Admin() {
         </div>
       )}
     </div>
+    </>
   )
 }

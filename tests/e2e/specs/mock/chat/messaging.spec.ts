@@ -65,25 +65,25 @@ test.describe('Chat - Messaging', () => {
     await expect(videoBtn).toBeVisible();
   });
 
-  test('should display image attachment picker', async ({ chatPage, page }) => {
+  test('should display file attachment button', async ({ chatPage, page }) => {
     await chatPage.expectLoadingToFinish();
     await chatPage.selectConversation(0);
-    const imgBtn = page.locator('[data-testid="attach-image-button"]');
-    await expect(imgBtn).toBeVisible();
+    const btn = page.locator('[data-testid="attach-file-button"]');
+    await expect(btn).toBeVisible();
   });
 
-  test('should display video attachment picker', async ({ chatPage, page }) => {
+  test('should display camera button', async ({ chatPage, page }) => {
     await chatPage.expectLoadingToFinish();
     await chatPage.selectConversation(0);
-    const videoBtn = page.locator('[data-testid="attach-video-button"]');
-    await expect(videoBtn).toBeVisible();
+    const btn = page.locator('[data-testid="attach-camera-button"]');
+    await expect(btn).toBeVisible();
   });
 
-  test('should display document attachment picker', async ({ chatPage, page }) => {
+  test('should display voice recording button', async ({ chatPage, page }) => {
     await chatPage.expectLoadingToFinish();
     await chatPage.selectConversation(0);
-    const docBtn = page.locator('[data-testid="attach-document-button"]');
-    await expect(docBtn).toBeVisible();
+    const btn = page.locator('[data-testid="attach-voice-button"]');
+    await expect(btn).toBeVisible();
   });
 
   test('should display chat menu with options', async ({ chatPage, page }) => {

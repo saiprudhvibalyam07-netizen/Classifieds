@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
 import { LocationPicker } from '../components/LocationPicker'
+import { SEO } from '../components/SEO'
 import type { Category, Listing } from '../types'
 
 export function EditListing() {
@@ -105,7 +106,9 @@ export function EditListing() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
+    <>
+      <SEO title="Edit Listing" description="Edit your classified listing on ValClassifieds." />
+      <div className="mx-auto max-w-2xl px-4 py-8">
       <h1 className="mb-8 text-3xl font-bold">Edit Listing</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -188,5 +191,6 @@ export function EditListing() {
         </button>
       </form>
     </div>
+    </>
   )
 }

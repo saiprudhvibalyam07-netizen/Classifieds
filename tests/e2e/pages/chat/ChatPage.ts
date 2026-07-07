@@ -14,9 +14,9 @@ export class ChatPage {
   private emptyState = () => this.page.locator('[data-testid="chat-empty-state"]');
   private loadingSkeleton = () => this.page.locator('[data-testid="chat-loading-skeleton"]');
   private conversationHeader = () => this.page.locator('[data-testid="conversation-header"]');
-  private attachImageButton = () => this.page.locator('[data-testid="attach-image-button"]');
-  private attachVideoButton = () => this.page.locator('[data-testid="attach-video-button"]');
-  private attachDocumentButton = () => this.page.locator('[data-testid="attach-document-button"]');
+  private attachFileButton = () => this.page.locator('[data-testid="attach-file-button"]');
+  private attachCameraButton = () => this.page.locator('[data-testid="attach-camera-button"]');
+  private attachVoiceButton = () => this.page.locator('[data-testid="attach-voice-button"]');
   private imageBubble = () => this.page.locator('[data-testid="image-bubble"]');
   private videoBubble = () => this.page.locator('[data-testid="video-bubble"]');
   private documentBubble = () => this.page.locator('[data-testid="document-bubble"]');

@@ -1,6 +1,7 @@
 import { FormEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { SEO } from '../components/SEO'
 
 const ERROR_MESSAGES: Record<string, string> = {
   'User already registered': 'This email is already registered. Please sign in instead.',
@@ -50,7 +51,9 @@ export function Register() {
 
   if (success) {
     return (
-      <div className="mx-auto mt-16 max-w-md px-4">
+      <>
+        <SEO title="Account Created" description="Your ValClassifieds account has been created. Check your email to confirm your account." url="/register" />
+        <div className="mx-auto mt-16 max-w-md px-4">
         <div className="rounded-xl bg-green-50 p-8 text-center shadow-sm">
           <div className="mb-4 text-4xl">📧</div>
           <h1 className="mb-4 text-2xl font-bold text-green-800">Account Created Successfully</h1>
@@ -66,11 +69,14 @@ export function Register() {
           </Link>
         </div>
       </div>
+      </>
     )
   }
 
   return (
-    <div className="mx-auto mt-16 max-w-md px-4">
+    <>
+      <SEO title="Create Account" description="Create your ValClassifieds account to start buying and selling in your community." url="/register" />
+      <div className="mx-auto mt-16 max-w-md px-4">
       <h1 className="mb-6 text-3xl font-bold">Create Account</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -139,5 +145,6 @@ export function Register() {
         </Link>
       </p>
     </div>
+    </>
   )
 }

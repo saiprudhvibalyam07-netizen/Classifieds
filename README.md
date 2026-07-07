@@ -19,19 +19,54 @@ A modern classifieds marketplace built with React, TypeScript, Tailwind CSS, and
 - TypeScript
 - Tailwind CSS
 - Supabase (Auth, Database, Storage, Realtime)
-- Zustand (state management)
 - React Router v6
 - Playwright (E2E tests)
 
 ## Getting Started
 
-1. Clone repository
-2. Install dependencies: `npm install`
-3. Copy `.env.example` to `.env` and configure Supabase credentials
-4. Run database migrations via Supabase Dashboard SQL Editor
-5. Configure Supabase Auth settings (see below)
-6. Start development server: `npm run dev`
-7. Seed the database: `npm run db:seed`
+### Prerequisites
+
+- Node.js 18+
+- Supabase project (free tier)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/your-username/valclassifieds.git
+cd valclassifieds
+
+# Install dependencies
+npm install
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your Supabase project credentials
+```
+
+### Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VITE_SUPABASE_URL` | Yes | Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | Yes | Supabase anon/public key (safe for client) |
+
+**Important**: Never commit `.env` or any file containing real secrets. The `.env.example` file is safe to commit.
+
+### Running Locally
+
+```bash
+# Start development server
+npm run dev
+
+# The app is now available at http://localhost:5173
+```
+
+### Database Setup
+
+1. Run all migration files from `supabase/migrations/` in the Supabase Dashboard SQL Editor
+2. Configure Supabase Auth settings (see Email Confirmation below)
+3. (Optional) Seed the database: `npm run db:seed`
 
 ## Email Confirmation
 
@@ -119,16 +154,59 @@ UPDATE public.profiles SET role = 'admin' WHERE email = 'user@example.com';
 The `promote_to_admin()` and `get_user_role()` functions are defined in migration `supabase/migrations/00013_admin_functions.sql`.
 
 
+## Build
+
+```bash
+# Production build
+npm run build
+
+# Output in dist/
+# TypeScript check runs before Vite build
+```
+
+## Deploy to Vercel
+
+The project is configured for Vercel deployment with `vercel.json`. It handles SPA routing (React Router) and static asset caching.
+
+### One-click Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+### Manual Deploy
+
+```bash
+npm i -g vercel
+vercel
+```
+
+### Environment Variables on Vercel
+
+Set these in Vercel Dashboard → Project Settings → Environment Variables:
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VITE_SUPABASE_URL` | Yes | Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | Yes | Supabase anon/public key |
+
+### Post-Deployment
+
+1. Update Supabase Auth Settings:
+   - Set **Site URL** to your Vercel deployment URL
+   - Add `https://your-domain.vercel.app/auth/callback` to **Redirect URLs**
+2. Submit sitemap to Google Search Console
+3. Configure custom domain in Vercel Dashboard (optional)
+
 ## Testing
 
-### Playwright Test Suites
+### Test Suites
 
-Two test suites are configured:
+Three test suites are configured:
 
-| Suite | Command | Description |
-|-------|---------|-------------|
-| Mock | `npm run test:e2e:mock` | 26 tests with mocked Supabase (fast, no backend) |
-| Real | `npm run test:e2e:real` | 30+ tests against real Supabase backend |
+| Suite | Command | Tests | Description |
+|-------|---------|:-----:|-------------|
+| Mock | `npm run test:e2e:mock` | 31 | Mocked Supabase (fast, no backend) |
+| E2E | `npm run test:e2e:real` | 76 | Against real Supabase backend |
+| API | `npm run test:e2e` | 72 | Direct Supabase API contract tests |
 
 ### Test Coverage
 
@@ -170,15 +248,15 @@ Listings:
 ### Running Tests
 
 ```bash
-# Start dev server
+# Start dev server (required for E2E tests)
 npm run dev
 
-# Run mock tests only
+# Run mock tests (fast, no backend needed)
 npm run test:e2e:mock
 
-# Run real backend tests only
+# Run real backend tests (requires Supabase)
 npm run test:e2e:real
 
-# Run all tests
+# Run all test suites (mock + e2e + api)
 npm run test:e2e
 ```

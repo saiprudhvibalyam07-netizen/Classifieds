@@ -8,6 +8,7 @@ import {
   getMessageIdsForUnreadCheck,
   getMessageReads,
   getNotifications,
+  getUnreadMessageIds,
 } from './mockChatData'
 
 const now = new Date().toISOString()
@@ -184,6 +185,8 @@ export async function mockSupabaseAuth(page: Page, overrides?: { role?: string; 
         updated_at: null,
         created_at: new Date().toISOString(),
         profile: { id: MOCK_USER_ID, full_name: 'Test Buyer', avatar_url: null },
+        reply_message: null,
+        status: 'sent',
       }
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(newMsg) })
       return
@@ -282,6 +285,32 @@ export async function mockSupabaseAuth(page: Page, overrides?: { role?: string; 
       return
     }
     await route.fulfill({ status: 200, contentType: 'application/json', body: '[]' })
+  })
+
+  await page.route('**/rest/v1/rpc/chat_unread_count', async (route) => {
+    const body = route.request().postData()
+    const { p_user_id } = body ? JSON.parse(body) : {}
+    const unread = getUnreadMessageIds(p_user_id || MOCK_USER_ID)
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(unread.size) })
+  })
+
+  await page.route('**/rest/v1/rpc/chat_unread_conversation_ids', async (route) => {
+    const body = route.request().postData()
+    const { p_user_id } = body ? JSON.parse(body) : {}
+    const userId = p_user_id || MOCK_USER_ID
+    const convs = getConversations(userId)
+    const unread = getUnreadMessageIds(userId)
+    const result: { conversation_id: string }[] = []
+    for (const conv of convs.data) {
+      const msgs = getMessages(conv.id)
+      for (const m of msgs.data) {
+        if (m.sender_id !== userId && unread.has(m.id)) {
+          result.push({ conversation_id: conv.id })
+          break
+        }
+      }
+    }
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(result) })
   })
 
   await page.route('**/storage/v1/object/*', async (route) => {

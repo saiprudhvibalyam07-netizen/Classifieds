@@ -57,5 +57,11 @@ export default defineConfig({
       testDir: './specs/e2e',
       use: { ...devices['Desktop Chrome'] },
     },
+    {
+      name: 'api',
+      testDir: './specs/api',
+      use: { ...devices['Desktop Chrome'] },
+      timeout: 30000,
+    },
   ],
 });

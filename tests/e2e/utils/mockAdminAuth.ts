@@ -54,6 +54,8 @@ export async function mockAdminAuth(page: Page) {
           email: 'admin@test.com',
           role: 'admin',
           phone: '+91-9876543210',
+          city: 'Mumbai',
+          state: 'Maharashtra',
         },
       ]),
     });

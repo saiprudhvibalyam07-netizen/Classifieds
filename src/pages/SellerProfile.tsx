@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { User, MapPin, Calendar, Package, ArrowLeft } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import { SEO } from '../components/SEO'
+import { OptimizedImage } from '../components/OptimizedImage'
 import type { Listing, Profile } from '../types'
 import { format } from 'date-fns'
 
@@ -49,7 +51,9 @@ export function SellerProfile() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+      <>
+        <SEO title="Seller Profile" description="View seller profile and their listings on ValClassifieds." />
+        <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="animate-pulse space-y-6">
           <div className="h-8 w-48 rounded bg-gray-200" />
           <div className="flex items-center gap-4">
@@ -66,21 +70,31 @@ export function SellerProfile() {
           </div>
         </div>
       </div>
+      </>
     )
   }
 
   if (!seller) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-16 text-center">
+      <>
+        <SEO title="Seller Not Found" description="The requested seller profile could not be found." />
+        <div className="mx-auto max-w-3xl px-4 py-16 text-center">
         <h1 className="text-2xl font-bold">Seller not found</h1>
         <Link to="/listings" className="mt-4 inline-block text-primary-600 hover:underline">
           Browse listings
         </Link>
       </div>
+      </>
     )
   }
 
   return (
+    <>
+      <SEO
+        title={seller.full_name ?? 'Seller'}
+        description={`View ${seller.full_name ?? 'seller'}'s profile and their active listings on ValClassifieds.`}
+        url={`/seller/${seller.id}`}
+      />
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
       <Link
         to="/listings"
@@ -93,9 +107,11 @@ export function SellerProfile() {
         <div className="bg-gradient-to-r from-primary-700 to-primary-500 p-6 sm:p-8">
           <div className="flex items-center gap-5">
             {seller.avatar_url ? (
-              <img
+              <OptimizedImage
                 src={seller.avatar_url}
                 alt={seller.full_name ?? ''}
+                width={80}
+                height={80}
                 className="h-20 w-20 rounded-full border-4 border-white/50 object-cover"
               />
             ) : (
@@ -163,7 +179,7 @@ export function SellerProfile() {
               >
                 <div className="aspect-[4/3] overflow-hidden rounded-t-xl bg-gray-100">
                   {listing.images && listing.images[0] ? (
-                    <img
+                    <OptimizedImage
                       src={listing.images[0].url}
                       alt={listing.title}
                       className="h-full w-full object-cover transition group-hover:scale-105"
@@ -195,5 +211,6 @@ export function SellerProfile() {
         </div>
       )}
     </div>
+    </>
   )
 }

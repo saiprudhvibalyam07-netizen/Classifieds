@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, SlidersHorizontal, List, LayoutGrid, Building2, MapPin, Calendar } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import { SEO, BreadcrumbListJsonLd } from '../components/SEO'
+import { OptimizedImage } from '../components/OptimizedImage'
 import type { Category, Listing } from '../types'
 import { categories } from '../data/categories'
 import { categoryFilterConfigs, type FilterDef } from '../data/categoryFilters'
@@ -100,10 +102,13 @@ export function CategoryPage() {
 
   if (!slug || !staticCat) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-20 text-center">
-        <h1 className="mb-4 text-2xl font-bold text-gray-900">Category Not Found</h1>
-        <Link to="/" className="text-primary-600 hover:text-primary-700">Back to Home</Link>
-      </div>
+      <>
+        <SEO title="Category Not Found" description="The requested category could not be found on ValClassifieds." />
+        <div className="mx-auto max-w-2xl px-4 py-20 text-center">
+          <h1 className="mb-4 text-2xl font-bold text-gray-900">Category Not Found</h1>
+          <Link to="/" className="text-primary-600 hover:text-primary-700">Back to Home</Link>
+        </div>
+      </>
     )
   }
 
@@ -112,7 +117,33 @@ export function CategoryPage() {
   const description = category?.description || staticCat.description
 
   return (
-    <div>
+    <>
+      <SEO
+        title={staticCat.name}
+        description={description || `Browse ${staticCat.name} classified listings on ValClassifieds.`}
+        url={`/category/${slug}`}
+        jsonLd={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: `${staticCat.name} - ValClassifieds`,
+            description: description || `Browse ${staticCat.name} classified listings.`,
+            url: `${window.location.origin}/category/${slug}`,
+          },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            name: `${staticCat.name} - ValClassifieds`,
+            description: description || `Browse ${staticCat.name} classified listings.`,
+            url: `${window.location.origin}/category/${slug}`,
+          },
+        ]}
+      />
+      <BreadcrumbListJsonLd items={[
+        { name: 'Home', url: '/' },
+        { name: staticCat.name, url: `/category/${slug}` },
+      ]} />
+      <div>
       {/* Hero Banner */}
       <section className="bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -156,7 +187,7 @@ export function CategoryPage() {
                 >
                   <div className="aspect-[16/9] overflow-hidden rounded-t-xl bg-gray-100">
                     {l.images?.[0] ? (
-                      <img src={l.images[0].url} alt="" className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
+                      <OptimizedImage src={l.images[0].url} alt={l.title} className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
                     ) : (
                       <div className="flex h-full items-center justify-center text-gray-400">
                         <Building2 className="h-8 w-8" />
@@ -339,7 +370,7 @@ export function CategoryPage() {
                       <>
                         <div className="aspect-[16/9] overflow-hidden rounded-t-xl bg-gray-100">
                           {l.images?.[0] ? (
-                            <img src={l.images[0].url} alt="" className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
+                            <OptimizedImage src={l.images[0].url} alt={l.title} className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
                           ) : (
                             <div className="flex h-full items-center justify-center text-gray-400">
                               <Building2 className="h-8 w-8" />
@@ -370,7 +401,7 @@ export function CategoryPage() {
                       <>
                         <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
                           {l.images?.[0] ? (
-                            <img src={l.images[0].url} alt="" className="h-full w-full object-cover" />
+                            <OptimizedImage src={l.images[0].url} alt={l.title} className="h-full w-full object-cover" />
                           ) : (
                             <div className="flex h-full items-center justify-center text-gray-400">
                               <Building2 className="h-6 w-6" />
@@ -403,5 +434,6 @@ export function CategoryPage() {
         </div>
       </div>
     </div>
+    </>
   )
 }

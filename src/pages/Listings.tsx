@@ -4,6 +4,8 @@ import { Heart, Search, SlidersHorizontal } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
 import { useFavorites } from '../hooks/useFavorites'
+import { SEO } from '../components/SEO'
+import { OptimizedImage } from '../components/OptimizedImage'
 import type { Category, Listing } from '../types'
 
 const PAGE_SIZE = 12
@@ -155,7 +157,29 @@ export function Listings() {
   const totalPages = Math.ceil(total / PAGE_SIZE)
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <>
+      <SEO
+        title="Browse Listings"
+        description="Browse hundreds of classified listings for property, vehicles, jobs, electronics, and more in India."
+        url="/listings"
+        jsonLd={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'Browse Listings - ValClassifieds',
+            description: 'Browse hundreds of classified listings across all categories.',
+            url: `${window.location.origin}/listings`,
+          },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            name: 'Browse Listings - ValClassifieds',
+            description: 'Browse hundreds of classified listings across all categories.',
+            url: `${window.location.origin}/listings`,
+          },
+        ]}
+      />
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <h1 className="mb-6 text-3xl font-bold">Browse Listings</h1>
 
       {/* Search bar */}
@@ -298,7 +322,7 @@ export function Listings() {
               <Link to={`/listings/${listing.id}`} className="flex flex-1 flex-col">
                 <div className="aspect-[4/3] overflow-hidden rounded-t-xl bg-gray-100">
                   {listing.images && listing.images[0] ? (
-                    <img src={listing.images[0].url} alt={listing.title} data-testid="listing-card-image" className="h-full w-full object-cover transition group-hover:scale-105" loading="lazy" />
+                    <OptimizedImage src={listing.images[0].url} alt={listing.title} data-testid="listing-card-image" className="h-full w-full object-cover transition group-hover:scale-105" />
                   ) : (
                     <div className="flex h-full items-center justify-center text-gray-400">No image</div>
                   )}
@@ -339,22 +363,27 @@ export function Listings() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <nav className="mt-8 flex justify-center gap-2" aria-label="Pagination" data-testid="listings-pagination">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <button
-              key={p}
-              onClick={() => setParam('page', String(p))}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
-                p === page ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-              aria-label={`Page ${p}${p === page ? ', current page' : ''}`}
-              aria-current={p === page ? 'page' : undefined}
-            >
-              {p}
-            </button>
-          ))}
-        </nav>
+        <>
+          {page > 1 && <link rel="prev" href={`${window.location.pathname}?${new URLSearchParams({ ...Object.fromEntries(searchParams), page: String(page - 1) })}`} />}
+          {page < totalPages && <link rel="next" href={`${window.location.pathname}?${new URLSearchParams({ ...Object.fromEntries(searchParams), page: String(page + 1) })}`} />}
+          <nav className="mt-8 flex justify-center gap-2" aria-label="Pagination" data-testid="listings-pagination">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+              <button
+                key={p}
+                onClick={() => setParam('page', String(p))}
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+                  p === page ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+                aria-label={`Page ${p}${p === page ? ', current page' : ''}`}
+                aria-current={p === page ? 'page' : undefined}
+              >
+                {p}
+              </button>
+            ))}
+          </nav>
+        </>
       )}
     </div>
+    </>
   )
 }

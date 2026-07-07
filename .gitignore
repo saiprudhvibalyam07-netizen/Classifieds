@@ -6,6 +6,7 @@ dist/
 
 # Environment variables
 .env
+tests/e2e/.env.test
 
 # macOS
 .DS_Store

@@ -171,7 +171,7 @@ function msg(
   senderId: string,
   text: string,
   createdAt: string,
-  opts?: { isRead?: boolean; attachments?: Record<string, unknown>[]; isDeleted?: boolean; isEdited?: boolean; replyTo?: string }
+  opts?: { isRead?: boolean; attachments?: Record<string, unknown>[]; isDeleted?: boolean; isEdited?: boolean; replyTo?: string; type?: string }
 ): MockMessage {
   return {
     id,
@@ -180,7 +180,7 @@ function msg(
     message: text,
     message_attachments: opts?.attachments ?? [],
     is_read: opts?.isRead ?? true,
-    type: 'text',
+    type: opts?.type ?? 'text',
     content: null,
     metadata: {},
     reply_to: opts?.replyTo ?? null,
@@ -192,11 +192,22 @@ function msg(
   }
 }
 
+function findMessageById(msgId: string): MockMessage | undefined {
+  for (const convMsgs of Object.values(messagesByConversation)) {
+    const found = convMsgs.find(m => m.id === msgId)
+    if (found) return found
+  }
+  return undefined
+}
+
 function buildMessageResponse(m: MockMessage) {
+  const replyMsg = m.reply_to ? findMessageById(m.reply_to) : undefined
   return {
     ...m,
     profile: profiles[m.sender_id] ?? null,
     reactions: [],
+    reply_message: replyMsg ? { ...replyMsg, profile: profiles[replyMsg.sender_id] ?? null, reactions: [] } : null,
+    status: m.is_read ? 'read' : 'delivered',
   }
 }
 
@@ -239,6 +250,11 @@ const messagesByConversation: Record<string, MockMessage[]> = {
     msg(`${C1_PREFIX}013`, CONV_1_ID, SELLER_1_ID, 'I am free tomorrow evening around 6 PM.', '2026-06-02T10:00:00Z'),
     msg(`${C1_PREFIX}014`, CONV_1_ID, MOCK_USER_ID, 'Perfect, see you then!', '2026-06-02T10:30:00Z'),
     msg(`${C1_PREFIX}015`, CONV_1_ID, MOCK_USER_ID, 'Thank you! Will pick it up tomorrow.', '2026-06-10T14:30:00Z'),
+    msg(`${C1_PREFIX}016`, CONV_1_ID, SELLER_1_ID, 'Voice note explaining details', '2026-06-10T15:00:00Z', { type: 'voice', isRead: false }),
+    msg(`${C1_PREFIX}017`, CONV_1_ID, SELLER_1_ID, 'Video showing product condition', '2026-06-10T15:30:00Z', { type: 'video', isRead: false }),
+    msg(`${C1_PREFIX}018`, CONV_1_ID, SELLER_1_ID, 'Ownership document attached', '2026-06-10T16:00:00Z', { type: 'document', isRead: false }),
+    msg(`${C1_PREFIX}019`, CONV_1_ID, MOCK_USER_ID, 'Got it, thanks! Edited with correction', '2026-06-10T16:30:00Z', { isEdited: true }),
+    msg(`${C1_PREFIX}020`, CONV_1_ID, MOCK_USER_ID, 'Regarding the price...', '2026-06-10T17:00:00Z', { replyTo: `${C1_PREFIX}009` }),
   ],
   [CONV_2_ID]: [
     msg(`${C1_PREFIX}101`, CONV_2_ID, MOCK_USER_ID, 'Hello, is the Swift still available?', '2026-06-02T10:05:00Z'),

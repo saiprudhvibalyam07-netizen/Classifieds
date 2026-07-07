@@ -6,6 +6,8 @@ import { useAuth } from '../hooks/useAuth'
 import { useFavorites } from '../hooks/useFavorites'
 import { ImageGallery } from '../components/ImageGallery'
 import { ListingMap } from '../components/ListingMap'
+import { SEO, BreadcrumbListJsonLd } from '../components/SEO'
+import { OptimizedImage } from '../components/OptimizedImage'
 import type { Listing } from '../types'
 import { format } from 'date-fns'
 
@@ -50,24 +52,68 @@ export function ListingDetail() {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-20">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary-600 border-t-transparent" />
-      </div>
+      <>
+        <SEO title="Loading..." description="Loading listing details..." />
+        <div className="flex justify-center py-20">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary-600 border-t-transparent" />
+        </div>
+      </>
     )
   }
 
   if (!listing) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold">Listing not found</h1>
-        <Link to="/listings" className="mt-4 inline-block text-primary-600 hover:underline">
-          Back to listings
-        </Link>
-      </div>
+      <>
+        <SEO title="Listing Not Found" description="The requested listing could not be found." />
+        <div className="mx-auto max-w-3xl px-4 py-16 text-center">
+          <h1 className="text-2xl font-bold">Listing not found</h1>
+          <Link to="/listings" className="mt-4 inline-block text-primary-600 hover:underline">
+            Back to listings
+          </Link>
+        </div>
+      </>
     )
   }
 
+  const productSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: listing.title,
+    description: listing.description?.slice(0, 200),
+    image: listing.images?.[0]?.url || undefined,
+    offers: {
+      '@type': 'Offer',
+      price: listing.price,
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      itemCondition: listing.condition === 'new' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition',
+    },
+  }
+
   return (
+    <>
+      <SEO
+        title={listing.title}
+        description={listing.description?.slice(0, 160) || `View ${listing.title} for $${listing.price.toLocaleString()}`}
+        image={listing.images?.[0]?.url || undefined}
+        url={`/listings/${listing.id}`}
+        type="website"
+        jsonLd={[
+          productSchema,
+          {
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            name: `${listing.title} - ValClassifieds`,
+            description: listing.description?.slice(0, 160) || `View ${listing.title} for $${listing.price.toLocaleString()}`,
+            url: `${window.location.origin}/listings/${listing.id}`,
+          },
+        ]}
+      />
+      <BreadcrumbListJsonLd items={[
+        { name: 'Home', url: '/' },
+        { name: 'Browse Listings', url: '/listings' },
+        { name: listing.title, url: `/listings/${listing.id}` },
+      ]} />
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
       <Link
         to="/listings"
@@ -158,7 +204,7 @@ export function ListingDetail() {
               className="mt-6 flex items-center gap-3 rounded-lg bg-gray-50 p-4 transition hover:bg-gray-100"
             >
               {listing.profile.avatar_url ? (
-                <img src={listing.profile.avatar_url} alt="" className="h-10 w-10 rounded-full object-cover" />
+                <OptimizedImage src={listing.profile.avatar_url} alt={listing.profile.full_name || 'Seller'} className="h-10 w-10 rounded-full object-cover" />
               ) : (
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200">
                   <User className="h-5 w-5 text-gray-500" />
@@ -208,5 +254,6 @@ export function ListingDetail() {
         </div>
       </div>
     </div>
+    </>
   )
 }

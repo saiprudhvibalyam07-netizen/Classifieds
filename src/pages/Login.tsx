@@ -1,6 +1,7 @@
 import { FormEvent, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { SEO } from '../components/SEO'
 
 const ERROR_MESSAGES: Record<string, string> = {
   'Invalid login credentials': 'Invalid email or password. Please try again.',
@@ -40,7 +41,9 @@ export function Login() {
   }
 
   return (
-    <div className="mx-auto mt-16 max-w-md px-4">
+    <>
+      <SEO title="Sign In" description="Sign in to your ValClassifieds account to manage listings, chat with sellers, and more." url="/login" />
+      <div className="mx-auto mt-16 max-w-md px-4">
       {justConfirmed && (
         <div className="mb-6 rounded-xl bg-green-50 p-4 text-center text-sm text-green-700 shadow-sm" data-testid="login-confirmed-banner">
           Email confirmed successfully! You can now sign in.
@@ -106,5 +109,6 @@ export function Login() {
         </Link>
       </p>
     </div>
+    </>
   )
 }

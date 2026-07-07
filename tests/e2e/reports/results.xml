@@ -1,0 +1,20 @@
+Global setup: verifying environment variables...
+  BASE_URL=http://localhost:5173
+  TEST_BUYER_EMAIL=rajesh.kumar@valclassifieds.test
+  TEST_BUYER_PASSWORD=Rajesh#99Kumar
+Global setup complete.
+Global teardown: cleaning up test artifacts...
+<testsuites id="" name="" tests="5" failures="0" skipped="0" errors="0" time="21.282273">
+<testsuite name="specs/e2e/chat/messaging.e2e.spec.ts" timestamp="2026-07-03T14:58:26.687Z" hostname="e2e" tests="5" failures="0" skipped="0" time="17.721" errors="0">
+<testcase name="E2E: Chat - Messaging › should display conversation list" classname="specs/e2e/chat/messaging.e2e.spec.ts" time="2.779">
+</testcase>
+<testcase name="E2E: Chat - Messaging › should display conversations for logged-in user" classname="specs/e2e/chat/messaging.e2e.spec.ts" time="2.622">
+</testcase>
+<testcase name="E2E: Chat - Messaging › should send a message in conversation" classname="specs/e2e/chat/messaging.e2e.spec.ts" time="4.176">
+</testcase>
+<testcase name="E2E: Chat - Messaging › should have accessible message input after selecting conversation" classname="specs/e2e/chat/messaging.e2e.spec.ts" time="4.142">
+</testcase>
+<testcase name="E2E: Chat - Messaging › should navigate back to conversation list from active conversation" classname="specs/e2e/chat/messaging.e2e.spec.ts" time="4.002">
+</testcase>
+</testsuite>
+</testsuites>

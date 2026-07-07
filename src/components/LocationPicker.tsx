@@ -1,6 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet'
 import { MapPin, Navigation, Loader } from 'lucide-react'
+
+let leafletCssLoaded = false
+
+function loadLeafletCss() {
+  if (leafletCssLoaded) return
+  leafletCssLoaded = true
+  const link = document.createElement('link')
+  link.rel = 'stylesheet'
+  link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
+  link.crossOrigin = 'anonymous'
+  document.head.appendChild(link)
+}
 import { useDebounce } from '../hooks/useDebounce'
 import { searchLocation, reverseGeocode } from '../lib/geocode'
 import type { LatLngExpression, LeafletMouseEvent } from 'leaflet'
@@ -47,21 +59,39 @@ export function LocationPicker({ value, onChange, error }: Props) {
   const debouncedSearch = useDebounce(searchInput, 400)
 
   useEffect(() => {
+    loadLeafletCss()
+  }, [])
+
+  useEffect(() => {
     if (!debouncedSearch.trim()) {
       setResults([])
       return
     }
     setSearching(true)
     searchLocation(debouncedSearch).then((res) => {
-      setResults(
-        res.map((r) => ({
-          lat: parseFloat(r.lat),
-          lng: parseFloat(r.lon),
-          display_name: r.display_name,
-        }))
-      )
+      const mapped = res.map((r) => ({
+        lat: parseFloat(r.lat),
+        lng: parseFloat(r.lon),
+        display_name: r.display_name,
+      }))
+      setResults(mapped)
       setShowResults(true)
       setSearching(false)
+      if (mapped.length > 0) {
+        const first = mapped[0]
+        onChange({ latitude: first.lat, longitude: first.lng, address: first.display_name, city: '', state: '' })
+        reverseGeocode(first.lat, first.lng).then((geo) => {
+          if (geo) {
+            onChange({
+              latitude: first.lat,
+              longitude: first.lng,
+              address: geo.display_name,
+              city: geo.city ?? '',
+              state: geo.state ?? '',
+            })
+          }
+        })
+      }
     })
   }, [debouncedSearch])
 

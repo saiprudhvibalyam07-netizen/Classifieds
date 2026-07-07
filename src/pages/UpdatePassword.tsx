@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
+import { SEO } from '../components/SEO'
 
 export function UpdatePassword() {
   const navigate = useNavigate()
@@ -42,7 +43,9 @@ export function UpdatePassword() {
   }
 
   return (
-    <div className="mx-auto mt-16 max-w-md px-4">
+    <>
+      <SEO title="Set New Password" description="Set a new password for your ValClassifieds account." url="/update-password" />
+      <div className="mx-auto mt-16 max-w-md px-4">
       <h1 className="mb-6 text-3xl font-bold">Set New Password</h1>
 
       {!ready ? (
@@ -91,5 +94,6 @@ export function UpdatePassword() {
         </form>
       )}
     </div>
+    </>
   )
 }

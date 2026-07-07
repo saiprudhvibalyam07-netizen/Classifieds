@@ -1,6 +1,7 @@
 import { FormEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { SEO } from '../components/SEO'
 
 export function ForgotPassword() {
   const [email, setEmail] = useState('')
@@ -28,7 +29,9 @@ export function ForgotPassword() {
 
   if (sent) {
     return (
-      <div className="mx-auto mt-16 max-w-md px-4 text-center">
+      <>
+        <SEO title="Check Your Email" description="We've sent a password reset link to your email." url="/forgot-password" />
+        <div className="mx-auto mt-16 max-w-md px-4 text-center">
         <h1 className="mb-4 text-3xl font-bold">Check Your Email</h1>
         <p className="text-gray-600">
           We've sent a password reset link to <strong>{email}</strong>.
@@ -37,11 +40,14 @@ export function ForgotPassword() {
           Back to sign in
         </Link>
       </div>
+      </>
     )
   }
 
   return (
-    <div className="mx-auto mt-16 max-w-md px-4">
+    <>
+      <SEO title="Reset Password" description="Reset your ValClassifieds account password." url="/forgot-password" />
+      <div className="mx-auto mt-16 max-w-md px-4">
       <h1 className="mb-6 text-3xl font-bold">Reset Password</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -76,5 +82,6 @@ export function ForgotPassword() {
         </Link>
       </p>
     </div>
+    </>
   )
 }

@@ -1,0 +1,72 @@
+<testsuites id="" name="" tests="31" failures="0" skipped="0" errors="0" time="69.287626">
+<testsuite name="specs/mock/admin/access.spec.ts" timestamp="2026-07-05T05:58:12.027Z" hostname="mock" tests="3" failures="0" skipped="0" time="5.975" errors="0">
+<testcase name="Admin Access › should show admin nav link for admin users" classname="specs/mock/admin/access.spec.ts" time="2.378">
+</testcase>
+<testcase name="Admin Access › should redirect non-admin user away from /admin" classname="specs/mock/admin/access.spec.ts" time="1.573">
+</testcase>
+<testcase name="Admin Access › should allow admin user to access /admin" classname="specs/mock/admin/access.spec.ts" time="2.024">
+</testcase>
+</testsuite>
+<testsuite name="specs/mock/auth/login.spec.ts" timestamp="2026-07-05T05:58:12.027Z" hostname="mock" tests="7" failures="0" skipped="0" time="7.242" errors="0">
+<testcase name="Authentication - Login › should render the login form" classname="specs/mock/auth/login.spec.ts" time="0.85">
+</testcase>
+<testcase name="Authentication - Login › should show error for invalid credentials" classname="specs/mock/auth/login.spec.ts" time="2.046">
+</testcase>
+<testcase name="Authentication - Login › should not submit form with empty email" classname="specs/mock/auth/login.spec.ts" time="0.686">
+</testcase>
+<testcase name="Authentication - Login › should not submit form with empty password" classname="specs/mock/auth/login.spec.ts" time="0.862">
+</testcase>
+<testcase name="Authentication - Login › should navigate to register page" classname="specs/mock/auth/login.spec.ts" time="0.847">
+</testcase>
+<testcase name="Authentication - Login › should have sign in heading and form fields" classname="specs/mock/auth/login.spec.ts" time="0.884">
+</testcase>
+<testcase name="Authentication - Login › should show email confirmation required error for unconfirmed emails" classname="specs/mock/auth/login.spec.ts" time="1.067">
+</testcase>
+</testsuite>
+<testsuite name="specs/mock/chat/messaging.spec.ts" timestamp="2026-07-05T05:58:12.027Z" hostname="mock" tests="13" failures="0" skipped="0" time="26.31" errors="0">
+<testcase name="Chat - Messaging › should display conversation list with multiple items" classname="specs/mock/chat/messaging.spec.ts" time="1.786">
+</testcase>
+<testcase name="Chat - Messaging › should display conversations for logged-in user" classname="specs/mock/chat/messaging.spec.ts" time="1.774">
+</testcase>
+<testcase name="Chat - Messaging › should send a message in conversation" classname="specs/mock/chat/messaging.spec.ts" time="1.915">
+</testcase>
+<testcase name="Chat - Messaging › should have unread badge visible for conversations with unread messages" classname="specs/mock/chat/messaging.spec.ts" time="1.75">
+</testcase>
+<testcase name="Chat - Messaging › should have accessible message input after selecting conversation" classname="specs/mock/chat/messaging.spec.ts" time="1.937">
+</testcase>
+<testcase name="Chat - Messaging › should navigate back to conversation list from active conversation" classname="specs/mock/chat/messaging.spec.ts" time="1.87">
+</testcase>
+<testcase name="Chat - Messaging › should display conversation header with call buttons" classname="specs/mock/chat/messaging.spec.ts" time="1.904">
+</testcase>
+<testcase name="Chat - Messaging › should display file attachment button" classname="specs/mock/chat/messaging.spec.ts" time="1.959">
+</testcase>
+<testcase name="Chat - Messaging › should display camera button" classname="specs/mock/chat/messaging.spec.ts" time="1.988">
+</testcase>
+<testcase name="Chat - Messaging › should display voice recording button" classname="specs/mock/chat/messaging.spec.ts" time="1.86">
+</testcase>
+<testcase name="Chat - Messaging › should display chat menu with options" classname="specs/mock/chat/messaging.spec.ts" time="2.773">
+</testcase>
+<testcase name="Chat - Messaging › should display message status indicator" classname="specs/mock/chat/messaging.spec.ts" time="1.93">
+</testcase>
+<testcase name="Chat - Messaging › should display reaction picker on message hover" classname="specs/mock/chat/messaging.spec.ts" time="2.864">
+</testcase>
+</testsuite>
+<testsuite name="specs/mock/listings/browse.spec.ts" timestamp="2026-07-05T05:58:12.027Z" hostname="mock" tests="8" failures="0" skipped="0" time="28.617" errors="0">
+<testcase name="Listings - Browse &amp; Search › should display listing cards" classname="specs/mock/listings/browse.spec.ts" time="3.246">
+</testcase>
+<testcase name="Listings - Browse &amp; Search › should filter by keyword search" classname="specs/mock/listings/browse.spec.ts" time="2.948">
+</testcase>
+<testcase name="Listings - Browse &amp; Search › should filter by category" classname="specs/mock/listings/browse.spec.ts" time="3.542">
+</testcase>
+<testcase name="Listings - Browse &amp; Search › should show location filter in filters panel" classname="specs/mock/listings/browse.spec.ts" time="3.827">
+</testcase>
+<testcase name="Listings - Browse &amp; Search › should filter by price range" classname="specs/mock/listings/browse.spec.ts" time="4.007">
+</testcase>
+<testcase name="Listings - Browse &amp; Search › should show empty state for no results" classname="specs/mock/listings/browse.spec.ts" time="4.056">
+</testcase>
+<testcase name="Listings - Browse &amp; Search › should navigate to listing detail on card click" classname="specs/mock/listings/browse.spec.ts" time="3.83">
+</testcase>
+<testcase name="Listings - Browse &amp; Search › should have accessible search input" classname="specs/mock/listings/browse.spec.ts" time="3.161">
+</testcase>
+</testsuite>
+</testsuites>

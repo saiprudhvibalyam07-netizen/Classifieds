@@ -4,6 +4,8 @@ import { Heart } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
 import { useFavorites } from '../hooks/useFavorites'
+import { SEO } from '../components/SEO'
+import { OptimizedImage } from '../components/OptimizedImage'
 import type { Listing } from '../types'
 
 export function Favorites() {
@@ -37,7 +39,9 @@ export function Favorites() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <>
+      <SEO title="My Favorites" description="View your saved favorite listings on ValClassifieds." url="/favorites" />
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <h1 className="mb-8 text-3xl font-bold">My Favorites</h1>
 
       {listings.length === 0 ? (
@@ -54,7 +58,7 @@ export function Favorites() {
               <Link to={`/listings/${listing.id}`}>
                 <div className="aspect-[4/3] overflow-hidden rounded-t-xl bg-gray-100">
                   {listing.images && listing.images[0] ? (
-                    <img src={listing.images[0].url} alt={listing.title} className="h-full w-full object-cover transition group-hover:scale-105" />
+                    <OptimizedImage src={listing.images[0].url} alt={listing.title} className="h-full w-full object-cover transition group-hover:scale-105" />
                   ) : (
                     <div className="flex h-full items-center justify-center text-gray-400">No image</div>
                   )}
@@ -76,5 +80,6 @@ export function Favorites() {
         </div>
       )}
     </div>
+    </>
   )
 }

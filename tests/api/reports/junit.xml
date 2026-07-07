@@ -1,0 +1,379 @@
+<testsuites id="" name="" tests="72" failures="0" skipped="1" errors="7" time="65.485053">
+<testsuite name="specs/api/auth/auth-callback.api.spec.ts" timestamp="2026-07-05T05:50:57.167Z" hostname="api" tests="3" failures="0" skipped="0" time="1.01" errors="0">
+<testcase name="API: Auth – AuthCallback verification › getSession returns null for unauthenticated user" classname="specs/api/auth/auth-callback.api.spec.ts" time="0.009">
+</testcase>
+<testcase name="API: Auth – AuthCallback verification › JWT is valid via auth.getUser" classname="specs/api/auth/auth-callback.api.spec.ts" time="0.999">
+</testcase>
+<testcase name="API: Auth – AuthCallback verification › onAuthStateChange fires SIGNED_IN on login" classname="specs/api/auth/auth-callback.api.spec.ts" time="0.002">
+</testcase>
+</testsuite>
+<testsuite name="specs/api/auth/login.api.spec.ts" timestamp="2026-07-05T05:50:57.167Z" hostname="api" tests="6" failures="0" skipped="0" time="2.831" errors="0">
+<testcase name="API: Auth – signInWithPassword › Valid buyer credentials return session with access_token" classname="specs/api/auth/login.api.spec.ts" time="0.446">
+</testcase>
+<testcase name="API: Auth – signInWithPassword › Sign-in response contains expected fields" classname="specs/api/auth/login.api.spec.ts" time="0.575">
+</testcase>
+<testcase name="API: Auth – signInWithPassword › Wrong password returns 400" classname="specs/api/auth/login.api.spec.ts" time="0.412">
+</testcase>
+<testcase name="API: Auth – signInWithPassword › Unregistered email returns 400" classname="specs/api/auth/login.api.spec.ts" time="0.388">
+</testcase>
+<testcase name="API: Auth – signInWithPassword › Empty email returns 400" classname="specs/api/auth/login.api.spec.ts" time="0.345">
+</testcase>
+<testcase name="API: Auth – signInWithPassword › Empty password returns 400" classname="specs/api/auth/login.api.spec.ts" time="0.665">
+</testcase>
+</testsuite>
+<testsuite name="specs/api/auth/logout.api.spec.ts" timestamp="2026-07-05T05:50:57.167Z" hostname="api" tests="4" failures="0" skipped="0" time="3.724" errors="0">
+<testcase name="API: Auth – signOut › Sign out with valid JWT returns 204" classname="specs/api/auth/logout.api.spec.ts" time="1.015">
+</testcase>
+<testcase name="API: Auth – signOut › After sign out, client getSession returns null" classname="specs/api/auth/logout.api.spec.ts" time="0.813">
+</testcase>
+<testcase name="API: Auth – signOut › Sign out without JWT returns 401" classname="specs/api/auth/logout.api.spec.ts" time="0.496">
+</testcase>
+<testcase name="API: Auth – signOut › Double sign out returns 401 or 403 depending on Supabase CSRF check" classname="specs/api/auth/logout.api.spec.ts" time="1.4">
+</testcase>
+</testsuite>
+<testsuite name="specs/api/auth/password-reset.api.spec.ts" timestamp="2026-07-05T05:50:57.167Z" hostname="api" tests="6" failures="0" skipped="0" time="4.002" errors="0">
+<testcase name="API: Auth – resetPasswordForEmail &amp; updateUser › resetPasswordForEmail with registered email returns 200 or 429 (rate-limited)" classname="specs/api/auth/password-reset.api.spec.ts" time="0.34">
+</testcase>
+<testcase name="API: Auth – resetPasswordForEmail &amp; updateUser › resetPasswordForEmail with unregistered email returns 200 or 429" classname="specs/api/auth/password-reset.api.spec.ts" time="0.361">
+</testcase>
+<testcase name="API: Auth – resetPasswordForEmail &amp; updateUser › resetPasswordForEmail with invalid email format returns 400" classname="specs/api/auth/password-reset.api.spec.ts" time="0.334">
+</testcase>
+<testcase name="API: Auth – resetPasswordForEmail &amp; updateUser › updateUser without auth returns 401" classname="specs/api/auth/password-reset.api.spec.ts" time="0.34">
+</testcase>
+<testcase name="API: Auth – resetPasswordForEmail &amp; updateUser › updateUser with valid session and valid password works" classname="specs/api/auth/password-reset.api.spec.ts" time="1.751">
+</testcase>
+<testcase name="API: Auth – resetPasswordForEmail &amp; updateUser › updateUser with short password returns 422" classname="specs/api/auth/password-reset.api.spec.ts" time="0.876">
+</testcase>
+</testsuite>
+<testsuite name="specs/api/auth/signup.api.spec.ts" timestamp="2026-07-05T05:50:57.167Z" hostname="api" tests="5" failures="0" skipped="0" time="2.31" errors="0">
+<testcase name="API: Auth – signUp › Signup accepts valid data (may be rate-limited by Supabase)" classname="specs/api/auth/signup.api.spec.ts" time="0.528">
+</testcase>
+<testcase name="API: Auth – signUp › Signup with user_metadata stores full_name" classname="specs/api/auth/signup.api.spec.ts" time="0.478">
+</testcase>
+<testcase name="API: Auth – signUp › Already-registered email returns error" classname="specs/api/auth/signup.api.spec.ts" time="0.449">
+</testcase>
+<testcase name="API: Auth – signUp › Password too short (&lt; 6 chars) returns error" classname="specs/api/auth/signup.api.spec.ts" time="0.463">
+</testcase>
+<testcase name="API: Auth – signUp › Invalid email format returns error" classname="specs/api/auth/signup.api.spec.ts" time="0.392">
+</testcase>
+</testsuite>
+<testsuite name="specs/api/categories/browse.api.spec.ts" timestamp="2026-07-05T05:50:57.167Z" hostname="api" tests="8" failures="0" skipped="0" time="4.213" errors="0">
+<testcase name="API: Categories – Browse › GET /categories?select=* returns all categories with correct structure" classname="specs/api/categories/browse.api.spec.ts" time="0.397">
+</testcase>
+<testcase name="API: Categories – Browse › GET /categories?select=id,slug returns only id and slug fields" classname="specs/api/categories/browse.api.spec.ts" time="0.515">
+</testcase>
+<testcase name="API: Categories – Browse › GET /categories?select=*&amp;eq(slug,vehicles)&amp;single() returns correct category" classname="specs/api/categories/browse.api.spec.ts" time="0.402">
+</testcase>
+<testcase name="API: Categories – Browse › GET /categories?select=*&amp;eq(slug,housing)&amp;single() returns correct category" classname="specs/api/categories/browse.api.spec.ts" time="0.391">
+</testcase>
+<testcase name="API: Categories – Browse › GET /categories?eq(slug,__invalid__)&amp;single() returns error for non-existent slug" classname="specs/api/categories/browse.api.spec.ts" time="0.415">
+</testcase>
+<testcase name="API: Categories – Browse › Categories returned in a consistent order (no display_order column in DB)" classname="specs/api/categories/browse.api.spec.ts" time="0.498">
+</testcase>
+<testcase name="API: Categories – Browse › Get category by slug with hyphens works correctly" classname="specs/api/categories/browse.api.spec.ts" time="1.097">
+</testcase>
+<testcase name="API: Categories – Browse › Uppercase slug is case-sensitive and returns error" classname="specs/api/categories/browse.api.spec.ts" time="0.498">
+</testcase>
+</testsuite>
+<testsuite name="specs/api/listings/admin.api.spec.ts" timestamp="2026-07-05T05:50:57.167Z" hostname="api" tests="6" failures="0" skipped="0" time="4.464" errors="0">
+<testcase name="API: Listings – Admin operations › Admin fetch non-pending listings works" classname="specs/api/listings/admin.api.spec.ts" time="1.012">
+</testcase>
+<testcase name="API: Listings – Admin operations › Admin fetch pending listings returns results" classname="specs/api/listings/admin.api.spec.ts" time="1.121">
+</testcase>
+<testcase name="API: Listings – Admin operations › Admin can update listing status" classname="specs/api/listings/admin.api.spec.ts" time="0.615">
+</testcase>
+<testcase name="API: Listings – Admin operations › Admin can set listing to inactive" classname="specs/api/listings/admin.api.spec.ts" time="0.473">
+</testcase>
+<testcase name="API: Listings – Admin operations › Admin can toggle listing back to active" classname="specs/api/listings/admin.api.spec.ts" time="0.441">
+</testcase>
+<testcase name="API: Listings – Admin operations › Admin fetch all users returns list with roles" classname="specs/api/listings/admin.api.spec.ts" time="0.802">
+</testcase>
+</testsuite>
+<testsuite name="specs/api/listings/browse.api.spec.ts" timestamp="2026-07-05T05:50:57.167Z" hostname="api" tests="13" failures="0" skipped="0" time="7.368" errors="0">
+<testcase name="API: Listings – Browse &amp; Search › GET listings with status=active returns listings with nested joins" classname="specs/api/listings/browse.api.spec.ts" time="0.729">
+</testcase>
+<testcase name="API: Listings – Browse &amp; Search › Keyword search returns matching titles (case-insensitive)" classname="specs/api/listings/browse.api.spec.ts" time="0.432">
+</testcase>
+<testcase name="API: Listings – Browse &amp; Search › Category filter returns filtered results" classname="specs/api/listings/browse.api.spec.ts" time="0.857">
+</testcase>
+<testcase name="API: Listings – Browse &amp; Search › City filter returns filtered results" classname="specs/api/listings/browse.api.spec.ts" time="0.971">
+</testcase>
+<testcase name="API: Listings – Browse &amp; Search › Price range filter works correctly" classname="specs/api/listings/browse.api.spec.ts" time="0.495">
+</testcase>
+<testcase name="API: Listings – Browse &amp; Search › Sort by price ascending returns non-decreasing prices" classname="specs/api/listings/browse.api.spec.ts" time="0.464">
+</testcase>
+<testcase name="API: Listings – Browse &amp; Search › Sort by price descending returns non-increasing prices" classname="specs/api/listings/browse.api.spec.ts" time="0.55">
+</testcase>
+<testcase name="API: Listings – Browse &amp; Search › Pagination returns correct slice" classname="specs/api/listings/browse.api.spec.ts" time="0.373">
+</testcase>
+<testcase name="API: Listings – Browse &amp; Search › Empty result for non-matching query returns empty array" classname="specs/api/listings/browse.api.spec.ts" time="0.334">
+</testcase>
+<testcase name="API: Listings – Browse &amp; Search › Distinct cities endpoint returns sorted unique city names" classname="specs/api/listings/browse.api.spec.ts" time="0.379">
+</testcase>
+<testcase name="API: Listings – Browse &amp; Search › Featured listings returns ≤6 results" classname="specs/api/listings/browse.api.spec.ts" time="0.486">
+</testcase>
+<testcase name="API: Listings – Browse &amp; Search › Recent listings returns ≤8 results" classname="specs/api/listings/browse.api.spec.ts" time="0.361">
+</testcase>
+<testcase name="API: Listings – Browse &amp; Search › Seller listings returns only active listings for seller" classname="specs/api/listings/browse.api.spec.ts" time="0.937">
+</testcase>
+</testsuite>
+<testsuite name="specs/api/listings/crud.api.spec.ts" timestamp="2026-07-05T05:50:57.167Z" hostname="api" tests="14" failures="0" skipped="1" time="16.335" errors="2">
+<testcase name="API: Listings – CRUD › POST create listing with all fields succeeds and returns status=active" classname="specs/api/listings/crud.api.spec.ts" time="1.381">
+</testcase>
+<testcase name="API: Listings – CRUD › POST create listing with minimum fields succeeds" classname="specs/api/listings/crud.api.spec.ts" time="1.879">
+</testcase>
+<testcase name="API: Listings – CRUD › POST create listing without auth returns 401" classname="specs/api/listings/crud.api.spec.ts" time="0.748">
+</testcase>
+<testcase name="API: Listings – CRUD › GET listing detail returns listing with all joins" classname="specs/api/listings/crud.api.spec.ts" time="0.715">
+</testcase>
+<testcase name="API: Listings – CRUD › GET listing detail with non-existent ID returns error" classname="specs/api/listings/crud.api.spec.ts" time="0.364">
+</testcase>
+<testcase name="API: Listings – CRUD › PATCH update own listing succeeds" classname="specs/api/listings/crud.api.spec.ts" time="1.462">
+</testcase>
+<testcase name="API: Listings – CRUD › PATCH update partial field (single field) succeeds" classname="specs/api/listings/crud.api.spec.ts" time="1.837">
+</testcase>
+<testcase name="API: Listings – CRUD › PATCH update without auth is blocked (0 rows affected, no error thrown)" classname="specs/api/listings/crud.api.spec.ts" time="2.079">
+</testcase>
+<testcase name="API: Listings – CRUD › DELETE own listing succeeds" classname="specs/api/listings/crud.api.spec.ts" time="1.545">
+</testcase>
+<testcase name="API: Listings – CRUD › DELETE without auth is blocked (0 rows affected, no error thrown)" classname="specs/api/listings/crud.api.spec.ts" time="1.907">
+</testcase>
+<testcase name="API: Listings – CRUD › Increment views_count on listing detail view" classname="specs/api/listings/crud.api.spec.ts" time="1.935">
+</testcase>
+<testcase name="API: Listings – CRUD › Favorites batch fetch by ID list" classname="specs/api/listings/crud.api.spec.ts" time="0.483">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/listings-crud.api-API-List-85590-ites-batch-fetch-by-ID-list-api/error-context.md]]
+
+[[ATTACHMENT|../../test-results/listings-crud.api-API-List-85590-ites-batch-fetch-by-ID-list-api/error-context.md]]
+]]>
+</system-out>
+<error message="signInAs(buyer) failed: 429 {&quot;code&quot;:429,&quot;error_code&quot;:&quot;over_request_rate_limit&quot;,&quot;msg&quot;:&quot;Request rate limit reached&quot;}" type="Error">
+<![CDATA[  [api] › specs/api/listings/crud.api.spec.ts:219:3 › API: Listings – CRUD › Favorites batch fetch by ID list 
+
+    Error: signInAs(buyer) failed: 429 {"code":429,"error_code":"over_request_rate_limit","msg":"Request rate limit reached"}
+
+       at api/auth.ts:27
+
+      25 |   if (!response.ok) {
+      26 |     const body = await response.text();
+    > 27 |     throw new Error(`signInAs(${role}) failed: ${response.status} ${body}`);
+         |           ^
+      28 |   }
+      29 |
+      30 |   const data = await response.json();
+        at signInAs (/Users/ruthvi07/valclassifieds/tests/e2e/api/auth.ts:27:11)
+        at Object.buyerSession (/Users/ruthvi07/valclassifieds/tests/e2e/api/fixtures.ts:18:21)
+
+    Error: signInAs(buyer) failed: 429 {"code":429,"error_code":"over_request_rate_limit","msg":"Request rate limit reached"}
+
+       at api/auth.ts:27
+
+      25 |   if (!response.ok) {
+      26 |     const body = await response.text();
+    > 27 |     throw new Error(`signInAs(${role}) failed: ${response.status} ${body}`);
+         |           ^
+      28 |   }
+      29 |
+      30 |   const data = await response.json();
+        at signInAs (/Users/ruthvi07/valclassifieds/tests/e2e/api/auth.ts:27:11)
+        at Object.buyerSession (/Users/ruthvi07/valclassifieds/tests/e2e/api/fixtures.ts:18:21)
+
+    Error Context: ../../test-results/listings-crud.api-API-List-85590-ites-batch-fetch-by-ID-list-api/error-context.md
+
+    Error Context: ../../test-results/listings-crud.api-API-List-85590-ites-batch-fetch-by-ID-list-api/error-context.md
+]]>
+</error>
+</testcase>
+<testcase name="API: Listings – CRUD › Empty ID list returns empty array" classname="specs/api/listings/crud.api.spec.ts" time="0">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/listings-crud.api-API-List-2effb-ID-list-returns-empty-array-api/error-context.md]]
+
+[[ATTACHMENT|../../test-results/listings-crud.api-API-List-2effb-ID-list-returns-empty-array-api/error-context.md]]
+]]>
+</system-out>
+<error message="signInAs(buyer) failed: 429 {&quot;code&quot;:429,&quot;error_code&quot;:&quot;over_request_rate_limit&quot;,&quot;msg&quot;:&quot;Request rate limit reached&quot;}" type="Error">
+<![CDATA[  [api] › specs/api/listings/crud.api.spec.ts:235:3 › API: Listings – CRUD › Empty ID list returns empty array 
+
+    Error: signInAs(buyer) failed: 429 {"code":429,"error_code":"over_request_rate_limit","msg":"Request rate limit reached"}
+
+       at api/auth.ts:27
+
+      25 |   if (!response.ok) {
+      26 |     const body = await response.text();
+    > 27 |     throw new Error(`signInAs(${role}) failed: ${response.status} ${body}`);
+         |           ^
+      28 |   }
+      29 |
+      30 |   const data = await response.json();
+        at signInAs (/Users/ruthvi07/valclassifieds/tests/e2e/api/auth.ts:27:11)
+        at Object.buyerSession (/Users/ruthvi07/valclassifieds/tests/e2e/api/fixtures.ts:18:21)
+
+    Error: signInAs(buyer) failed: 429 {"code":429,"error_code":"over_request_rate_limit","msg":"Request rate limit reached"}
+
+       at api/auth.ts:27
+
+      25 |   if (!response.ok) {
+      26 |     const body = await response.text();
+    > 27 |     throw new Error(`signInAs(${role}) failed: ${response.status} ${body}`);
+         |           ^
+      28 |   }
+      29 |
+      30 |   const data = await response.json();
+        at signInAs (/Users/ruthvi07/valclassifieds/tests/e2e/api/auth.ts:27:11)
+        at Object.buyerSession (/Users/ruthvi07/valclassifieds/tests/e2e/api/fixtures.ts:18:21)
+
+    Error Context: ../../test-results/listings-crud.api-API-List-2effb-ID-list-returns-empty-array-api/error-context.md
+
+    Error Context: ../../test-results/listings-crud.api-API-List-2effb-ID-list-returns-empty-array-api/error-context.md
+]]>
+</error>
+</testcase>
+<testcase name="API: Listings – CRUD › Own listings (Dashboard) returns only own listings" classname="specs/api/listings/crud.api.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="specs/api/profiles/admin.api.spec.ts" timestamp="2026-07-05T05:50:57.167Z" hostname="api" tests="2" failures="0" skipped="0" time="1.947" errors="1">
+<testcase name="API: Profiles – Admin › Admin can list all users with roles" classname="specs/api/profiles/admin.api.spec.ts" time="1.348">
+</testcase>
+<testcase name="API: Profiles – Admin › Buyer can list profiles (RLS allows profile reads)" classname="specs/api/profiles/admin.api.spec.ts" time="0.599">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/profiles-admin.api-API-Pro-1b0dc-s-RLS-allows-profile-reads--api/error-context.md]]
+]]>
+</system-out>
+<error message="signInAs(buyer) failed: 429 {&quot;code&quot;:429,&quot;error_code&quot;:&quot;over_request_rate_limit&quot;,&quot;msg&quot;:&quot;Request rate limit reached&quot;}" type="Error">
+<![CDATA[  [api] › specs/api/profiles/admin.api.spec.ts:15:3 › API: Profiles – Admin › Buyer can list profiles (RLS allows profile reads) 
+
+    Error: signInAs(buyer) failed: 429 {"code":429,"error_code":"over_request_rate_limit","msg":"Request rate limit reached"}
+
+       at api/auth.ts:27
+
+      25 |   if (!response.ok) {
+      26 |     const body = await response.text();
+    > 27 |     throw new Error(`signInAs(${role}) failed: ${response.status} ${body}`);
+         |           ^
+      28 |   }
+      29 |
+      30 |   const data = await response.json();
+        at signInAs (/Users/ruthvi07/valclassifieds/tests/e2e/api/auth.ts:27:11)
+        at Object.buyerSession (/Users/ruthvi07/valclassifieds/tests/e2e/api/fixtures.ts:18:21)
+
+    Error Context: ../../test-results/profiles-admin.api-API-Pro-1b0dc-s-RLS-allows-profile-reads--api/error-context.md
+]]>
+</error>
+</testcase>
+</testsuite>
+<testsuite name="specs/api/profiles/own.api.spec.ts" timestamp="2026-07-05T05:50:57.167Z" hostname="api" tests="5" failures="0" skipped="0" time="3.559" errors="4">
+<testcase name="API: Profiles – Own profile › GET own profile returns authenticated user data" classname="specs/api/profiles/own.api.spec.ts" time="0.745">
+<system-err>
+<![CDATA[
+Warning: attachment ../../test-results/profiles-own.api-API-Profi-2cc57-rns-authenticated-user-data-api/error-context.md is missing]]>
+</system-err>
+<error message="signInAs(buyer) failed: 429 {&quot;code&quot;:429,&quot;error_code&quot;:&quot;over_request_rate_limit&quot;,&quot;msg&quot;:&quot;Request rate limit reached&quot;}" type="Error">
+<![CDATA[  [api] › specs/api/profiles/own.api.spec.ts:7:3 › API: Profiles – Own profile › GET own profile returns authenticated user data 
+
+    Error: signInAs(buyer) failed: 429 {"code":429,"error_code":"over_request_rate_limit","msg":"Request rate limit reached"}
+
+       at api/auth.ts:27
+
+      25 |   if (!response.ok) {
+      26 |     const body = await response.text();
+    > 27 |     throw new Error(`signInAs(${role}) failed: ${response.status} ${body}`);
+         |           ^
+      28 |   }
+      29 |
+      30 |   const data = await response.json();
+        at signInAs (/Users/ruthvi07/valclassifieds/tests/e2e/api/auth.ts:27:11)
+        at Object.buyerSession (/Users/ruthvi07/valclassifieds/tests/e2e/api/fixtures.ts:18:21)
+
+    Error Context: ../../test-results/profiles-own.api-API-Profi-2cc57-rns-authenticated-user-data-api/error-context.md
+]]>
+</error>
+</testcase>
+<testcase name="API: Profiles – Own profile › PATCH update own profile full_name succeeds" classname="specs/api/profiles/own.api.spec.ts" time="0.778">
+<system-err>
+<![CDATA[
+Warning: attachment ../../test-results/profiles-own.api-API-Profi-e7e69--profile-full-name-succeeds-api/error-context.md is missing]]>
+</system-err>
+<error message="signInAs(buyer) failed: 429 {&quot;code&quot;:429,&quot;error_code&quot;:&quot;over_request_rate_limit&quot;,&quot;msg&quot;:&quot;Request rate limit reached&quot;}" type="Error">
+<![CDATA[  [api] › specs/api/profiles/own.api.spec.ts:21:3 › API: Profiles – Own profile › PATCH update own profile full_name succeeds 
+
+    Error: signInAs(buyer) failed: 429 {"code":429,"error_code":"over_request_rate_limit","msg":"Request rate limit reached"}
+
+       at api/auth.ts:27
+
+      25 |   if (!response.ok) {
+      26 |     const body = await response.text();
+    > 27 |     throw new Error(`signInAs(${role}) failed: ${response.status} ${body}`);
+         |           ^
+      28 |   }
+      29 |
+      30 |   const data = await response.json();
+        at signInAs (/Users/ruthvi07/valclassifieds/tests/e2e/api/auth.ts:27:11)
+        at Object.buyerSession (/Users/ruthvi07/valclassifieds/tests/e2e/api/fixtures.ts:18:21)
+
+    Error Context: ../../test-results/profiles-own.api-API-Profi-e7e69--profile-full-name-succeeds-api/error-context.md
+]]>
+</error>
+</testcase>
+<testcase name="API: Profiles – Own profile › PATCH update own profile phone number succeeds" classname="specs/api/profiles/own.api.spec.ts" time="0.677">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/profiles-own.api-API-Profi-91bb0-ofile-phone-number-succeeds-api/error-context.md]]
+]]>
+</system-out>
+<error message="signInAs(buyer) failed: 429 {&quot;code&quot;:429,&quot;error_code&quot;:&quot;over_request_rate_limit&quot;,&quot;msg&quot;:&quot;Request rate limit reached&quot;}" type="Error">
+<![CDATA[  [api] › specs/api/profiles/own.api.spec.ts:37:3 › API: Profiles – Own profile › PATCH update own profile phone number succeeds 
+
+    Error: signInAs(buyer) failed: 429 {"code":429,"error_code":"over_request_rate_limit","msg":"Request rate limit reached"}
+
+       at api/auth.ts:27
+
+      25 |   if (!response.ok) {
+      26 |     const body = await response.text();
+    > 27 |     throw new Error(`signInAs(${role}) failed: ${response.status} ${body}`);
+         |           ^
+      28 |   }
+      29 |
+      30 |   const data = await response.json();
+        at signInAs (/Users/ruthvi07/valclassifieds/tests/e2e/api/auth.ts:27:11)
+        at Object.buyerSession (/Users/ruthvi07/valclassifieds/tests/e2e/api/fixtures.ts:18:21)
+
+    Error Context: ../../test-results/profiles-own.api-API-Profi-91bb0-ofile-phone-number-succeeds-api/error-context.md
+]]>
+</error>
+</testcase>
+<testcase name="API: Profiles – Own profile › Seller profile (public) returns limited fields" classname="specs/api/profiles/own.api.spec.ts" time="0.655">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/profiles-own.api-API-Profi-4d76e-blic-returns-limited-fields-api/error-context.md]]
+]]>
+</system-out>
+<error message="signInAs(admin) failed: 429 {&quot;code&quot;:429,&quot;error_code&quot;:&quot;over_request_rate_limit&quot;,&quot;msg&quot;:&quot;Request rate limit reached&quot;}" type="Error">
+<![CDATA[  [api] › specs/api/profiles/own.api.spec.ts:53:3 › API: Profiles – Own profile › Seller profile (public) returns limited fields 
+
+    Error: signInAs(admin) failed: 429 {"code":429,"error_code":"over_request_rate_limit","msg":"Request rate limit reached"}
+
+       at api/auth.ts:27
+
+      25 |   if (!response.ok) {
+      26 |     const body = await response.text();
+    > 27 |     throw new Error(`signInAs(${role}) failed: ${response.status} ${body}`);
+         |           ^
+      28 |   }
+      29 |
+      30 |   const data = await response.json();
+        at signInAs (/Users/ruthvi07/valclassifieds/tests/e2e/api/auth.ts:27:11)
+        at Object.adminSession (/Users/ruthvi07/valclassifieds/tests/e2e/api/fixtures.ts:26:21)
+
+    Error Context: ../../test-results/profiles-own.api-API-Profi-4d76e-blic-returns-limited-fields-api/error-context.md
+]]>
+</error>
+</testcase>
+<testcase name="API: Profiles – Own profile › Seller profile (public) for non-existent ID returns error" classname="specs/api/profiles/own.api.spec.ts" time="0.704">
+</testcase>
+</testsuite>
+</testsuites>

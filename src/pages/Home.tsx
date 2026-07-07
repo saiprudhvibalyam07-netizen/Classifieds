@@ -4,9 +4,27 @@ import { Search, MapPin, Building2, TrendingUp, Zap, Shield, ArrowRight, Sparkle
 import { supabase } from '../lib/supabase'
 import { SearchBar } from '../components/SearchBar'
 import { FeatureMenu } from '../components/home/FeatureMenu'
+import { SEO, OrganizationJsonLd, WebsiteJsonLd, WebPageJsonLd } from '../components/SEO'
+import { OptimizedImage } from '../components/OptimizedImage'
 import type { Listing } from '../types'
 
 export function Home() {
+  return (
+    <>
+      <SEO
+        title="Buy & Sell"
+        description="The trusted marketplace for your community. Browse hundreds of listings or post your own ad in minutes."
+        url="/"
+      />
+      <OrganizationJsonLd />
+      <WebsiteJsonLd />
+      <WebPageJsonLd name="ValClassifieds - Buy & Sell" description="The trusted marketplace for your community. Browse hundreds of listings or post your own ad in minutes." url="/" />
+      <HomeContent />
+    </>
+  )
+}
+
+function HomeContent() {
   const [featured, setFeatured] = useState<Listing[]>([])
   const [recent, setRecent] = useState<Listing[]>([])
 
@@ -112,7 +130,7 @@ export function Home() {
                 >
                   <div className="aspect-[16/9] overflow-hidden bg-gray-100">
                     {l.images?.[0] ? (
-                      <img src={l.images[0].url} alt="" className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
+                      <OptimizedImage src={l.images[0].url} alt={l.title} className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
                     ) : (
                       <div className="flex h-full items-center justify-center text-gray-400">
                         <Building2 className="h-10 w-10" />
@@ -171,7 +189,7 @@ export function Home() {
                 >
                   <div className="mb-3 aspect-[4/3] overflow-hidden rounded-lg bg-gray-100">
                     {l.images?.[0] ? (
-                      <img src={l.images[0].url} alt="" className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
+                      <OptimizedImage src={l.images[0].url} alt={l.title} className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
                     ) : (
                       <div className="flex h-full items-center justify-center text-gray-400">
                         <Building2 className="h-8 w-8" />

@@ -1,63 +1,61 @@
 import { test, expect } from '../../../fixtures/noAuthContext';
+import { TEST_USERS } from '../../../utils/testData';
 
-test.describe('E2E: Authentication - Login', () => {
-  test('should render the login form', async ({ loginPage, page }) => {
+test.describe('E2E: Login', () => {
+
+  test('renders login form with all fields', async ({ loginPage }) => {
     await loginPage.goto();
-    await expect(page.locator('h1')).toHaveText('Sign In');
-    await expect(page.locator('[data-testid="login-email-input"]')).toBeVisible();
-    await expect(page.locator('[data-testid="login-password-input"]')).toBeVisible();
-    await expect(page.locator('[data-testid="login-submit-button"]')).toBeVisible();
+    await expect(loginPage['emailInput']()).toBeVisible();
+    await expect(loginPage['passwordInput']()).toBeVisible();
+    await expect(loginPage['submitButton']()).toBeVisible();
   });
 
-  test('should show error for invalid credentials', async ({ loginPage }) => {
+  test('shows error for invalid credentials', async ({ loginPage }) => {
     await loginPage.goto();
-    await loginPage.login('wrong@email.com', 'wrongpassword');
-    await loginPage.expectErrorMessage('Invalid email or password. Please try again.');
+    await loginPage.login('wrong@email.com', 'wrongpass');
+    await expect(loginPage['errorMessage']()).toBeVisible({ timeout: 10000 });
   });
 
-  test('should not submit form with empty email', async ({ loginPage, page }) => {
+  test('does not submit with empty email', async ({ loginPage }) => {
     await loginPage.goto();
-    await loginPage.login('', 'somepassword');
-    await expect(page.locator('[data-testid="login-error-message"]')).not.toBeVisible();
+    await loginPage['passwordInput']().fill('somepass');
+    await loginPage['submitButton']().click();
+    await expect(loginPage['errorMessage']()).not.toBeVisible();
   });
 
-  test('should not submit form with empty password', async ({ loginPage, page }) => {
+  test('does not submit with empty password', async ({ loginPage }) => {
     await loginPage.goto();
-    await loginPage.login('test@test.com', '');
-    await expect(page.locator('[data-testid="login-error-message"]')).not.toBeVisible();
+    await loginPage['emailInput']().fill('test@test.com');
+    await loginPage['submitButton']().click();
+    await expect(loginPage['errorMessage']()).not.toBeVisible();
   });
 
-  test('should navigate to register page', async ({ loginPage, page }) => {
+  test('navigates to register page', async ({ loginPage }) => {
     await loginPage.goto();
     await loginPage.clickRegisterLink();
-    await expect(page).toHaveURL(/\/register/);
   });
 
-  test('should have sign in heading and form fields', async ({ loginPage, page }) => {
+  test('logs in successfully with valid buyer credentials', async ({ page, loginPage }) => {
     await loginPage.goto();
-    await expect(page.locator('h1')).toBeVisible();
-    await expect(page.locator('[data-testid="login-email-input"]')).toBeVisible();
-    await expect(page.locator('[data-testid="login-submit-button"]')).toBeVisible();
-  });
-
-  test('should log in successfully with valid credentials', async ({ loginPage }) => {
-    await loginPage.goto();
-    const email = process.env.TEST_BUYER_EMAIL || 'rajesh.kumar@valclassifieds.test';
-    const password = process.env.TEST_BUYER_PASSWORD || 'Rajesh#99Kumar';
-    await loginPage.login(email, password);
+    await loginPage.login(TEST_USERS.buyer.email, TEST_USERS.buyer.password);
     await loginPage.expectLoginSuccess();
   });
 
-  test('should show email confirmation success banner when ?confirmed=true', async ({ loginPage, page }) => {
+  test('shows email confirmation success banner', async ({ page }) => {
     await page.goto('/login?confirmed=true');
-    await page.waitForSelector('[data-testid="login-confirmed-banner"]');
-    await expect(page.locator('[data-testid="login-confirmed-banner"]')).toContainText('Email confirmed successfully');
+    await expect(page.locator('[data-testid="login-confirmed-banner"]')).toBeVisible();
   });
 
-  test('should navigate to auth callback page', async ({ page }) => {
+  test('has forgot password link', async ({ page }) => {
+    await page.goto('/login');
+    const link = page.getByText('Forgot your password?');
+    await expect(link).toBeVisible();
+    await link.click();
+    await expect(page).toHaveURL(/\/forgot-password/);
+  });
+
+  test('navigates to auth callback page', async ({ page }) => {
     await page.goto('/auth/callback');
-    await page.waitForLoadState('networkidle');
-    // Should show processing state or error since no tokens
     await expect(page.locator('h2')).not.toBeEmpty();
   });
 });

@@ -135,6 +135,7 @@ export function FullscreenViewer({ images, initialIndex, onClose }: Props) {
             zoomed ? 'scale-150 cursor-zoom-out' : 'scale-100'
           }`}
           draggable={false}
+          loading="lazy"
         />
       </div>
     </div>

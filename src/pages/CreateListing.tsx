@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
 import { LocationPicker } from '../components/LocationPicker'
+import { SEO } from '../components/SEO'
 import type { Category } from '../types'
 
 export function CreateListing() {
@@ -105,7 +106,9 @@ export function CreateListing() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
+    <>
+      <SEO title="Post a Listing" description="Create a new classified listing on ValClassifieds. Post your ad in minutes." url="/create" />
+      <div className="mx-auto max-w-2xl px-4 py-8">
       <h1 className="mb-8 text-3xl font-bold">Post a Listing</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -202,5 +205,6 @@ export function CreateListing() {
         </button>
       </form>
     </div>
+    </>
   )
 }

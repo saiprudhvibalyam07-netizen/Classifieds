@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { SEO } from '../components/SEO'
 
 type Status = 'processing' | 'confirmed' | 'error' | 'already_confirmed' | 'invalid_link'
 
@@ -64,7 +65,9 @@ export function AuthCallback() {
   const { bg, icon } = statusStyles[status]
 
   return (
-    <div className="mx-auto mt-24 max-w-md px-4">
+    <>
+      <SEO title="Email Confirmation" description="Confirming your ValClassifieds email address." url="/auth/callback" />
+      <div className="mx-auto mt-24 max-w-md px-4">
       <div className={`rounded-xl p-6 text-center shadow-sm ${bg}`}>
         <div className="mb-4 text-3xl">{icon}</div>
         {status === 'processing' && (
@@ -118,5 +121,6 @@ export function AuthCallback() {
         )}
       </div>
     </div>
+    </>
   )
 }
