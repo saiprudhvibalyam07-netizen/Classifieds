@@ -22,9 +22,13 @@ export interface ConversationProvider {
 }
 
 export function getConversationProvider(): ConversationProvider {
-  if (CHATBOT_CONFIG.mockMode) {
+  console.info('[Chatbot] mockMode =', CHATBOT_CONFIG.mockMode)
+
+  if (CHATBOT_CONFIG.mockMode === true) {
+    console.info('[Chatbot] Provider: MOCK')
     return mockConversationProvider
   }
 
+  console.info('[Chatbot] Provider: OPENAI')
   return openaiConversationProvider
 }
