@@ -6,7 +6,7 @@ import { useAuth } from '../hooks/useAuth'
 import { useFavorites } from '../hooks/useFavorites'
 import { ImageGallery } from '../components/ImageGallery'
 import { ListingMap } from '../components/ListingMap'
-import { SEO, BreadcrumbListJsonLd } from '../components/SEO'
+import { SEO, BreadcrumbListJsonLd, SITE_URL } from '../components/SEO'
 import { OptimizedImage } from '../components/OptimizedImage'
 import type { Listing } from '../types'
 import { format } from 'date-fns'
@@ -105,7 +105,7 @@ export function ListingDetail() {
             '@type': 'WebPage',
             name: `${listing.title} - ValClassifieds`,
             description: listing.description?.slice(0, 160) || `View ${listing.title} for $${listing.price.toLocaleString()}`,
-            url: `${window.location.origin}/listings/${listing.id}`,
+            url: `${SITE_URL}/listings/${listing.id}`,
           },
         ]}
       />

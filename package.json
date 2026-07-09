@@ -5,7 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:ssr": "node server.js",
     "build": "tsc -b && vite build",
+    "build:ssr": "tsc -b && npm run build:ssr:client && npm run build:ssr:server",
+    "build:ssr:client": "vite build --outDir dist/client",
+    "build:ssr:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
     "preview": "vite preview",
     "lint": "eslint .",
     "test": "vitest run",
@@ -36,6 +40,7 @@
   "devDependencies": {
     "@playwright/test": "^1.61.1",
     "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/leaflet": "^1.9.21",
     "@types/node": "^26.0.1",
     "@types/react": "^18.3.3",
@@ -46,6 +51,7 @@
     "autoprefixer": "^10.4.19",
     "eslint": "^9.8.0",
     "eslint-plugin-playwright": "^2.10.4",
+    "express": "^5.2.1",
     "fake-indexeddb": "^6.2.5",
     "jsdom": "^29.1.1",
     "pg": "^8.22.0",

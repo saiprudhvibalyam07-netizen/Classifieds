@@ -1,19 +1,5 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { MapPin, ExternalLink } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import type { LatLngExpression } from 'leaflet'
-
-let leafletCssLoaded = false
-
-function loadLeafletCss() {
-  if (leafletCssLoaded) return
-  leafletCssLoaded = true
-  const link = document.createElement('link')
-  link.rel = 'stylesheet'
-  link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
-  link.crossOrigin = 'anonymous'
-  document.head.appendChild(link)
-}
 
 type Props = {
   latitude: number
@@ -26,11 +12,13 @@ export function ListingMap({ latitude, longitude, title, address }: Props) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    loadLeafletCss()
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
+    link.crossOrigin = 'anonymous'
+    document.head.appendChild(link)
     setMounted(true)
   }, [])
-
-  const position: LatLngExpression = [latitude, longitude]
 
   return (
     <div>
@@ -38,31 +26,10 @@ export function ListingMap({ latitude, longitude, title, address }: Props) {
         <MapPin className="h-4 w-4" />
         Location
       </div>
-
-      {address && (
-        <p className="mb-3 text-sm text-gray-600">{address}</p>
-      )}
-
+      {address && <p className="mb-3 text-sm text-gray-600">{address}</p>}
       <div className="overflow-hidden rounded-xl shadow-sm">
-        {mounted && (
-          <MapContainer
-            center={position}
-            zoom={14}
-            scrollWheelZoom={false}
-            className="z-0 h-64 w-full"
-            key={`${latitude}-${longitude}`}
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <Marker position={position}>
-              <Popup>{title}</Popup>
-            </Marker>
-          </MapContainer>
-        )}
+        {mounted && <MapInner lat={latitude} lng={longitude} title={title} />}
       </div>
-
       <a
         href={`https://www.google.com/maps?q=${latitude},${longitude}`}
         target="_blank"
@@ -73,5 +40,47 @@ export function ListingMap({ latitude, longitude, title, address }: Props) {
         Open in Google Maps
       </a>
     </div>
+  )
+}
+
+function MapInner({ lat, lng, title }: { lat: number; lng: number; title: string }) {
+  const [RL, setRL] = useState<typeof import('react-leaflet') | null>(null)
+
+  useEffect(() => {
+    Promise.all([
+      import('leaflet'),
+      import('react-leaflet'),
+    ]).then(([L, RL]) => {
+      delete (L.Icon.Default.prototype as any)._getIconUrl
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+      })
+      setRL(RL)
+    })
+  }, [])
+
+  if (!RL) return null
+
+  const { MapContainer, TileLayer, Marker, Popup } = RL
+  const position = [lat, lng] as [number, number]
+
+  return (
+    <MapContainer
+      center={position}
+      zoom={14}
+      scrollWheelZoom={false}
+      className="z-0 h-64 w-full"
+      key={`${lat}-${lng}`}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <Marker position={position}>
+        <Popup>{title}</Popup>
+      </Marker>
+    </MapContainer>
   )
 }

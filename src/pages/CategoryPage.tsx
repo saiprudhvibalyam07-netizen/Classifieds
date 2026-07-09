@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, SlidersHorizontal, List, LayoutGrid, Building2, MapPin, Calendar } from 'lucide-react'
 import { supabase } from '../lib/supabase'
-import { SEO, BreadcrumbListJsonLd } from '../components/SEO'
+import { SEO, BreadcrumbListJsonLd, SITE_URL } from '../components/SEO'
 import { OptimizedImage } from '../components/OptimizedImage'
 import type { Category, Listing } from '../types'
 import { categories } from '../data/categories'
@@ -128,14 +128,14 @@ export function CategoryPage() {
             '@type': 'CollectionPage',
             name: `${staticCat.name} - ValClassifieds`,
             description: description || `Browse ${staticCat.name} classified listings.`,
-            url: `${window.location.origin}/category/${slug}`,
+            url: `${SITE_URL}/category/${slug}`,
           },
           {
             '@context': 'https://schema.org',
             '@type': 'WebPage',
             name: `${staticCat.name} - ValClassifieds`,
             description: description || `Browse ${staticCat.name} classified listings.`,
-            url: `${window.location.origin}/category/${slug}`,
+            url: `${SITE_URL}/category/${slug}`,
           },
         ]}
       />

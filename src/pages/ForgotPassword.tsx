@@ -1,7 +1,7 @@
 import { FormEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { SEO } from '../components/SEO'
+import { SEO, SITE_URL } from '../components/SEO'
 
 export function ForgotPassword() {
   const [email, setEmail] = useState('')
@@ -15,7 +15,7 @@ export function ForgotPassword() {
     setLoading(true)
 
     const { error: err } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/update-password`,
+      redirectTo: `${typeof window !== 'undefined' ? window.location.origin : SITE_URL}/update-password`,
     })
 
     if (err) {

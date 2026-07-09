@@ -1,5 +1,11 @@
-const SUPABASE_URL = 'https://seqzkrwgpshqinsjhxwh.supabase.co';
-const SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNlcXprcndncHNocWluc2poeHdoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjczMjU4NCwiZXhwIjoyMDk4MzA4NTg0fQ.I_fycTo6BNHKMIeP013CCEWfq2rQyln9xW6QJlPCdmo';
+const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+
+if (!SUPABASE_URL || !SERVICE_KEY) {
+  console.error('Error: SUPABASE_URL and SUPABASE_SERVICE_KEY environment variables are required.');
+  console.error('Usage: SUPABASE_URL=https://xxx.supabase.co SUPABASE_SERVICE_KEY=eyJ... node scripts/schema_check.mjs');
+  process.exit(1);
+}
 
 const headers = { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}`, 'Content-Type': 'application/json' };
 

@@ -1,9 +1,28 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
+  "buildCommand": "npm run build:ssr",
+  "outputDirectory": "dist/client",
   "framework": "vite",
+  "functions": {
+    "api/ssr.mjs": {
+      "runtime": "nodejs18.x",
+      "maxDuration": 30
+    },
+    "api/chat.mjs": {
+      "runtime": "nodejs18.x",
+      "maxDuration": 30
+    },
+    "api/embeddings.mjs": {
+      "runtime": "nodejs18.x",
+      "maxDuration": 30
+    }
+  },
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/assets/(.*)", "destination": "/assets/$1" },
+    { "source": "/(.*)\\.(svg|png|jpg|jpeg|webp|avif|ico|xml|txt|json)", "destination": "/$1.$2" },
+    { "source": "/(favicon\\.svg|robots\\.txt|sitemap\\.xml|BingSiteAuth\\.xml|googlee6b9c8c7a1d2f4b8\\.html)", "destination": "/$1" },
+    { "source": "/api/chat", "destination": "/api/chat.mjs" },
+    { "source": "/api/embeddings", "destination": "/api/embeddings.mjs" },
+    { "source": "/(.*)", "destination": "/api/ssr" }
   ],
   "headers": [
     {
@@ -16,6 +35,15 @@
       "source": "/(.*)\\.(svg|png|jpg|jpeg|webp|avif|ico|xml|txt)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
       ]
     }
   ]

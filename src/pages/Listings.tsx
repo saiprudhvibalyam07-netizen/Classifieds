@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams, useLocation } from 'react-router-dom'
 import { Heart, Search, SlidersHorizontal } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
 import { useFavorites } from '../hooks/useFavorites'
-import { SEO } from '../components/SEO'
+import { SEO, SITE_URL } from '../components/SEO'
 import { OptimizedImage } from '../components/OptimizedImage'
 import type { Category, Listing } from '../types'
 
@@ -21,6 +21,7 @@ function formatTimeAgo(dateStr: string): string {
 }
 
 export function Listings() {
+  const { pathname } = useLocation()
   const [searchParams, setSearchParams] = useSearchParams()
   const [listings, setListings] = useState<Listing[]>([])
   const [categories, setCategories] = useState<Category[]>([])
@@ -168,14 +169,14 @@ export function Listings() {
             '@type': 'CollectionPage',
             name: 'Browse Listings - ValClassifieds',
             description: 'Browse hundreds of classified listings across all categories.',
-            url: `${window.location.origin}/listings`,
+            url: `${SITE_URL}/listings`,
           },
           {
             '@context': 'https://schema.org',
             '@type': 'WebPage',
             name: 'Browse Listings - ValClassifieds',
             description: 'Browse hundreds of classified listings across all categories.',
-            url: `${window.location.origin}/listings`,
+            url: `${SITE_URL}/listings`,
           },
         ]}
       />
@@ -364,8 +365,8 @@ export function Listings() {
       {/* Pagination */}
       {totalPages > 1 && (
         <>
-          {page > 1 && <link rel="prev" href={`${window.location.pathname}?${new URLSearchParams({ ...Object.fromEntries(searchParams), page: String(page - 1) })}`} />}
-          {page < totalPages && <link rel="next" href={`${window.location.pathname}?${new URLSearchParams({ ...Object.fromEntries(searchParams), page: String(page + 1) })}`} />}
+          {page > 1 && <link rel="prev" href={`${pathname}?${new URLSearchParams({ ...Object.fromEntries(searchParams), page: String(page - 1) })}`} />}
+          {page < totalPages && <link rel="next" href={`${pathname}?${new URLSearchParams({ ...Object.fromEntries(searchParams), page: String(page + 1) })}`} />}
           <nav className="mt-8 flex justify-center gap-2" aria-label="Pagination" data-testid="listings-pagination">
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
               <button

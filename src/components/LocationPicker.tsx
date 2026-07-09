@@ -1,21 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet'
 import { MapPin, Navigation, Loader } from 'lucide-react'
-
-let leafletCssLoaded = false
-
-function loadLeafletCss() {
-  if (leafletCssLoaded) return
-  leafletCssLoaded = true
-  const link = document.createElement('link')
-  link.rel = 'stylesheet'
-  link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
-  link.crossOrigin = 'anonymous'
-  document.head.appendChild(link)
-}
 import { useDebounce } from '../hooks/useDebounce'
 import { searchLocation, reverseGeocode } from '../lib/geocode'
-import type { LatLngExpression, LeafletMouseEvent } from 'leaflet'
 
 type LocationData = {
   latitude: number
@@ -31,23 +17,6 @@ type Props = {
   error?: string
 }
 
-function MapClickHandler({ onMapClick }: { onMapClick: (lat: number, lng: number) => void }) {
-  useMapEvents({
-    click(e: LeafletMouseEvent) {
-      onMapClick(e.latlng.lat, e.latlng.lng)
-    },
-  })
-  return null
-}
-
-function FlyTo({ lat, lng }: { lat: number; lng: number }) {
-  const map = useMap()
-  useEffect(() => {
-    map.flyTo([lat, lng], map.getZoom())
-  }, [lat, lng, map])
-  return null
-}
-
 export function LocationPicker({ value, onChange, error }: Props) {
   const [searchInput, setSearchInput] = useState('')
   const [results, setResults] = useState<Array<{ lat: number; lng: number; display_name: string }>>([])
@@ -59,7 +28,11 @@ export function LocationPicker({ value, onChange, error }: Props) {
   const debouncedSearch = useDebounce(searchInput, 400)
 
   useEffect(() => {
-    loadLeafletCss()
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
+    link.crossOrigin = 'anonymous'
+    document.head.appendChild(link)
   }, [])
 
   useEffect(() => {
@@ -137,7 +110,7 @@ export function LocationPicker({ value, onChange, error }: Props) {
     })
   }
 
-  const defaultCenter: LatLngExpression = value
+  const defaultCenter: [number, number] = value
     ? [value.latitude, value.longitude]
     : [40.7128, -74.006]
 
@@ -185,34 +158,12 @@ export function LocationPicker({ value, onChange, error }: Props) {
           </div>
         )}
         <div className={mapReady ? '' : 'hidden'}>
-          <MapContainer
+          <PickerMap
+            value={value}
             center={defaultCenter}
-            zoom={value ? 14 : 3}
-            className="z-0 h-64 w-full"
-            whenReady={() => setMapReady(true)}
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <MapClickHandler onMapClick={handleMapClick} />
-            {value && (
-              <>
-                <FlyTo lat={value.latitude} lng={value.longitude} />
-                <Marker
-                  position={[value.latitude, value.longitude]}
-                  draggable={true}
-                  eventHandlers={{
-                    dragend: (e) => {
-                      const marker = e.target
-                      const pos = marker.getLatLng()
-                      handleMapClick(pos.lat, pos.lng)
-                    },
-                  }}
-                />
-              </>
-            )}
-          </MapContainer>
+            onMapClick={handleMapClick}
+            onReady={() => setMapReady(true)}
+          />
         </div>
       </div>
 
@@ -233,5 +184,81 @@ export function LocationPicker({ value, onChange, error }: Props) {
 
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </div>
+  )
+}
+
+function PickerMap({ value, center, onMapClick, onReady }: {
+  value: LocationData | null
+  center: [number, number]
+  onMapClick: (lat: number, lng: number) => void
+  onReady: () => void
+}) {
+  const [RL, setRL] = useState<typeof import('react-leaflet') | null>(null)
+
+  useEffect(() => {
+    Promise.all([
+      import('leaflet'),
+      import('react-leaflet'),
+    ]).then(([L, RL]) => {
+      delete (L.Icon.Default.prototype as any)._getIconUrl
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+      })
+      setRL(RL)
+    })
+  }, [])
+
+  if (!RL) return null
+
+  const { MapContainer, TileLayer, Marker, useMapEvents, useMap } = RL
+
+  function MapClickHandler({ onMapClick: onClick }: { onMapClick: (lat: number, lng: number) => void }) {
+    useMapEvents({
+      click(e: any) {
+        onClick(e.latlng.lat, e.latlng.lng)
+      },
+    })
+    return null
+  }
+
+  function FlyTo({ lat, lng }: { lat: number; lng: number }) {
+    const map = useMap()
+    useEffect(() => {
+      map.flyTo([lat, lng], map.getZoom())
+    }, [lat, lng, map])
+    return null
+  }
+
+  return (
+    <MapContainer
+      center={center}
+      zoom={value ? 14 : 3}
+      className="z-0 h-64 w-full"
+      whenReady={() => onReady()}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <MapClickHandler onMapClick={onMapClick} />
+      {value && (
+        <>
+          <FlyTo lat={value.latitude} lng={value.longitude} />
+          <Marker
+            position={[value.latitude, value.longitude]}
+            draggable={true}
+            eventHandlers={{
+              dragend: (e: any) => {
+                const marker = e.target
+                const pos = marker.getLatLng()
+                onMapClick(pos.lat, pos.lng)
+              },
+            }}
+          />
+        </>
+      )}
+    </MapContainer>
   )
 }

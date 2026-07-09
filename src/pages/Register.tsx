@@ -1,7 +1,7 @@
 import { FormEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { SEO } from '../components/SEO'
+import { SEO, SITE_URL } from '../components/SEO'
 
 const ERROR_MESSAGES: Record<string, string> = {
   'User already registered': 'This email is already registered. Please sign in instead.',
@@ -36,7 +36,7 @@ export function Register() {
       password,
       options: {
         data: { full_name: fullName },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${typeof window !== 'undefined' ? window.location.origin : SITE_URL}/auth/callback`,
       },
     })
 

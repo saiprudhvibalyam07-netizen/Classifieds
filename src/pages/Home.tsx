@@ -5,7 +5,6 @@ import { supabase } from '../lib/supabase'
 import { SearchBar } from '../components/SearchBar'
 import { FeatureMenu } from '../components/home/FeatureMenu'
 import { SEO, OrganizationJsonLd, WebsiteJsonLd, WebPageJsonLd } from '../components/SEO'
-import { OptimizedImage } from '../components/OptimizedImage'
 import type { Listing } from '../types'
 
 export function Home() {
@@ -54,7 +53,7 @@ function HomeContent() {
       {/* Hero Banner */}
       <section className="relative bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyek0zNiAyNHYySDI0di0yaDEyeiIvPjwvZz48L2c+PC9zdmc+')] opacity-30" />
-        <div className="relative mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8">
+        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
           <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white/80">
             <Sparkles className="h-4 w-4" />
             India's Trusted Marketplace
@@ -94,7 +93,7 @@ function HomeContent() {
               {trendingSearches.map((term) => (
                 <Link
                   key={term}
-                  to={`/listings?search=${encodeURIComponent(term)}`}
+                  to={`/listings?q=${encodeURIComponent(term)}`}
                   className="rounded-full bg-white/10 px-3.5 py-1.5 text-sm text-white/80 transition hover:bg-white/20 hover:text-white"
                 >
                   {term}
@@ -121,40 +120,48 @@ function HomeContent() {
                 View All <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </div>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {featured.map((l) => (
                 <Link
                   key={l.id}
                   to={`/listings/${l.id}`}
-                  className="group overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md"
+                  className="group min-w-0 overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md"
                 >
-                  <div className="aspect-[16/9] overflow-hidden bg-gray-100">
-                    {l.images?.[0] ? (
-                      <OptimizedImage src={l.images[0].url} alt={l.title} className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
-                    ) : (
-                      <div className="flex h-full items-center justify-center text-gray-400">
-                        <Building2 className="h-10 w-10" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-4">
-                    <div className="mb-1 flex items-center gap-2">
-                      {l.category && (
-                        <span className="text-xs text-gray-500">{l.category.name}</span>
+                    <div className="relative aspect-[16/9] overflow-hidden bg-gray-100">
+                      {l.images?.[0] ? (
+                        <div className="absolute inset-0">
+                          <img
+                            src={l.images[0].url}
+                            alt={l.title}
+                            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
+                        </div>
+                      ) : (
+                        <div className="flex h-full items-center justify-center text-gray-400">
+                          <Building2 className="h-10 w-10" />
+                        </div>
                       )}
-                      <span className="inline-flex items-center rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
-                        Featured
-                      </span>
                     </div>
-                    <p className="font-semibold text-gray-900 truncate">{l.title}</p>
-                    <div className="mt-1 flex items-center gap-1 text-sm text-gray-500">
-                      <MapPin className="h-3.5 w-3.5" />
-                      {l.city || l.location || 'Various locations'}
+                    <div className="p-4">
+                      <div className="mb-1 flex items-center gap-2">
+                        {l.category && (
+                          <span className="text-xs text-gray-500">{l.category.name}</span>
+                        )}
+                        <span className="inline-flex items-center rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
+                          Featured
+                        </span>
+                      </div>
+                      <p className="font-semibold text-gray-900 truncate">{l.title}</p>
+                      <div className="mt-1 flex items-center gap-1 text-sm text-gray-500">
+                        <MapPin className="h-3.5 w-3.5" />
+                        {l.city || l.location || 'Various locations'}
+                      </div>
+                      <div className="mt-2">
+                        <span className="text-xl font-bold text-primary-600">${l.price.toLocaleString()}</span>
+                      </div>
                     </div>
-                    <div className="mt-2">
-                      <span className="text-xl font-bold text-primary-600">${l.price.toLocaleString()}</span>
-                    </div>
-                  </div>
                 </Link>
               ))}
             </div>
@@ -180,32 +187,42 @@ function HomeContent() {
                 View All <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {recent.map((l) => (
                 <Link
                   key={l.id}
                   to={`/listings/${l.id}`}
-                  className="group rounded-xl bg-white p-4 shadow-sm transition hover:shadow-md"
+                  className="group min-w-0 overflow-hidden rounded-xl bg-white p-3 shadow-sm transition hover:shadow-md"
                 >
-                  <div className="mb-3 aspect-[4/3] overflow-hidden rounded-lg bg-gray-100">
+                  <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-100">
                     {l.images?.[0] ? (
-                      <OptimizedImage src={l.images[0].url} alt={l.title} className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
+                      <div className="absolute inset-0">
+                        <img
+                          src={l.images[0].url}
+                          alt={l.title}
+                          className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
+                      </div>
                     ) : (
                       <div className="flex h-full items-center justify-center text-gray-400">
                         <Building2 className="h-8 w-8" />
                       </div>
                     )}
                   </div>
-                  <p className="mb-1 text-sm font-semibold text-gray-900 truncate">{l.title}</p>
-                  <div className="mb-1 flex items-center gap-1 text-xs text-gray-500">
-                    <MapPin className="h-3 w-3" />
-                    <span className="truncate">{l.city || l.location || 'Various locations'}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-primary-600">${l.price.toLocaleString()}</span>
-                    {l.category && (
-                      <span className="text-xs text-gray-400">{l.category.name}</span>
-                    )}
+                  <div className="mt-2">
+                    <p className="font-semibold text-gray-900 truncate text-sm">{l.title}</p>
+                    <div className="mt-1 flex items-center gap-1 text-xs text-gray-500">
+                      <MapPin className="h-3 w-3" />
+                      <span className="truncate">{l.city || l.location || 'Various locations'}</span>
+                    </div>
+                    <div className="mt-1 flex items-center justify-between">
+                      <span className="font-bold text-primary-600 text-sm">${l.price.toLocaleString()}</span>
+                      {l.category && (
+                        <span className="text-xs text-gray-400">{l.category.name}</span>
+                      )}
+                    </div>
                   </div>
                 </Link>
               ))}
