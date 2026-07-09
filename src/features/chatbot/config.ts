@@ -1,6 +1,6 @@
 export const CHATBOT_CONFIG = {
   enabled: true,
-  mockMode: false,
+  mockMode: true,
   sessionExpiryDays: 30,
   messageLimit: 50,
   typingDelay: { min: 800, max: 2000 },
