@@ -1,8 +1,11 @@
+import { useState } from 'react'
 import { useChat } from '../hooks/useChat'
 import { ChatHeader } from './ChatHeader'
 import { ChatMessages } from './ChatMessages'
 import { ChatInput } from './ChatInput'
 import { ErrorState } from './ErrorState'
+import { AboutValBot } from './AboutValBot'
+import { ConfirmDialog } from './ConfirmDialog'
 
 export function ChatPanel() {
   const {
@@ -15,12 +18,28 @@ export function ChatPanel() {
     closeChat,
     sendMessage,
     retryMessage,
+    resetChat,
+    startNewConversation,
   } = useChat()
+
+  const [showAbout, setShowAbout] = useState(false)
+  const [showClearConfirm, setShowClearConfirm] = useState(false)
 
   const showWelcome = true
 
   const handlePromptClick = (prompt: string) => {
     sendMessage(prompt)
+  }
+
+  const handleNewChat = async () => {
+    resetChat()
+    await startNewConversation(role)
+  }
+
+  const handleClearConfirm = async () => {
+    setShowClearConfirm(false)
+    resetChat()
+    await startNewConversation(role)
   }
 
   return (
@@ -31,7 +50,13 @@ export function ChatPanel() {
       aria-label="Chat with ValBot"
       aria-modal="true"
     >
-      <ChatHeader role={role} onClose={closeChat} />
+      <ChatHeader
+        role={role}
+        onClose={closeChat}
+        onNewChat={handleNewChat}
+        onClearConversation={() => setShowClearConfirm(true)}
+        onAbout={() => setShowAbout(true)}
+      />
 
       <div className="flex flex-1 flex-col overflow-hidden">
         {error && (
@@ -70,6 +95,18 @@ export function ChatPanel() {
           placeholder="Ask me anything about ValClassifieds..."
         />
       </div>
+
+      {showAbout && <AboutValBot onClose={() => setShowAbout(false)} />}
+
+      {showClearConfirm && (
+        <ConfirmDialog
+          title="Clear Conversation"
+          message="This will remove all messages from this chat. Are you sure you want to continue?"
+          confirmLabel="Clear"
+          onConfirm={handleClearConfirm}
+          onCancel={() => setShowClearConfirm(false)}
+        />
+      )}
     </div>
   )
 }

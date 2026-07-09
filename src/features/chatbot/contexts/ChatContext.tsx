@@ -12,6 +12,7 @@ interface ChatContextValue extends ChatState {
   startNewConversation: (role: ChatbotRole) => Promise<void>
   restoreConversation: (conversation: ChatbotConversation, messages: ChatbotMessage[]) => void
   retryMessage: (messageId: string) => Promise<void>
+  resetChat: () => void
 }
 
 const ChatContext = createContext<ChatContextValue | null>(null)
@@ -52,7 +53,7 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
     case 'SET_OFFLINE':
       return { ...state, offline: action.payload }
     case 'RESET':
-      return initialState
+      return { ...initialState, isOpen: state.isOpen }
     case 'START_STREAM': {
       const newMessage: ChatbotMessage = {
         id: action.payload.messageId,
@@ -255,6 +256,11 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     await sendMessage(failedMessage.content)
   }, [state.messages, sendMessage])
 
+  const resetChat = useCallback(() => {
+    abortRef.current = true
+    dispatch({ type: 'RESET' })
+  }, [])
+
   return (
     <ChatContext.Provider
       value={{
@@ -266,6 +272,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         startNewConversation,
         restoreConversation,
         retryMessage,
+        resetChat,
       }}
     >
       {children}
