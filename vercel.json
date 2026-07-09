@@ -3,19 +3,10 @@
   "outputDirectory": "dist/client",
   "framework": "vite",
   "functions": {
-    "api/ssr.mjs": {
-      "runtime": "nodejs18.x",
-      "maxDuration": 30
-    },
-    "api/chat.mjs": {
-      "runtime": "nodejs18.x",
-      "maxDuration": 30
-    },
-    "api/embeddings.mjs": {
-      "runtime": "nodejs18.x",
-      "maxDuration": 30
-    }
-  },
+  "api/*.mjs": {
+    "maxDuration": 30
+  }
+},
   "rewrites": [
     { "source": "/assets/(.*)", "destination": "/assets/$1" },
     { "source": "/(.*)\\.(svg|png|jpg|jpeg|webp|avif|ico|xml|txt|json)", "destination": "/$1.$2" },
