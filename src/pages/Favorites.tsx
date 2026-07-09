@@ -54,7 +54,7 @@ export function Favorites() {
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {listings.map((listing) => (
-            <div key={listing.id} className="group relative rounded-xl bg-white shadow-sm transition hover:shadow-md">
+            <div key={listing.id} className="group relative min-w-0 overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md">
               <Link to={`/listings/${listing.id}`}>
                 <div className="aspect-[4/3] overflow-hidden rounded-t-xl bg-gray-100">
                   {listing.images && listing.images[0] ? (

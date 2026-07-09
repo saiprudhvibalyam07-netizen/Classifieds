@@ -183,7 +183,7 @@ export function CategoryPage() {
                 <Link
                   key={l.id}
                   to={`/listings/${l.id}`}
-                  className="group rounded-xl bg-white shadow-sm transition hover:shadow-md"
+                  className="group min-w-0 overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md"
                 >
                   <div className="aspect-[16/9] overflow-hidden rounded-t-xl bg-gray-100">
                     {l.images?.[0] ? (
@@ -362,7 +362,7 @@ export function CategoryPage() {
                   <Link
                     key={l.id}
                     to={`/listings/${l.id}`}
-                    className={`group rounded-xl bg-white shadow-sm transition hover:shadow-md ${
+                    className={`group min-w-0 overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md ${
                       view === 'list' ? 'flex gap-4 p-3' : ''
                     }`}
                   >

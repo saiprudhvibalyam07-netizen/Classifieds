@@ -319,7 +319,7 @@ export function Listings() {
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {listings.map((listing) => (
-            <div key={listing.id} className="group relative flex flex-col rounded-xl bg-white shadow-sm transition hover:shadow-md" data-testid="listing-card">
+            <div key={listing.id} className="group relative min-w-0 overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md" data-testid="listing-card">
               <Link to={`/listings/${listing.id}`} className="flex flex-1 flex-col">
                 <div className="aspect-[4/3] overflow-hidden rounded-t-xl bg-gray-100">
                   {listing.images && listing.images[0] ? (

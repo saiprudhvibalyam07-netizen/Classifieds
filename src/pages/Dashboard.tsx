@@ -71,7 +71,7 @@ export function Dashboard() {
           {listings.map((listing) => (
             <div
               key={listing.id}
-              className="flex items-center gap-4 rounded-xl bg-white p-4 shadow-sm"
+              className="flex min-w-0 items-center gap-4 overflow-hidden rounded-xl bg-white p-4 shadow-sm"
             >
               <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
                 {listing.images && listing.images[0] ? (

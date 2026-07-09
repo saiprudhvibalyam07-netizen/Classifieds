@@ -175,7 +175,7 @@ export function SellerProfile() {
               <Link
                 key={listing.id}
                 to={`/listings/${listing.id}`}
-                className="group rounded-xl bg-white shadow-sm transition hover:shadow-md"
+                className="group min-w-0 overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md"
               >
                 <div className="aspect-[4/3] overflow-hidden rounded-t-xl bg-gray-100">
                   {listing.images && listing.images[0] ? (

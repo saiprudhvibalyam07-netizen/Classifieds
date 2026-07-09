@@ -163,7 +163,7 @@ export function Admin() {
           ) : (
             <div className="space-y-4">
               {pendingListings.map((l) => (
-                <div key={l.id} className="flex items-center gap-4 rounded-xl bg-white p-4 shadow-sm">
+                <div key={l.id} className="flex min-w-0 items-center gap-4 overflow-hidden rounded-xl bg-white p-4 shadow-sm">
                   <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
                     {l.images && l.images[0] ? (
                       <OptimizedImage src={l.images[0].url} alt={l.title} className="h-full w-full object-cover" />
