@@ -11,8 +11,6 @@
     { "source": "/assets/(.*)", "destination": "/assets/$1" },
     { "source": "/(.*)\\.(svg|png|jpg|jpeg|webp|avif|ico|xml|txt|json)", "destination": "/$1.$2" },
     { "source": "/(favicon\\.svg|robots\\.txt|sitemap\\.xml|BingSiteAuth\\.xml|googlee6b9c8c7a1d2f4b8\\.html)", "destination": "/$1" },
-    { "source": "/api/chat", "destination": "/api/chat.mjs" },
-    { "source": "/api/embeddings", "destination": "/api/embeddings.mjs" },
     { "source": "/(.*)", "destination": "/api/ssr" }
   ],
   "headers": [
