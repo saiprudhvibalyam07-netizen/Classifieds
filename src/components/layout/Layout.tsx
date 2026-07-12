@@ -1,8 +1,12 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { Header } from './Header'
 import { Footer } from './Footer'
+import { SupportWidget } from '../../features/customer-support'
 
 export function Layout() {
+  const location = useLocation()
+  const isMessagesPage = location.pathname === '/messages'
+
   return (
     <div className="flex min-h-screen flex-col">
       <a
@@ -16,6 +20,7 @@ export function Layout() {
         <Outlet />
       </main>
       <Footer />
+      {!isMessagesPage && <SupportWidget />}
     </div>
   )
 }

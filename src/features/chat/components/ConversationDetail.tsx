@@ -243,7 +243,7 @@ export function ConversationDetail({
   }, [callState])
 
   return (
-    <div className="relative flex h-full flex-col">
+    <div className="flex flex-1 flex-col min-h-0">
       <ConversationHeader
         conversation={conversation}
         currentUserId={currentUserId}
@@ -262,7 +262,7 @@ export function ConversationDetail({
 
       <div
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto bg-gray-50 px-4 py-4"
+        className="flex-1 overflow-y-auto bg-gray-50 px-4 py-4 min-h-0"
         data-testid="chat-message-area"
       >
         {loading && (
@@ -319,7 +319,7 @@ export function ConversationDetail({
         </div>
       </div>
 
-      <div className="relative border-t border-gray-200 bg-white">
+      <div className="relative flex-shrink-0 border-t border-gray-200 bg-white">
         {toast && (
           <div className="absolute -top-10 left-1/2 -translate-x-1/2 rounded-lg bg-gray-900 px-4 py-2 text-xs text-white shadow-lg">
             {toast.message}
@@ -339,19 +339,19 @@ export function ConversationDetail({
           />
         )}
 
-        <form onSubmit={handleSendMessage} className="flex items-end gap-2 px-4 py-3">
+        <form onSubmit={handleSendMessage} className="flex items-end gap-2 px-4 py-3 pb-safe">
           <AttachmentPicker
             onSelectFiles={handleSelectFiles}
             onRecordVoice={handleRecordVoice}
             disabled={sending}
           />
-          <div className="relative flex flex-1 items-end gap-2">
+          <div className="relative flex flex-1 items-end gap-2 min-w-0">
             <input
               ref={inputRef}
               type="text"
               placeholder="Type a message..."
               disabled={sending}
-              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm outline-none transition focus:border-primary-500 focus:ring-1 focus:ring-primary-500 disabled:bg-gray-100"
+              className="flex-1 min-w-0 rounded-lg border border-gray-300 px-4 py-2 text-sm outline-none transition focus:border-primary-500 focus:ring-1 focus:ring-primary-500 disabled:bg-gray-100"
               data-testid="chat-message-input"
               aria-label="Message input"
             />
