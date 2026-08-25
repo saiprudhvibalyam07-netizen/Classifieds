@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
 import { Layout } from './components/layout/Layout'
+import { GoogleAnalytics } from './components/GoogleAnalytics'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { Home } from './pages/Home'
 import { Login } from './pages/Login'
@@ -26,6 +27,7 @@ const AccessDenied = lazy(() => import('./pages/AccessDenied').then((m) => ({ de
 export default function App() {
   return (
     <AuthProvider>
+      <GoogleAnalytics />
       <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-4 border-primary-600 border-t-transparent" /></div>}>
       <Routes>
         <Route element={<Layout />}>
