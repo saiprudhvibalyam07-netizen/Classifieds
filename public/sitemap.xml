@@ -6,21 +6,6 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.valclassifieds.com/login</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://www.valclassifieds.com/register</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://www.valclassifieds.com/forgot-password</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.1</priority>
-  </url>
-  <url>
     <loc>https://www.valclassifieds.com/listings</loc>
     <changefreq>hourly</changefreq>
     <priority>0.9</priority>
@@ -104,10 +89,5 @@
     <loc>https://www.valclassifieds.com/category/community</loc>
     <changefreq>hourly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.valclassifieds.com/access-denied</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.1</priority>
   </url>
 </urlset>
