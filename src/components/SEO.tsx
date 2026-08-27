@@ -10,8 +10,8 @@ type SEOProps = {
 }
 
 export const SITE_NAME = 'ValClassifieds'
-export const DEFAULT_IMAGE = 'https://www.valclassifieds.com/og-image.png'
-export const SITE_URL = 'https://www.valclassifieds.com'
+export const DEFAULT_IMAGE = 'https://classifieds-gold.vercel.app/og-image.png'
+export const SITE_URL = 'https://classifieds-gold.vercel.app'
 
 export function SEO({ title, description, image, url, type = 'website', jsonLd }: SEOProps) {
   const pageTitle = `${title} | ${SITE_NAME}`
