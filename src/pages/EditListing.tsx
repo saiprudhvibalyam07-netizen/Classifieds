@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth'
 import { LocationPicker } from '../components/LocationPicker'
 import { SEO } from '../components/SEO'
 import type { Category, Listing } from '../types'
+import { describeValVerifyResult, requestValVerify, ValVerifyRequestError } from '../lib/valverify'
 
 export function EditListing() {
   const { id } = useParams<{ id: string }>()
@@ -93,7 +94,17 @@ export function EditListing() {
       setError(updateError.message)
       setLoading(false)
     } else {
-      navigate(`/listings/${id}`)
+      let notice = 'Listing updated. Automated verification will be available for Admin review.'
+      if (id) {
+        try {
+          notice = describeValVerifyResult(await requestValVerify(id), 'updated')
+        } catch (verificationError) {
+          notice = verificationError instanceof ValVerifyRequestError
+            ? `Listing updated, but automated verification could not complete: ${verificationError.message}`
+            : 'Listing updated, but automated verification could not complete.'
+        }
+      }
+      navigate(`/listings/${id}`, { state: { verificationNotice: notice } })
     }
   }
 

@@ -1,6 +1,8 @@
 import { supabase } from './supabase'
-import type { ValVerifyResult } from '../types/valverify'
+import type { ValVerifyRecommendation, ValVerifyResult } from '../types/valverify'
 import { validateValVerifyResult } from '../types/valverify'
+
+const VALVERIFY_RECOMMENDATIONS: ValVerifyRecommendation[] = ['APPROVE', 'REVIEW', 'REJECT']
 
 export class ValVerifyRequestError extends Error {
   status: number
@@ -68,4 +70,38 @@ export function describeValVerifyResult(result: ValVerifyResult, action: 'posted
     return `${prefix} Automated checks found issues.${action === 'posted' ? ' It remains pending Admin review.' : ' Admin review may be needed.'}`
   }
   return `${prefix} Automated checks recommend Admin review before publication.${action === 'updated' ? ' Moderation status was not changed.' : ''}`
+}
+
+export type ValVerifySafeSummary = {
+  recommendation: ValVerifyRecommendation | null
+  summary: string | null
+  reasons: string[]
+  verifiedAt: string | null
+}
+
+// The owner-safe read path is server-side only via the
+// get_listing_verification RPC. This client validator rebuilds a minimal
+// seller-safe object and never trusts arbitrary columns from the response.
+export async function getValVerifySummary(listingId: string): Promise<ValVerifySafeSummary | null> {
+  const { data, error } = await supabase.rpc('get_listing_verification', {
+    p_listing_id: listingId,
+  })
+  if (error) return null
+  if (!Array.isArray(data) || data.length === 0) return null
+
+  const row = isRecord(data[0]) ? data[0] : null
+  if (!row) return null
+
+  const recommendation = row.recommendation === null
+    || VALVERIFY_RECOMMENDATIONS.includes(row.recommendation as ValVerifyRecommendation)
+    ? (row.recommendation as ValVerifyRecommendation | null)
+    : null
+  const summary = typeof row.summary === 'string' ? row.summary.slice(0, 500) : null
+  const reasons = Array.isArray(row.reasons)
+    ? row.reasons.filter((reason): reason is string => typeof reason === 'string').slice(0, 8)
+    : []
+  const rawVerifiedAt = typeof row.verifiedAt === 'string' ? row.verifiedAt : row.verified_at
+  const verifiedAt = typeof rawVerifiedAt === 'string' ? rawVerifiedAt : null
+
+  return { recommendation, summary, reasons, verifiedAt }
 }

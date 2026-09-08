@@ -677,6 +677,30 @@ function uniqueReasons(reasons) {
   return result
 }
 
+// Seller-safe text contract: strips provider/internal scaffolding from any
+// string destined for seller-facing summary/reasons. Deterministic reasons
+// (a controlled vocabulary produced by makeCheck) are already safe and never
+// pass through here; only untrusted AI-derived text is sanitized.
+const PROVIDER_SCAFFOLD_PATTERN =
+  /(PROVIDER_[A-Z_]+|STALE_INPUT|content_hash|run_id|systemInstruction|inlineData|```[a-z]*|\.mjs:\d+|at\s+\w+\.mjs|model\s*[:=]|confidence\s*[:=]|riskScore\s*[:=]|\*\*(request|response|parts)\*\*|\{[^}]{0,40}content[^}]{0,40}\})/i
+
+function sanitizeSellerText(value) {
+  if (typeof value !== 'string') return null
+  const normalized = normalizeText(value)
+  if (!normalized || PROVIDER_SCAFFOLD_PATTERN.test(normalized)) return null
+  return normalized
+}
+
+export function sanitizeSellerSummary(value) {
+  const sanitized = sanitizeSellerText(value)
+  return sanitized ? limitText(sanitized, 500) : null
+}
+
+export function sanitizeSellerReasons(reasons) {
+  if (!Array.isArray(reasons)) return []
+  return uniqueReasons(reasons.map(sanitizeSellerText).filter(Boolean))
+}
+
 export function decideRecommendation(deterministic, aiAnalysis) {
   if (deterministic.hardFailure) return 'REJECT'
   if (!aiAnalysis) return 'REVIEW'
@@ -718,9 +742,10 @@ function nowIso(now) {
 function buildCompletedResult({ snapshot, deterministic, aiAnalysis, model, now }) {
   const recommendation = decideRecommendation(deterministic, aiAnalysis)
   const checks = mergeChecks(deterministic.checks, aiAnalysis?.checks)
+  const aiReasons = sanitizeSellerReasons(aiAnalysis?.reasons)
   const reasons = uniqueReasons([
     ...deterministic.reasons,
-    ...(aiAnalysis?.reasons ?? []),
+    ...aiReasons,
     recommendation === 'APPROVE' ? 'No material issues were found.' : '',
   ])
 
@@ -729,7 +754,7 @@ function buildCompletedResult({ snapshot, deterministic, aiAnalysis, model, now 
     confidence: aiAnalysis?.confidence ?? (deterministic.hardFailure ? 100 : null),
     riskScore: aiAnalysis?.riskScore ?? deterministic.riskScore,
     checks,
-    summary: summaryFor(recommendation, aiAnalysis?.summary),
+    summary: summaryFor(recommendation, sanitizeSellerSummary(aiAnalysis?.summary)),
     reasons: reasons.length > 0 ? reasons : ['Automated checks completed.'],
     schemaVersion: 1,
     verificationStatus: 'COMPLETED',

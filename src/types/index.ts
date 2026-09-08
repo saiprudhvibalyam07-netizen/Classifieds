@@ -34,7 +34,7 @@ export type Listing = {
   city: string | null
   state: string | null
   condition: 'new' | 'used' | null
-  status: 'pending' | 'active' | 'sold' | 'inactive'
+  status: 'pending' | 'active' | 'sold' | 'inactive' | 'rejected'
   is_featured: boolean
   views_count: number
   created_at: string

@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth'
 import { LocationPicker } from '../components/LocationPicker'
 import { SEO } from '../components/SEO'
 import type { Category } from '../types'
+import { describeValVerifyResult, requestValVerify, ValVerifyRequestError } from '../lib/valverify'
 
 export function CreateListing() {
   const navigate = useNavigate()
@@ -102,7 +103,16 @@ export function CreateListing() {
       }
     }
 
-    navigate(`/listings/${listing.id}`)
+    let notice = 'Listing posted and is pending Admin approval.'
+    try {
+      notice = describeValVerifyResult(await requestValVerify(listing.id))
+    } catch (verificationError) {
+      notice = verificationError instanceof ValVerifyRequestError
+        ? `Listing posted, but automated verification could not complete: ${verificationError.message}`
+        : 'Listing posted, but automated verification could not complete.'
+    }
+
+    navigate(`/listings/${listing.id}`, { state: { verificationNotice: notice } })
   }
 
   return (

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useLocation } from 'react-router-dom'
 import { ArrowLeft, Heart, MapPin, Calendar, Eye, User, MessageSquare } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
@@ -9,14 +9,17 @@ import { ListingMap } from '../components/ListingMap'
 import { SEO, BreadcrumbListJsonLd, SITE_URL } from '../components/SEO'
 import { OptimizedImage } from '../components/OptimizedImage'
 import type { Listing } from '../types'
+import { getValVerifySummary, type ValVerifySafeSummary } from '../lib/valverify'
 import { format } from 'date-fns'
 
 export function ListingDetail() {
   const { id } = useParams<{ id: string }>()
+  const routeLocation = useLocation()
   const { user } = useAuth()
   const { favoriteIds, toggle } = useFavorites()
   const [listing, setListing] = useState<Listing | null>(null)
   const [loading, setLoading] = useState(true)
+  const [verificationSummary, setVerificationSummary] = useState<ValVerifySafeSummary | null>(null)
   const mountedRef = useRef(true)
 
   useEffect(() => {
@@ -24,6 +27,20 @@ export function ListingDetail() {
     if (id) fetchListing()
     return () => { mountedRef.current = false }
   }, [id])
+
+  useEffect(() => {
+    let active = true
+    if (listing && listing.status === 'rejected' && user?.id) {
+      getValVerifySummary(listing.id).then((summary) => {
+        if (active) setVerificationSummary(summary)
+      }, () => {
+        if (active) setVerificationSummary(null)
+      })
+    } else {
+      setVerificationSummary(null)
+    }
+    return () => { active = false }
+  }, [listing?.id, listing?.status, user?.id])
 
   async function fetchListing() {
     const { data, error } = await supabase
@@ -75,6 +92,8 @@ export function ListingDetail() {
     )
   }
 
+  const routeState = routeLocation.state as { verificationNotice?: string } | null
+
   const productSchema = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -121,6 +140,34 @@ export function ListingDetail() {
       >
         <ArrowLeft className="h-4 w-4" /> Back to listings
       </Link>
+
+      {routeState?.verificationNotice && (
+        <div role="status" className="mb-6 rounded-lg bg-blue-50 p-4 text-sm text-blue-800">
+          {routeState.verificationNotice}
+        </div>
+      )}
+
+      {listing.status === 'rejected' && user?.id === listing.user_id && (
+        <div role="status" data-testid="listing-correction-banner" className="mb-6 rounded-lg bg-red-50 p-4 text-sm text-red-800">
+          <p className="font-semibold">Listing needs correction</p>
+          <p className="mt-1">
+            ValVerify automated screening found issues that must be corrected before this listing can be sent for Admin approval.
+          </p>
+          {verificationSummary?.reasons.length ? (
+            <ul className="mt-2 list-disc space-y-1 pl-5">
+              {verificationSummary.reasons.map((reason, index) => (
+                <li key={`${reason}-${index}`}>{reason}</li>
+              ))}
+            </ul>
+          ) : null}
+          <Link
+            to={`/edit/${listing.id}`}
+            className="mt-3 inline-block rounded-lg bg-primary-600 px-4 py-2 font-medium text-white hover:bg-primary-700"
+          >
+            Edit Listing
+          </Link>
+        </div>
+      )}
 
       <div className="grid gap-8 lg:grid-cols-5">
         <div className="space-y-8 lg:col-span-3">
