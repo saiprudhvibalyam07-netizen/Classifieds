@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(__dirname, '..')
 
-let render: ((url: string) => { html: string; head: string }) | null = null
+let render = null
 
 async function getRender() {
   if (!render) {
@@ -15,7 +15,7 @@ async function getRender() {
   return render
 }
 
-export default async function handler(req: any, res: any) {
+export default async function handler(req, res) {
   const url = req.url || '/'
 
   try {
